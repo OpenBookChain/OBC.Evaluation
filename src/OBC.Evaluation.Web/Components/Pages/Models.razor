@@ -1,0 +1,84 @@
+@page "/models"
+@inject EvalService Eval
+@inject IDbContextFactory<EvalDb> Dbs
+
+<PageTitle>Models · OBC Evaluation</PageTitle>
+<h1>Models</h1>
+<p class="muted">Each model gets the whole run matrix (@Eval.Bundle.Tasks.Where(t => !t.HeldOut).Sum(t => t.Setups.Count) runs). A different model version or app is a different model: add it as a new one, so every result stays tied to exactly what produced it.</p>
+
+<div class="panel table-wrap">
+    <table>
+        <thead><tr><th>Id</th><th>Name</th><th>Model version</th><th>App</th><th>Mode</th><th>Active</th><th>Notes</th></tr></thead>
+        <tbody>
+            @foreach (var m in models)
+            {
+                <tr>
+                    <td>@m.Id</td>
+                    <td>@m.Name<div class="muted small">@m.Provider</div></td>
+                    <td><code>@m.ModelVersion</code></td>
+                    <td>@m.App</td>
+                    <td>
+                        <select value="@m.Mode" @onchange="e => UpdateAsync(m.Id, x => x.Mode = e.Value!.ToString()!)">
+                            <option value="@Modes.Manual">manual</option>
+                            <option value="@Modes.Agent">agent</option>
+                        </select>
+                    </td>
+                    <td><input type="checkbox" checked="@m.Active" @onchange="e => UpdateAsync(m.Id, x => x.Active = (bool)e.Value!)" /></td>
+                    <td class="small">@m.Notes</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<h2>Add a model</h2>
+<div class="panel">
+    <div class="grid">
+        <label>Name <input @bind="draft.Name" @bind:event="oninput" placeholder="e.g. Claude Opus (claude.ai)" /></label>
+        <label>Provider <input @bind="draft.Provider" placeholder="Anthropic, OpenAI, Google, local…" /></label>
+        <label>Exact model version <input @bind="draft.ModelVersion" @bind:event="oninput" placeholder="e.g. claude-opus-5-5" /></label>
+        <label>App or tool <input @bind="draft.App" @bind:event="oninput" placeholder="Claude.ai, ChatGPT web, Gemini app, Claude Code CLI…" /></label>
+        <label>Mode
+            <select @bind="draft.Mode">
+                <option value="@Modes.Manual">manual: one by one in the wizard</option>
+                <option value="@Modes.Agent">agent: run by the agent runner</option>
+            </select>
+        </label>
+    </div>
+    <label style="margin-top:0.75rem">Notes <input @bind="draft.Notes" placeholder="Plan, settings, reasoning effort, anything that affects results" /></label>
+    <button class="primary" style="margin-top:0.75rem" disabled="@(!CanAdd)" @onclick="AddAsync">Add model and create its runs</button>
+</div>
+
+@code {
+    private List<ModelProfile> models = new();
+    private ModelProfile draft = new();
+
+    private bool CanAdd => !string.IsNullOrWhiteSpace(draft.Name) && !string.IsNullOrWhiteSpace(draft.ModelVersion) && !string.IsNullOrWhiteSpace(draft.App);
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        await using var db = await Dbs.CreateDbContextAsync();
+        models = await db.Models.AsNoTracking().OrderBy(m => m.Id).ToListAsync();
+    }
+
+    private async Task AddAsync()
+    {
+        await Eval.AddModelAsync(draft);
+        draft = new ModelProfile();
+        await LoadAsync();
+    }
+
+    private async Task UpdateAsync(int id, Action<ModelProfile> change)
+    {
+        await using (var db = await Dbs.CreateDbContextAsync())
+        {
+            var model = await db.Models.FindAsync(id);
+            change(model!);
+            await db.SaveChangesAsync();
+            await Eval.LogAsync("model", $"Model {id}: mode {model!.Mode}, active {model.Active}.");
+        }
+        await LoadAsync();
+    }
+}

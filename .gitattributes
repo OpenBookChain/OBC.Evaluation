@@ -1,0 +1,2 @@
+# The bundle is hashed byte for byte: never convert its line endings
+bundle/** -text

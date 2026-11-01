@@ -1,0 +1,27 @@
+@inherits LayoutComponentBase
+@inject OBC.Evaluation.Core.Bundle Bundle
+
+<div class="shell">
+    <nav class="side">
+        <div class="brand">OBC Evaluation</div>
+        <NavLink href="" Match="NavLinkMatch.All">Dashboard</NavLink>
+        <NavLink href="run">Run wizard</NavLink>
+        <NavLink href="runs">Runs</NavLink>
+        <NavLink href="checklist">Checklist</NavLink>
+        <NavLink href="models">Models</NavLink>
+        <NavLink href="agents">Agent runner</NavLink>
+        <div class="bundle" title="SHA-256 of bundle.json">
+            <div>@Bundle.Name</div>
+            <code>@Bundle.Sha256[..12]</code>
+        </div>
+    </nav>
+    <main class="content">
+        @Body
+    </main>
+</div>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>

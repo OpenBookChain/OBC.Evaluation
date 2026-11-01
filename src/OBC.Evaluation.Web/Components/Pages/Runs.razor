@@ -1,0 +1,87 @@
+@page "/runs"
+@inject EvalService Eval
+
+<PageTitle>Runs · OBC Evaluation</PageTitle>
+<h1>Runs</h1>
+
+@if (views == null)
+{
+    <p class="muted">Loading…</p>
+    return;
+}
+
+<div class="panel row">
+    <label>Model
+        <select @bind="model">
+            <option value="">All</option>
+            @foreach (var name in views.Select(v => v.Run.Model.Name).Distinct().Order())
+            {
+                <option value="@name">@name</option>
+            }
+        </select>
+    </label>
+    <label>State
+        <select @bind="state">
+            <option value="">All</option>
+            @foreach (var s in Enum.GetNames<RunState>())
+            {
+                <option value="@s">@s</option>
+            }
+        </select>
+    </label>
+    <label>Phase · size
+        <select @bind="cell">
+            <option value="">All</option>
+            @foreach (var c in views.Select(v => $"{v.Run.Phase} · {v.Run.Size}").Distinct().Order())
+            {
+                <option value="@c">@c</option>
+            }
+        </select>
+    </label>
+    <label>Setup
+        <select @bind="setup">
+            <option value="">All</option>
+            @foreach (var s in Eval.Bundle.Setups)
+            {
+                <option value="@s">@s</option>
+            }
+        </select>
+    </label>
+    <label>Find <input @bind="find" @bind:event="oninput" placeholder="Task id, e.g. B3 or C2-audit" /></label>
+    <span class="muted small">@Shown.Count() of @views.Count</span>
+</div>
+
+<div class="panel table-wrap">
+    <table>
+        <thead><tr><th>Task</th><th>Setup</th><th>Model</th><th>State</th><th>Attempts</th><th>Reply</th><th>Time</th></tr></thead>
+        <tbody>
+            @foreach (var v in Shown.Take(400))
+            {
+                <tr>
+                    <td><a href="runs/@v.Run.Id">@v.Task.Id</a>@(v.Run.Repeat > 1 ? $" · repeat {v.Run.Repeat}" : "")<div class="muted small">@v.Task.Title</div></td>
+                    <td>@v.Run.Setup</td>
+                    <td>@v.Run.Model.Name</td>
+                    <td><span class="badge @v.State">@v.State</span>@if (v.BlockedBy != null) { <div class="muted small">@v.BlockedBy</div> }</td>
+                    <td>@v.Run.Attempts.Count</td>
+                    <td>@if (v.Latest?.Validation != null) { <span class="badge @v.Latest.Validation">@v.Latest.Validation</span> }</td>
+                    <td class="small">@(v.Latest?.DurationSeconds is double d ? TimeSpan.FromSeconds(d).ToString(@"mm\:ss") : "")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (Shown.Count() > 400) { <p class="muted small">Showing the first 400; narrow the filters.</p> }
+</div>
+
+@code {
+    private List<RunView>? views;
+    private string model = "", state = "", cell = "", setup = "", find = "";
+
+    private IEnumerable<RunView> Shown => views!.Where(v =>
+        (model == "" || v.Run.Model.Name == model) &&
+        (state == "" || v.State.ToString() == state) &&
+        (cell == "" || $"{v.Run.Phase} · {v.Run.Size}" == cell) &&
+        (setup == "" || v.Run.Setup == setup) &&
+        (find == "" || v.Task.Id.Contains(find, StringComparison.OrdinalIgnoreCase)));
+
+    protected override async Task OnInitializedAsync() => views = await Eval.ViewsAsync();
+}

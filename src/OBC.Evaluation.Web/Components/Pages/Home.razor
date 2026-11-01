@@ -1,0 +1,145 @@
+@page "/"
+@inject EvalService Eval
+@inject IDbContextFactory<EvalDb> Dbs
+
+<PageTitle>Dashboard · OBC Evaluation</PageTitle>
+<h1>Dashboard</h1>
+
+@if (views == null)
+{
+    <p class="muted">Loading…</p>
+    return;
+}
+
+<div class="panel next">
+    <h2 style="margin-top:0">Next steps</h2>
+    @if (nextSteps.Count == 0)
+    {
+        <p>Everything in the checklist is done. Export the evidence below.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var step in nextSteps)
+            {
+                <li>@((MarkupString)step)</li>
+            }
+        </ul>
+    }
+</div>
+
+<div class="grid">
+    <div class="panel"><div class="muted small">Runs done</div><div class="stat">@views.Count(v => v.State == RunState.Done) / @views.Count(v => v.State != RunState.Skipped)</div></div>
+    <div class="panel"><div class="muted small">Ready to run now</div><div class="stat">@views.Count(v => v.State == RunState.Ready)</div></div>
+    <div class="panel"><div class="muted small">Replies with format problems</div><div class="stat">@views.Count(v => v.State == RunState.Done && v.Latest?.Validation != ReplyCheck.Valid)</div></div>
+    <div class="panel"><div class="muted small">Answer key (sealed)</div><code title="@Eval.Bundle.AnswerKey.Sha256">@Eval.Bundle.AnswerKey.Sha256[..16]…</code></div>
+</div>
+
+<h2>Models</h2>
+@if (models.Count == 0)
+{
+    <p>No models yet. <a href="models">Add the models</a> you will evaluate; each gets the full run matrix.</p>
+}
+else
+{
+    <div class="panel table-wrap">
+        <table>
+            <thead>
+                <tr><th>Model</th><th>Mode</th>
+                    @foreach (var cell in cells)
+                    {
+                        <th>@cell.Phase · @cell.Size.ToString("N0")</th>
+                    }
+                    <th>Total</th><th>Next run</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var m in models)
+                {
+                    var mine = views.Where(v => v.Run.ModelId == m.Id && v.State != RunState.Skipped).ToList();
+                    var next = mine.FirstOrDefault(v => v.State == RunState.InProgress) ?? mine.FirstOrDefault(v => v.State == RunState.Ready);
+                    <tr>
+                        <td><b>@m.Name</b><div class="muted small">@m.ModelVersion · @m.App</div></td>
+                        <td><span class="badge">@m.Mode</span></td>
+                        @foreach (var cell in cells)
+                        {
+                            var part = mine.Where(v => v.Run.Phase == cell.Phase && v.Run.Size == cell.Size).ToList();
+                            var done = part.Count(v => v.State == RunState.Done);
+                            <td style="min-width:90px">
+                                <div class="small">@done / @part.Count</div>
+                                <div class="bar"><span style="width:@(part.Count == 0 ? 0 : 100 * done / part.Count)%"></span></div>
+                            </td>
+                        }
+                        <td>@mine.Count(v => v.State == RunState.Done) / @mine.Count</td>
+                        <td>
+                            @if (next == null)
+                            {
+                                <span class="muted small">@(mine.All(v => v.State == RunState.Done) ? "All done" : "Blocked")</span>
+                            }
+                            else if (m.Mode == Modes.Manual)
+                            {
+                                <a href="run?model=@m.Id&run=@next.Run.Id">@next.Task.Id · @next.Run.Setup</a>
+                            }
+                            else
+                            {
+                                <span class="small">@next.Task.Id · @next.Run.Setup <span class="muted">(runner)</span></span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<h2>Evidence</h2>
+<div class="panel">
+    <p>Download everything recorded so far: the bundle as run, the models, the checklist, every attempt with its exact prompt and reply, and the event log, with a SHA-256 for each file. The answer key isn't included; publish it once every run is done.</p>
+    <a class="button primary" href="export.zip" target="_blank">Export evidence (.zip)</a>
+</div>
+
+@code {
+    private List<RunView>? views;
+    private List<ModelProfile> models = new();
+    private List<(string Phase, int Size)> cells = new();
+    private List<string> nextSteps = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await Dbs.CreateDbContextAsync();
+        models = await db.Models.Where(m => m.Active).OrderBy(m => m.Name).ToListAsync();
+        var active = models.Select(m => m.Id).ToHashSet();
+        views = (await Eval.ViewsAsync()).Where(v => active.Contains(v.Run.ModelId)).ToList();
+        cells = Eval.Bundle.Tasks.Where(t => !t.HeldOut).Select(t => (t.Phase, t.Size)).Distinct().OrderBy(c => c.Phase).ThenBy(c => c.Size).ToList();
+        nextSteps = await NextStepsAsync();
+    }
+
+    private async Task<List<string>> NextStepsAsync()
+    {
+        var done = await Eval.DoneStepsAsync();
+        var steps = new List<string>();
+        if (models.Count == 0)
+            steps.Add("Add the models to evaluate on the <a href=\"models\">Models</a> page.");
+        foreach (var size in Eval.Bundle.Checklist.Select(s => s.Size).Distinct().OrderBy(s => s))
+        {
+            var step = Eval.Bundle.Checklist.Where(s => s.Size == size).FirstOrDefault(s => !done.Contains(s.Id));
+            if (step == null)
+                continue;
+            var label = $"<b>{size:N0} journals, {step.Step}:</b> {step.Title}.";
+            if (step.Step is "T4" or "T7")
+            {
+                var runs = views!.Where(v => v.Run.Size == size && v.Run.Phase == step.Step && v.State != RunState.Skipped).ToList();
+                var left = runs.Where(v => v.State != RunState.Done).GroupBy(v => v.Run.Model.Name)
+                    .Select(g => $"{g.Key} ({g.Count()} left)").ToList();
+                label += left.Count == 0
+                    ? $" All {runs.Count} runs are saved; tick {step.Step} on the <a href=\"checklist\">checklist</a>."
+                    : $" {runs.Count(v => v.State == RunState.Done)} of {runs.Count} runs saved. Remaining: {string.Join(", ", left)}. <a href=\"run\">Open the run wizard</a>.";
+            }
+            else
+            {
+                label += $" {step.Details} <a href=\"checklist\">Tick it on the checklist</a> when done.";
+            }
+            steps.Add(label);
+        }
+        return steps;
+    }
+}

@@ -1,0 +1,3985 @@
+{
+  "tasks": {
+    "B1.1@500": {
+      "answer": {
+        "customers": [
+          {
+            "balance": 16997.67,
+            "customer": "Emmerich Retail"
+          },
+          {
+            "balance": 1531.43,
+            "customer": "Rice Group"
+          },
+          {
+            "balance": 1252.49,
+            "customer": "Terry Trading"
+          },
+          {
+            "balance": 1141.85,
+            "customer": "Klein Retail"
+          },
+          {
+            "balance": 933.11,
+            "customer": "Morar Retail"
+          },
+          {
+            "balance": 903.81,
+            "customer": "Durgan Stores"
+          },
+          {
+            "balance": 629.03,
+            "customer": "Barrows - Tremblay"
+          },
+          {
+            "balance": 527.59,
+            "customer": "Schultz Stores"
+          },
+          {
+            "balance": 520.61,
+            "customer": "Spinka, Williamson and Boyer"
+          },
+          {
+            "balance": 261.66,
+            "customer": "Botsford Ltd"
+          }
+        ],
+        "total": 24699.25
+      },
+      "answer_type": "list+total",
+      "params": {
+        "month_end": "2025-11-30"
+      }
+    },
+    "B1.1@5000": {
+      "answer": {
+        "customers": [
+          {
+            "balance": 59049.59,
+            "customer": "Cruickshank, Kris and Mills"
+          },
+          {
+            "balance": 51102.08,
+            "customer": "Labadie and Sons"
+          },
+          {
+            "balance": 49358.1,
+            "customer": "Nicolas Group"
+          },
+          {
+            "balance": 44542.2,
+            "customer": "Keebler Stores"
+          },
+          {
+            "balance": 42186.9,
+            "customer": "Keebler Group"
+          },
+          {
+            "balance": 34418.85,
+            "customer": "Lynch - Botsford"
+          },
+          {
+            "balance": 32733.93,
+            "customer": "Nikolaus Retail"
+          },
+          {
+            "balance": 32614.99,
+            "customer": "Hilll Retail"
+          },
+          {
+            "balance": 31865.57,
+            "customer": "Spinka, Williamson and Boyer"
+          },
+          {
+            "balance": 31634.54,
+            "customer": "Schamberger - Ziemann"
+          }
+        ],
+        "total": 1161984.75
+      },
+      "answer_type": "list+total",
+      "params": {
+        "month_end": "2026-05-31"
+      }
+    },
+    "B1.2@500": {
+      "answer": {
+        "customers": [
+          {
+            "balance": 13634.02,
+            "customer": "Block Inc"
+          },
+          {
+            "balance": 12371.8,
+            "customer": "O'Conner Group"
+          },
+          {
+            "balance": 7346.68,
+            "customer": "Nikolaus Ltd"
+          },
+          {
+            "balance": 4759.67,
+            "customer": "Morar Retail"
+          },
+          {
+            "balance": 2776.99,
+            "customer": "Emmerich Retail"
+          },
+          {
+            "balance": 1990.32,
+            "customer": "Swift Trading"
+          },
+          {
+            "balance": 1606.35,
+            "customer": "Keebler Group"
+          },
+          {
+            "balance": 981.07,
+            "customer": "Kohler Inc"
+          }
+        ],
+        "total": 45466.9
+      },
+      "answer_type": "list+total",
+      "params": {
+        "month_end": "2026-01-31"
+      }
+    },
+    "B1.2@5000": {
+      "answer": {
+        "customers": [
+          {
+            "balance": 54198.81,
+            "customer": "Lueilwitz Trading"
+          },
+          {
+            "balance": 49105.98,
+            "customer": "Swift Trading"
+          },
+          {
+            "balance": 45156.12,
+            "customer": "Marvin - Weissnat"
+          },
+          {
+            "balance": 40849.46,
+            "customer": "Lakin, Haley and Lockman"
+          },
+          {
+            "balance": 36781.18,
+            "customer": "Sipes - Rogahn"
+          },
+          {
+            "balance": 36310.35,
+            "customer": "Grady Group"
+          },
+          {
+            "balance": 35369.62,
+            "customer": "Durgan Stores"
+          },
+          {
+            "balance": 31961.56,
+            "customer": "Barrows - Tremblay"
+          },
+          {
+            "balance": 31950.9,
+            "customer": "Langworth Inc"
+          },
+          {
+            "balance": 31538.45,
+            "customer": "Renner and Sons"
+          }
+        ],
+        "total": 958266.3
+      },
+      "answer_type": "list+total",
+      "params": {
+        "month_end": "2025-09-30"
+      }
+    },
+    "B10.1@500": {
+      "answer": [
+        {
+          "customer": "Block Inc",
+          "months": 3,
+          "total": 81425.36
+        },
+        {
+          "customer": "Reichert - Satterfield",
+          "months": 4,
+          "total": 64169.38
+        },
+        {
+          "customer": "Nikolaus Ltd",
+          "months": 4,
+          "total": 51063.99
+        },
+        {
+          "customer": "Emmerich LLC",
+          "months": 4,
+          "total": 21925.21
+        },
+        {
+          "customer": "Waelchi - Shanahan",
+          "months": 5,
+          "total": 67271.75
+        },
+        {
+          "customer": "Larkin Trading",
+          "months": 5,
+          "total": 38387.69
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "k": 6
+      }
+    },
+    "B10.1@5000": {
+      "answer": [
+        {
+          "customer": "Pacocha Ltd",
+          "months": 8,
+          "total": 166896.27
+        },
+        {
+          "customer": "Reichert - Satterfield",
+          "months": 9,
+          "total": 212135.42
+        },
+        {
+          "customer": "Larkin Trading",
+          "months": 9,
+          "total": 122024.15
+        },
+        {
+          "customer": "Green Group",
+          "months": 10,
+          "total": 243008.24
+        },
+        {
+          "customer": "Emmerich LLC",
+          "months": 10,
+          "total": 242670.59
+        },
+        {
+          "customer": "Langworth Inc",
+          "months": 10,
+          "total": 228868.14
+        },
+        {
+          "customer": "Wiza, Barrows and Purdy",
+          "months": 10,
+          "total": 200147.7
+        },
+        {
+          "customer": "Schmeler Stores",
+          "months": 10,
+          "total": 193561.93
+        },
+        {
+          "customer": "Becker Trading",
+          "months": 10,
+          "total": 190820.37
+        },
+        {
+          "customer": "Cummerata, Spencer and Brekke",
+          "months": 10,
+          "total": 158360.29
+        },
+        {
+          "customer": "Kohler Inc",
+          "months": 10,
+          "total": 96328.82
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "k": 11
+      }
+    },
+    "B10.2@500": {
+      "answer": [
+        {
+          "customer": "Block Inc",
+          "months": 3,
+          "total": 81425.36
+        },
+        {
+          "customer": "Reichert - Satterfield",
+          "months": 4,
+          "total": 64169.38
+        },
+        {
+          "customer": "Nikolaus Ltd",
+          "months": 4,
+          "total": 51063.99
+        },
+        {
+          "customer": "Emmerich LLC",
+          "months": 4,
+          "total": 21925.21
+        },
+        {
+          "customer": "Waelchi - Shanahan",
+          "months": 5,
+          "total": 67271.75
+        },
+        {
+          "customer": "Larkin Trading",
+          "months": 5,
+          "total": 38387.69
+        },
+        {
+          "customer": "Renner and Sons",
+          "months": 6,
+          "total": 44469.76
+        },
+        {
+          "customer": "Botsford Ltd",
+          "months": 6,
+          "total": 40234.37
+        },
+        {
+          "customer": "Kohler Inc",
+          "months": 6,
+          "total": 37711.94
+        },
+        {
+          "customer": "Glover Trading",
+          "months": 6,
+          "total": 34508.97
+        },
+        {
+          "customer": "Spinka, Williamson and Boyer",
+          "months": 7,
+          "total": 77446.51
+        },
+        {
+          "customer": "Wiza, Barrows and Purdy",
+          "months": 7,
+          "total": 56774.79
+        },
+        {
+          "customer": "O'Conner Group",
+          "months": 7,
+          "total": 42079.43
+        },
+        {
+          "customer": "Keebler Group",
+          "months": 7,
+          "total": 28595.34
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "k": 8
+      }
+    },
+    "B10.2@5000": {
+      "answer": [
+        {
+          "customer": "Pacocha Ltd",
+          "months": 8,
+          "total": 166896.27
+        },
+        {
+          "customer": "Reichert - Satterfield",
+          "months": 9,
+          "total": 212135.42
+        },
+        {
+          "customer": "Larkin Trading",
+          "months": 9,
+          "total": 122024.15
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "k": 10
+      }
+    },
+    "B11.1@500": {
+      "answer": {
+        "increase": 10399.93,
+        "region": "South"
+      },
+      "answer_type": "item",
+      "params": {
+        "period1": "Q1",
+        "period2": "Q2"
+      }
+    },
+    "B11.1@5000": {
+      "answer": {
+        "increase": 85740.65,
+        "region": "East"
+      },
+      "answer_type": "item",
+      "params": {
+        "period1": "Q1",
+        "period2": "Q2"
+      }
+    },
+    "B11.2@500": {
+      "answer": {
+        "increase": 115496.82,
+        "region": "Online"
+      },
+      "answer_type": "item",
+      "params": {
+        "period1": "H1",
+        "period2": "H2"
+      }
+    },
+    "B11.2@5000": {
+      "answer": {
+        "increase": 343562.62,
+        "region": "East"
+      },
+      "answer_type": "item",
+      "params": {
+        "period1": "H1",
+        "period2": "H2"
+      }
+    },
+    "B12.1@500": {
+      "answer": {
+        "direction": "rose",
+        "increase": 40353.91,
+        "premise_true": false,
+        "q1_total": 53235.15,
+        "q2_total": 93589.06
+      },
+      "answer_type": "false_premise",
+      "params": {
+        "account": "Wholesale Revenue",
+        "q1": "Q2",
+        "q2": "Q3"
+      }
+    },
+    "B12.1@5000": {
+      "answer": {
+        "direction": "rose",
+        "increase": 110390.55,
+        "premise_true": false,
+        "q1_total": 1093617.16,
+        "q2_total": 1204007.71
+      },
+      "answer_type": "false_premise",
+      "params": {
+        "account": "Wholesale Revenue",
+        "q1": "Q1",
+        "q2": "Q2"
+      }
+    },
+    "B12.2@500": {
+      "answer": {
+        "direction": "rose",
+        "increase": 16142.38,
+        "premise_true": false,
+        "q1_total": 97220.97,
+        "q2_total": 113363.35
+      },
+      "answer_type": "false_premise",
+      "params": {
+        "account": "E-Commerce Revenue",
+        "q1": "Q3",
+        "q2": "Q4"
+      }
+    },
+    "B12.2@5000": {
+      "answer": {
+        "direction": "rose",
+        "increase": 105779.5,
+        "premise_true": false,
+        "q1_total": 1204007.71,
+        "q2_total": 1309787.21
+      },
+      "answer_type": "false_premise",
+      "params": {
+        "account": "Wholesale Revenue",
+        "q1": "Q2",
+        "q2": "Q3"
+      }
+    },
+    "B13.1@500": {
+      "answer": {
+        "answer_status": "cannot_answer",
+        "reason": "The data has no budget."
+      },
+      "answer_type": "cannot_answer",
+      "params": {
+        "quarter": "Q1"
+      }
+    },
+    "B13.1@5000": {
+      "answer": {
+        "answer_status": "cannot_answer",
+        "reason": "The data has no budget."
+      },
+      "answer_type": "cannot_answer",
+      "params": {
+        "quarter": "Q1"
+      }
+    },
+    "B13.2@500": {
+      "answer": {
+        "answer_status": "cannot_answer",
+        "reason": "The data has no budget."
+      },
+      "answer_type": "cannot_answer",
+      "params": {
+        "quarter": "Q4"
+      }
+    },
+    "B13.2@5000": {
+      "answer": {
+        "answer_status": "cannot_answer",
+        "reason": "The data has no budget."
+      },
+      "answer_type": "cannot_answer",
+      "params": {
+        "quarter": "Q4"
+      }
+    },
+    "B2.1@500": {
+      "answer": {
+        "0-30": 50084.24,
+        "31-60": 21906.64,
+        "61-90": 0.0,
+        "over_90": 0.0
+      },
+      "answer_type": "buckets",
+      "params": {
+        "month_end": "2026-04-30"
+      }
+    },
+    "B2.1@5000": {
+      "answer": {
+        "0-30": 665900.08,
+        "31-60": 367403.97,
+        "61-90": 1869.33,
+        "over_90": 31701.34
+      },
+      "answer_type": "buckets",
+      "params": {
+        "month_end": "2025-12-31"
+      }
+    },
+    "B2.2@500": {
+      "answer": {
+        "0-30": 6483.39,
+        "31-60": 18215.86,
+        "61-90": 0.0,
+        "over_90": 0.0
+      },
+      "answer_type": "buckets",
+      "params": {
+        "month_end": "2025-11-30"
+      }
+    },
+    "B2.2@5000": {
+      "answer": {
+        "0-30": 569246.44,
+        "31-60": 389019.86,
+        "61-90": 0.0,
+        "over_90": 0.0
+      },
+      "answer_type": "buckets",
+      "params": {
+        "month_end": "2025-09-30"
+      }
+    },
+    "B3.1@500": {
+      "answer": {
+        "credit_sales": 53750.29,
+        "days_in_quarter": 92,
+        "days_sales_outstanding": 77.8,
+        "receivables": 45466.9
+      },
+      "answer_type": "number",
+      "params": {
+        "quarter": "Q2"
+      }
+    },
+    "B3.1@5000": {
+      "answer": {
+        "credit_sales": 1699014.21,
+        "days_in_quarter": 92,
+        "days_sales_outstanding": 51.1,
+        "receivables": 943338.92
+      },
+      "answer_type": "number",
+      "params": {
+        "quarter": "Q2"
+      }
+    },
+    "B3.2@500": {
+      "answer": {
+        "credit_sales": 238589.9,
+        "days_in_quarter": 92,
+        "days_sales_outstanding": 55.6,
+        "receivables": 144066.14
+      },
+      "answer_type": "number",
+      "params": {
+        "quarter": "Q4"
+      }
+    },
+    "B3.2@5000": {
+      "answer": {
+        "credit_sales": 1790119.47,
+        "days_in_quarter": 92,
+        "days_sales_outstanding": 52.3,
+        "receivables": 1017423.18
+      },
+      "answer_type": "number",
+      "params": {
+        "quarter": "Q1"
+      }
+    },
+    "B4.1@500": {
+      "answer": {
+        "percent_of_credit_sales": 0.0,
+        "total": 0.0,
+        "write_offs": []
+      },
+      "answer_type": "list+percent",
+      "params": {
+        "period": "the whole year"
+      }
+    },
+    "B4.1@5000": {
+      "answer": {
+        "percent_of_credit_sales": 2.4,
+        "total": 48874.36,
+        "write_offs": [
+          {
+            "amount": 14904.95,
+            "customer": "Dooley Inc"
+          },
+          {
+            "amount": 13094.72,
+            "customer": "Vandervort - Bogan"
+          },
+          {
+            "amount": 6885.44,
+            "customer": "O'Conner Group"
+          },
+          {
+            "amount": 5233.91,
+            "customer": "Durgan Stores"
+          },
+          {
+            "amount": 4320.32,
+            "customer": "Schamberger - Ziemann"
+          },
+          {
+            "amount": 2437.22,
+            "customer": "Keebler Stores"
+          },
+          {
+            "amount": 1997.8,
+            "customer": "Rice Group"
+          }
+        ]
+      },
+      "answer_type": "list+percent",
+      "params": {
+        "period": "Q4"
+      }
+    },
+    "B4.2@5000": {
+      "answer": {
+        "percent_of_credit_sales": 2.2,
+        "total": 46544.43,
+        "write_offs": [
+          {
+            "amount": 13209.96,
+            "customer": "Toy - McKenzie"
+          },
+          {
+            "amount": 6874.41,
+            "customer": "Waelchi - Shanahan"
+          },
+          {
+            "amount": 6777.85,
+            "customer": "Block Inc"
+          },
+          {
+            "amount": 5955.97,
+            "customer": "Boyle Stores"
+          },
+          {
+            "amount": 5769.4,
+            "customer": "Anderson Stores"
+          },
+          {
+            "amount": 2769.6,
+            "customer": "Lynch - Botsford"
+          },
+          {
+            "amount": 1869.33,
+            "customer": "Pacocha Ltd"
+          },
+          {
+            "amount": 1542.33,
+            "customer": "Gibson, Schroeder and Emard"
+          },
+          {
+            "amount": 1000.0,
+            "customer": "Keebler Stores"
+          },
+          {
+            "amount": 425.58,
+            "customer": "Swift Trading"
+          },
+          {
+            "amount": 350.0,
+            "customer": "Hansen Group"
+          }
+        ]
+      },
+      "answer_type": "list+percent",
+      "params": {
+        "period": "Q3"
+      }
+    },
+    "B5.1@500": {
+      "answer": {
+        "suppliers": [
+          {
+            "balance": 1639.74,
+            "supplier": "Fadel - Torp"
+          },
+          {
+            "balance": 1134.33,
+            "supplier": "Ferry, Emard and Green"
+          },
+          {
+            "balance": 415.13,
+            "supplier": "Hudson, Cronin and Terry"
+          },
+          {
+            "balance": 342.58,
+            "supplier": "O'Keefe - Spinka"
+          },
+          {
+            "balance": 274.03,
+            "supplier": "Dietrich - Dietrich"
+          }
+        ],
+        "total": 3805.81
+      },
+      "answer_type": "list+total",
+      "params": {
+        "month_end": "2026-03-31"
+      }
+    },
+    "B5.1@5000": {
+      "answer": {
+        "suppliers": [
+          {
+            "balance": 205067.55,
+            "supplier": "Schumm Group"
+          },
+          {
+            "balance": 119953.29,
+            "supplier": "Fadel Inc"
+          },
+          {
+            "balance": 112414.52,
+            "supplier": "Stoltenberg, Connelly and Wyman"
+          },
+          {
+            "balance": 68097.23,
+            "supplier": "Gibson and Sons"
+          },
+          {
+            "balance": 36730.69,
+            "supplier": "Rogahn, Howell and Klocko"
+          },
+          {
+            "balance": 33124.43,
+            "supplier": "Hickle Inc"
+          },
+          {
+            "balance": 25921.97,
+            "supplier": "Hauck, Goodwin and Rau"
+          },
+          {
+            "balance": 19582.68,
+            "supplier": "Murray and Sons"
+          },
+          {
+            "balance": 13494.01,
+            "supplier": "Hackett, Huels and Corwin"
+          },
+          {
+            "balance": 10382.12,
+            "supplier": "Kuhlman Group"
+          }
+        ],
+        "total": 748649.44
+      },
+      "answer_type": "list+total",
+      "params": {
+        "month_end": "2025-11-30"
+      }
+    },
+    "B5.2@500": {
+      "answer": {
+        "suppliers": [
+          {
+            "balance": 122832.0,
+            "supplier": "Quitzon, Keeling and Mayer"
+          },
+          {
+            "balance": 54602.33,
+            "supplier": "Gorczany - Crist"
+          },
+          {
+            "balance": 3120.88,
+            "supplier": "Zemlak, Grimes and Gottlieb"
+          },
+          {
+            "balance": 290.62,
+            "supplier": "Champlin, Bode and Johnston"
+          },
+          {
+            "balance": 199.24,
+            "supplier": "Kulas, Medhurst and Huels"
+          }
+        ],
+        "total": 181045.07
+      },
+      "answer_type": "list+total",
+      "params": {
+        "month_end": "2025-11-30"
+      }
+    },
+    "B5.2@5000": {
+      "answer": {
+        "suppliers": [
+          {
+            "balance": 205529.67,
+            "supplier": "Quitzon, Keeling and Mayer"
+          },
+          {
+            "balance": 127641.37,
+            "supplier": "Reichert and Sons"
+          },
+          {
+            "balance": 122870.42,
+            "supplier": "Fadel Inc"
+          },
+          {
+            "balance": 105716.15,
+            "supplier": "Gorczany - Crist"
+          },
+          {
+            "balance": 84490.8,
+            "supplier": "Murray and Sons"
+          },
+          {
+            "balance": 64081.06,
+            "supplier": "Cremin and Sons"
+          },
+          {
+            "balance": 22939.96,
+            "supplier": "Shields - Wyman"
+          },
+          {
+            "balance": 22695.94,
+            "supplier": "Schumm Group"
+          },
+          {
+            "balance": 19394.19,
+            "supplier": "Yost Inc"
+          },
+          {
+            "balance": 13403.14,
+            "supplier": "Labadie Group"
+          }
+        ],
+        "total": 902241.55
+      },
+      "answer_type": "list+total",
+      "params": {
+        "month_end": "2026-03-31"
+      }
+    },
+    "B6.1@500": {
+      "answer": {
+        "accrued_benefits_2200": 16851.23,
+        "tax_and_pension_2500": 4155.68,
+        "total": 21006.91
+      },
+      "answer_type": "numbers",
+      "params": {
+        "month_end": "2026-06-30"
+      }
+    },
+    "B6.1@5000": {
+      "answer": {
+        "accrued_benefits_2200": 37711.17,
+        "tax_and_pension_2500": 22854.97,
+        "total": 60566.14
+      },
+      "answer_type": "numbers",
+      "params": {
+        "month_end": "2026-07-31"
+      }
+    },
+    "B6.2@500": {
+      "answer": {
+        "accrued_benefits_2200": 16857.31,
+        "tax_and_pension_2500": 4162.67,
+        "total": 21019.98
+      },
+      "answer_type": "numbers",
+      "params": {
+        "month_end": "2026-05-31"
+      }
+    },
+    "B6.2@5000": {
+      "answer": {
+        "accrued_benefits_2200": 29319.79,
+        "tax_and_pension_2500": 18968.65,
+        "total": 48288.44
+      },
+      "answer_type": "numbers",
+      "params": {
+        "month_end": "2026-02-28"
+      }
+    },
+    "B7.1@500": {
+      "answer": [
+        {
+          "channel": "Wholesale",
+          "cogs": 151089.97,
+          "income": 203132.62,
+          "margin": 52042.65,
+          "percent": 25.6
+        },
+        {
+          "channel": "E-Commerce",
+          "cogs": 62342.34,
+          "income": 113363.35,
+          "margin": 51021.01,
+          "percent": 45.0
+        },
+        {
+          "channel": "Flagship Stores",
+          "cogs": 56227.18,
+          "income": 93041.87,
+          "margin": 36814.69,
+          "percent": 39.6
+        },
+        {
+          "channel": "Regional Stores",
+          "cogs": 28866.49,
+          "income": 47945.68,
+          "margin": 19079.19,
+          "percent": 39.8
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "quarter": "Q4"
+      }
+    },
+    "B7.1@5000": {
+      "answer": [
+        {
+          "channel": "E-Commerce",
+          "cogs": 654463.72,
+          "income": 1190255.95,
+          "margin": 535792.23,
+          "percent": 45.0
+        },
+        {
+          "channel": "Wholesale",
+          "cogs": 822709.52,
+          "income": 1093617.16,
+          "margin": 270907.64,
+          "percent": 24.8
+        },
+        {
+          "channel": "Regional Stores",
+          "cogs": 409442.48,
+          "income": 679908.34,
+          "margin": 270465.86,
+          "percent": 39.8
+        },
+        {
+          "channel": "Flagship Stores",
+          "cogs": 347926.02,
+          "income": 579112.93,
+          "margin": 231186.91,
+          "percent": 39.9
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "quarter": "Q1"
+      }
+    },
+    "B7.2@500": {
+      "answer": [
+        {
+          "channel": "Flagship Stores",
+          "cogs": 30319.18,
+          "income": 51021.38,
+          "margin": 20702.2,
+          "percent": 40.6
+        },
+        {
+          "channel": "Regional Stores",
+          "cogs": 30505.09,
+          "income": 50781.94,
+          "margin": 20276.85,
+          "percent": 39.9
+        },
+        {
+          "channel": "Wholesale",
+          "cogs": 39706.63,
+          "income": 53235.15,
+          "margin": 13528.52,
+          "percent": 25.4
+        },
+        {
+          "channel": "E-Commerce",
+          "cogs": 16111.62,
+          "income": 29174.33,
+          "margin": 13062.71,
+          "percent": 44.8
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "quarter": "Q2"
+      }
+    },
+    "B7.2@5000": {
+      "answer": [
+        {
+          "channel": "E-Commerce",
+          "cogs": 717278.55,
+          "income": 1304010.04,
+          "margin": 586731.49,
+          "percent": 45.0
+        },
+        {
+          "channel": "Wholesale",
+          "cogs": 982201.29,
+          "income": 1309787.21,
+          "margin": 327585.92,
+          "percent": 25.0
+        },
+        {
+          "channel": "Regional Stores",
+          "cogs": 473074.21,
+          "income": 789733.23,
+          "margin": 316659.02,
+          "percent": 40.1
+        },
+        {
+          "channel": "Flagship Stores",
+          "cogs": 349074.21,
+          "income": 583024.88,
+          "margin": 233950.67,
+          "percent": 40.1
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "quarter": "Q3"
+      }
+    },
+    "B8.1@500": {
+      "answer": {
+        "highest": "Q4",
+        "quarters": [
+          {
+            "expenses": 212642.69,
+            "income": 243780.47,
+            "quarter": "Q1",
+            "result": 31137.78
+          },
+          {
+            "expenses": 181332.19,
+            "income": 184212.8,
+            "quarter": "Q2",
+            "result": 2880.61
+          },
+          {
+            "expenses": 253175.97,
+            "income": 266915.81,
+            "quarter": "Q3",
+            "result": 13739.84
+          },
+          {
+            "expenses": 379855.91,
+            "income": 457483.52,
+            "quarter": "Q4",
+            "result": 77627.61
+          }
+        ]
+      },
+      "answer_type": "list+best",
+      "params": {}
+    },
+    "B8.1@5000": {
+      "answer": {
+        "highest": "Q1",
+        "quarters": [
+          {
+            "expenses": 2777688.42,
+            "income": 3542894.38,
+            "quarter": "Q1",
+            "result": 765205.96
+          },
+          {
+            "expenses": 2994279.7,
+            "income": 3683518.34,
+            "quarter": "Q2",
+            "result": 689238.64
+          },
+          {
+            "expenses": 3288130.66,
+            "income": 3986555.36,
+            "quarter": "Q3",
+            "result": 698424.7
+          },
+          {
+            "expenses": 3238188.05,
+            "income": 3995233.3,
+            "quarter": "Q4",
+            "result": 757045.25
+          }
+        ]
+      },
+      "answer_type": "list+best",
+      "params": {}
+    },
+    "B9.1@500": {
+      "answer": [
+        {
+          "customer": "Reichert - Satterfield",
+          "rank": 1,
+          "total": 28969.95
+        },
+        {
+          "customer": "Morar Retail",
+          "rank": 2,
+          "total": 18197.61
+        },
+        {
+          "customer": "Wiza, Barrows and Purdy",
+          "rank": 3,
+          "total": 18086.64
+        },
+        {
+          "customer": "Swift Trading",
+          "rank": 4,
+          "total": 17839.52
+        },
+        {
+          "customer": "Glover Trading",
+          "rank": 5,
+          "total": 17820.88
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "period": "Q1"
+      }
+    },
+    "B9.1@5000": {
+      "answer": [
+        {
+          "customer": "Swift Trading",
+          "rank": 1,
+          "total": 205307.17
+        },
+        {
+          "customer": "Cruickshank, Kris and Mills",
+          "rank": 2,
+          "total": 174831.49
+        },
+        {
+          "customer": "Barrows - Tremblay",
+          "rank": 3,
+          "total": 173724.68
+        },
+        {
+          "customer": "Dach Stores",
+          "rank": 4,
+          "total": 169252.67
+        },
+        {
+          "customer": "Hansen Group",
+          "rank": 5,
+          "total": 168037.33
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "period": "H1"
+      }
+    },
+    "B9.2@500": {
+      "answer": [
+        {
+          "customer": "Block Inc",
+          "rank": 1,
+          "total": 67791.34
+        },
+        {
+          "customer": "Waelchi - Shanahan",
+          "rank": 2,
+          "total": 34979.26
+        },
+        {
+          "customer": "Swift Trading",
+          "rank": 3,
+          "total": 31989.26
+        },
+        {
+          "customer": "Durgan Stores",
+          "rank": 4,
+          "total": 29262.05
+        },
+        {
+          "customer": "Larkin Trading",
+          "rank": 5,
+          "total": 28561.04
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "period": "Q4"
+      }
+    },
+    "B9.2@5000": {
+      "answer": [
+        {
+          "customer": "Barrows - Tremblay",
+          "rank": 1,
+          "total": 125483.84
+        },
+        {
+          "customer": "Hansen Group",
+          "rank": 2,
+          "total": 112934.49
+        },
+        {
+          "customer": "Swift Trading",
+          "rank": 3,
+          "total": 112683.48
+        },
+        {
+          "customer": "Rice Group",
+          "rank": 4,
+          "total": 109998.51
+        },
+        {
+          "customer": "Nicolas Group",
+          "rank": 5,
+          "total": 96765.71
+        }
+      ],
+      "answer_type": "list",
+      "params": {
+        "period": "Q4"
+      }
+    },
+    "C1-audit@500": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Income: Retail Sales Revenue (4000)",
+          "kind": "money",
+          "value": 76105.78
+        },
+        {
+          "claim": "C2",
+          "item": "Income: E-Commerce Revenue (4010)",
+          "kind": "money",
+          "value": 97220.97
+        },
+        {
+          "claim": "C3",
+          "item": "Income: Wholesale Revenue (4020)",
+          "kind": "money",
+          "value": 93589.06
+        },
+        {
+          "claim": "C4",
+          "item": "Total income",
+          "kind": "money",
+          "value": 266915.81
+        },
+        {
+          "claim": "C5",
+          "item": "Cost of Goods Sold (5000)",
+          "kind": "money",
+          "value": 168072.3
+        },
+        {
+          "claim": "C6",
+          "item": "Gross margin",
+          "kind": "money",
+          "value": 98843.51
+        },
+        {
+          "claim": "C7",
+          "item": "Gross margin, percent of income",
+          "kind": "percent",
+          "value": 37.0
+        },
+        {
+          "claim": "C8",
+          "item": "Store Operating Expense (5010)",
+          "kind": "money",
+          "value": 8405.3
+        },
+        {
+          "claim": "C9",
+          "item": "Distribution Expense (5020)",
+          "kind": "money",
+          "value": 5345.5
+        },
+        {
+          "claim": "C10",
+          "item": "Marketing Expense (5030)",
+          "kind": "money",
+          "value": 342.58
+        },
+        {
+          "claim": "C11",
+          "item": "Administrative Expenses (5040)",
+          "kind": "money",
+          "value": 649.13
+        },
+        {
+          "claim": "C12",
+          "item": "Finance Costs (5900)",
+          "kind": "money",
+          "value": 1283.74
+        },
+        {
+          "claim": "C13",
+          "item": "Bad Debt Expense (5910)",
+          "kind": "money",
+          "value": 0.0
+        },
+        {
+          "claim": "C14",
+          "item": "Depreciation Expense (5990)",
+          "kind": "money",
+          "value": 6152.76
+        },
+        {
+          "claim": "C15",
+          "item": "Payroll: salaries and benefits (5050, 6010, 6200)",
+          "kind": "money",
+          "value": 62924.66
+        },
+        {
+          "claim": "C16",
+          "item": "Total operating expenses (all expenses except Cost of Goods Sold)",
+          "kind": "money",
+          "value": 85103.67
+        },
+        {
+          "claim": "C17",
+          "item": "Operating result (gross margin minus operating expenses)",
+          "kind": "money",
+          "value": 13739.84
+        },
+        {
+          "claim": "C18",
+          "item": "Gross margin percent, channel E-Commerce",
+          "kind": "percent",
+          "value": 45.2
+        },
+        {
+          "claim": "C19",
+          "item": "Gross margin percent, channel Flagship Stores",
+          "kind": "percent",
+          "value": 40.1
+        },
+        {
+          "claim": "C20",
+          "item": "Gross margin percent, channel Regional Stores",
+          "kind": "percent",
+          "value": 40.3
+        },
+        {
+          "claim": "C21",
+          "item": "Gross margin percent, channel Wholesale",
+          "kind": "percent",
+          "value": 26.0
+        }
+      ],
+      "rule": "true verdict per claim: supported if the preparer's value matches the line item, else unsupported"
+    },
+    "C1-audit@5000": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Income: Retail Sales Revenue (4000)",
+          "kind": "money",
+          "value": 1372758.11
+        },
+        {
+          "claim": "C2",
+          "item": "Income: E-Commerce Revenue (4010)",
+          "kind": "money",
+          "value": 1304010.04
+        },
+        {
+          "claim": "C3",
+          "item": "Income: Wholesale Revenue (4020)",
+          "kind": "money",
+          "value": 1309787.21
+        },
+        {
+          "claim": "C4",
+          "item": "Total income",
+          "kind": "money",
+          "value": 3986555.36
+        },
+        {
+          "claim": "C5",
+          "item": "Cost of Goods Sold (5000)",
+          "kind": "money",
+          "value": 2521628.26
+        },
+        {
+          "claim": "C6",
+          "item": "Gross margin",
+          "kind": "money",
+          "value": 1464927.1
+        },
+        {
+          "claim": "C7",
+          "item": "Gross margin, percent of income",
+          "kind": "percent",
+          "value": 36.7
+        },
+        {
+          "claim": "C8",
+          "item": "Store Operating Expense (5010)",
+          "kind": "money",
+          "value": 110776.48
+        },
+        {
+          "claim": "C9",
+          "item": "Distribution Expense (5020)",
+          "kind": "money",
+          "value": 179306.14
+        },
+        {
+          "claim": "C10",
+          "item": "Marketing Expense (5030)",
+          "kind": "money",
+          "value": 52904.96
+        },
+        {
+          "claim": "C11",
+          "item": "Administrative Expenses (5040)",
+          "kind": "money",
+          "value": 49311.17
+        },
+        {
+          "claim": "C12",
+          "item": "Finance Costs (5900)",
+          "kind": "money",
+          "value": 1283.74
+        },
+        {
+          "claim": "C13",
+          "item": "Bad Debt Expense (5910)",
+          "kind": "money",
+          "value": 46544.43
+        },
+        {
+          "claim": "C14",
+          "item": "Depreciation Expense (5990)",
+          "kind": "money",
+          "value": 9895.53
+        },
+        {
+          "claim": "C15",
+          "item": "Payroll: salaries and benefits (5050, 6010, 6200)",
+          "kind": "money",
+          "value": 316479.95
+        },
+        {
+          "claim": "C16",
+          "item": "Total operating expenses (all expenses except Cost of Goods Sold)",
+          "kind": "money",
+          "value": 766502.4
+        },
+        {
+          "claim": "C17",
+          "item": "Operating result (gross margin minus operating expenses)",
+          "kind": "money",
+          "value": 698424.7
+        },
+        {
+          "claim": "C18",
+          "item": "Gross margin percent, channel E-Commerce",
+          "kind": "percent",
+          "value": 45.0
+        },
+        {
+          "claim": "C19",
+          "item": "Gross margin percent, channel Flagship Stores",
+          "kind": "percent",
+          "value": 40.1
+        },
+        {
+          "claim": "C20",
+          "item": "Gross margin percent, channel Regional Stores",
+          "kind": "percent",
+          "value": 40.1
+        },
+        {
+          "claim": "C21",
+          "item": "Gross margin percent, channel Wholesale",
+          "kind": "percent",
+          "value": 25.0
+        }
+      ],
+      "rule": "true verdict per claim: supported if the preparer's value matches the line item, else unsupported"
+    },
+    "C1-prepare@500": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Income: Retail Sales Revenue (4000)",
+          "kind": "money",
+          "value": 76105.78
+        },
+        {
+          "claim": "C2",
+          "item": "Income: E-Commerce Revenue (4010)",
+          "kind": "money",
+          "value": 97220.97
+        },
+        {
+          "claim": "C3",
+          "item": "Income: Wholesale Revenue (4020)",
+          "kind": "money",
+          "value": 93589.06
+        },
+        {
+          "claim": "C4",
+          "item": "Total income",
+          "kind": "money",
+          "value": 266915.81
+        },
+        {
+          "claim": "C5",
+          "item": "Cost of Goods Sold (5000)",
+          "kind": "money",
+          "value": 168072.3
+        },
+        {
+          "claim": "C6",
+          "item": "Gross margin",
+          "kind": "money",
+          "value": 98843.51
+        },
+        {
+          "claim": "C7",
+          "item": "Gross margin, percent of income",
+          "kind": "percent",
+          "value": 37.0
+        },
+        {
+          "claim": "C8",
+          "item": "Store Operating Expense (5010)",
+          "kind": "money",
+          "value": 8405.3
+        },
+        {
+          "claim": "C9",
+          "item": "Distribution Expense (5020)",
+          "kind": "money",
+          "value": 5345.5
+        },
+        {
+          "claim": "C10",
+          "item": "Marketing Expense (5030)",
+          "kind": "money",
+          "value": 342.58
+        },
+        {
+          "claim": "C11",
+          "item": "Administrative Expenses (5040)",
+          "kind": "money",
+          "value": 649.13
+        },
+        {
+          "claim": "C12",
+          "item": "Finance Costs (5900)",
+          "kind": "money",
+          "value": 1283.74
+        },
+        {
+          "claim": "C13",
+          "item": "Bad Debt Expense (5910)",
+          "kind": "money",
+          "value": 0.0
+        },
+        {
+          "claim": "C14",
+          "item": "Depreciation Expense (5990)",
+          "kind": "money",
+          "value": 6152.76
+        },
+        {
+          "claim": "C15",
+          "item": "Payroll: salaries and benefits (5050, 6010, 6200)",
+          "kind": "money",
+          "value": 62924.66
+        },
+        {
+          "claim": "C16",
+          "item": "Total operating expenses (all expenses except Cost of Goods Sold)",
+          "kind": "money",
+          "value": 85103.67
+        },
+        {
+          "claim": "C17",
+          "item": "Operating result (gross margin minus operating expenses)",
+          "kind": "money",
+          "value": 13739.84
+        },
+        {
+          "claim": "C18",
+          "item": "Gross margin percent, channel E-Commerce",
+          "kind": "percent",
+          "value": 45.2
+        },
+        {
+          "claim": "C19",
+          "item": "Gross margin percent, channel Flagship Stores",
+          "kind": "percent",
+          "value": 40.1
+        },
+        {
+          "claim": "C20",
+          "item": "Gross margin percent, channel Regional Stores",
+          "kind": "percent",
+          "value": 40.3
+        },
+        {
+          "claim": "C21",
+          "item": "Gross margin percent, channel Wholesale",
+          "kind": "percent",
+          "value": 26.0
+        }
+      ]
+    },
+    "C1-prepare@5000": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Income: Retail Sales Revenue (4000)",
+          "kind": "money",
+          "value": 1372758.11
+        },
+        {
+          "claim": "C2",
+          "item": "Income: E-Commerce Revenue (4010)",
+          "kind": "money",
+          "value": 1304010.04
+        },
+        {
+          "claim": "C3",
+          "item": "Income: Wholesale Revenue (4020)",
+          "kind": "money",
+          "value": 1309787.21
+        },
+        {
+          "claim": "C4",
+          "item": "Total income",
+          "kind": "money",
+          "value": 3986555.36
+        },
+        {
+          "claim": "C5",
+          "item": "Cost of Goods Sold (5000)",
+          "kind": "money",
+          "value": 2521628.26
+        },
+        {
+          "claim": "C6",
+          "item": "Gross margin",
+          "kind": "money",
+          "value": 1464927.1
+        },
+        {
+          "claim": "C7",
+          "item": "Gross margin, percent of income",
+          "kind": "percent",
+          "value": 36.7
+        },
+        {
+          "claim": "C8",
+          "item": "Store Operating Expense (5010)",
+          "kind": "money",
+          "value": 110776.48
+        },
+        {
+          "claim": "C9",
+          "item": "Distribution Expense (5020)",
+          "kind": "money",
+          "value": 179306.14
+        },
+        {
+          "claim": "C10",
+          "item": "Marketing Expense (5030)",
+          "kind": "money",
+          "value": 52904.96
+        },
+        {
+          "claim": "C11",
+          "item": "Administrative Expenses (5040)",
+          "kind": "money",
+          "value": 49311.17
+        },
+        {
+          "claim": "C12",
+          "item": "Finance Costs (5900)",
+          "kind": "money",
+          "value": 1283.74
+        },
+        {
+          "claim": "C13",
+          "item": "Bad Debt Expense (5910)",
+          "kind": "money",
+          "value": 46544.43
+        },
+        {
+          "claim": "C14",
+          "item": "Depreciation Expense (5990)",
+          "kind": "money",
+          "value": 9895.53
+        },
+        {
+          "claim": "C15",
+          "item": "Payroll: salaries and benefits (5050, 6010, 6200)",
+          "kind": "money",
+          "value": 316479.95
+        },
+        {
+          "claim": "C16",
+          "item": "Total operating expenses (all expenses except Cost of Goods Sold)",
+          "kind": "money",
+          "value": 766502.4
+        },
+        {
+          "claim": "C17",
+          "item": "Operating result (gross margin minus operating expenses)",
+          "kind": "money",
+          "value": 698424.7
+        },
+        {
+          "claim": "C18",
+          "item": "Gross margin percent, channel E-Commerce",
+          "kind": "percent",
+          "value": 45.0
+        },
+        {
+          "claim": "C19",
+          "item": "Gross margin percent, channel Flagship Stores",
+          "kind": "percent",
+          "value": 40.1
+        },
+        {
+          "claim": "C20",
+          "item": "Gross margin percent, channel Regional Stores",
+          "kind": "percent",
+          "value": 40.1
+        },
+        {
+          "claim": "C21",
+          "item": "Gross margin percent, channel Wholesale",
+          "kind": "percent",
+          "value": 25.0
+        }
+      ]
+    },
+    "C1-reaudit@500": {
+      "changed_claims": [
+        {
+          "after": 4652.35,
+          "before": 5345.5,
+          "changes": [
+            4,
+            6
+          ],
+          "claim": "C9",
+          "item": "Distribution Expense (5020)",
+          "journals": [
+            "EXP-00081-61UI",
+            "EXP-00020-19HO",
+            "APPMT-00020-59PW"
+          ]
+        },
+        {
+          "after": 84410.52,
+          "before": 85103.67,
+          "changes": [
+            4,
+            6
+          ],
+          "claim": "C16",
+          "item": "Total operating expenses (all expenses except Cost of Goods Sold)",
+          "journals": [
+            "EXP-00081-61UI",
+            "EXP-00020-19HO",
+            "APPMT-00020-59PW"
+          ]
+        },
+        {
+          "after": 14432.99,
+          "before": 13739.84,
+          "changes": [
+            4,
+            6
+          ],
+          "claim": "C17",
+          "item": "Operating result (gross margin minus operating expenses)",
+          "journals": [
+            "EXP-00081-61UI",
+            "EXP-00020-19HO",
+            "APPMT-00020-59PW"
+          ]
+        }
+      ],
+      "post_values": {
+        "line_items": [
+          {
+            "claim": "C1",
+            "item": "Income: Retail Sales Revenue (4000)",
+            "kind": "money",
+            "value": 76105.78
+          },
+          {
+            "claim": "C2",
+            "item": "Income: E-Commerce Revenue (4010)",
+            "kind": "money",
+            "value": 97220.97
+          },
+          {
+            "claim": "C3",
+            "item": "Income: Wholesale Revenue (4020)",
+            "kind": "money",
+            "value": 93589.06
+          },
+          {
+            "claim": "C4",
+            "item": "Total income",
+            "kind": "money",
+            "value": 266915.81
+          },
+          {
+            "claim": "C5",
+            "item": "Cost of Goods Sold (5000)",
+            "kind": "money",
+            "value": 168072.3
+          },
+          {
+            "claim": "C6",
+            "item": "Gross margin",
+            "kind": "money",
+            "value": 98843.51
+          },
+          {
+            "claim": "C7",
+            "item": "Gross margin, percent of income",
+            "kind": "percent",
+            "value": 37.0
+          },
+          {
+            "claim": "C8",
+            "item": "Store Operating Expense (5010)",
+            "kind": "money",
+            "value": 8405.3
+          },
+          {
+            "claim": "C9",
+            "item": "Distribution Expense (5020)",
+            "kind": "money",
+            "value": 4652.35
+          },
+          {
+            "claim": "C10",
+            "item": "Marketing Expense (5030)",
+            "kind": "money",
+            "value": 342.58
+          },
+          {
+            "claim": "C11",
+            "item": "Administrative Expenses (5040)",
+            "kind": "money",
+            "value": 649.13
+          },
+          {
+            "claim": "C12",
+            "item": "Finance Costs (5900)",
+            "kind": "money",
+            "value": 1283.74
+          },
+          {
+            "claim": "C13",
+            "item": "Bad Debt Expense (5910)",
+            "kind": "money",
+            "value": 0.0
+          },
+          {
+            "claim": "C14",
+            "item": "Depreciation Expense (5990)",
+            "kind": "money",
+            "value": 6152.76
+          },
+          {
+            "claim": "C15",
+            "item": "Payroll: salaries and benefits (5050, 6010, 6200)",
+            "kind": "money",
+            "value": 62924.66
+          },
+          {
+            "claim": "C16",
+            "item": "Total operating expenses (all expenses except Cost of Goods Sold)",
+            "kind": "money",
+            "value": 84410.52
+          },
+          {
+            "claim": "C17",
+            "item": "Operating result (gross margin minus operating expenses)",
+            "kind": "money",
+            "value": 14432.99
+          },
+          {
+            "claim": "C18",
+            "item": "Gross margin percent, channel E-Commerce",
+            "kind": "percent",
+            "value": 45.2
+          },
+          {
+            "claim": "C19",
+            "item": "Gross margin percent, channel Flagship Stores",
+            "kind": "percent",
+            "value": 40.1
+          },
+          {
+            "claim": "C20",
+            "item": "Gross margin percent, channel Regional Stores",
+            "kind": "percent",
+            "value": 40.3
+          },
+          {
+            "claim": "C21",
+            "item": "Gross margin percent, channel Wholesale",
+            "kind": "percent",
+            "value": 26.0
+          }
+        ],
+        "request": "Prepare an income statement for Q3 of the financial year (1 February to 30 April 2026) for the finance director. Show the line items below, each as a tagged claim, and a short commentary.",
+        "title": "Income statement for Q3 (1 February to 30 April 2026)"
+      },
+      "rule": "Claim wrong at baseline: unsupported. Correct and unchanged: supported. Correct and changed: evidence_changed, naming the changed journals (each claim's 'journals')."
+    },
+    "C1-reaudit@5000": {
+      "changed_claims": [
+        {
+          "after": 178228.94,
+          "before": 179306.14,
+          "changes": [
+            6
+          ],
+          "claim": "C9",
+          "item": "Distribution Expense (5020)",
+          "journals": [
+            "EXP-00258-84QZ",
+            "APPMT-00258-98AI"
+          ]
+        },
+        {
+          "after": 53382.21,
+          "before": 52904.96,
+          "changes": [
+            4
+          ],
+          "claim": "C10",
+          "item": "Marketing Expense (5030)",
+          "journals": [
+            "EXP-00143-81PZ"
+          ]
+        },
+        {
+          "after": 765902.45,
+          "before": 766502.4,
+          "changes": [
+            4,
+            6
+          ],
+          "claim": "C16",
+          "item": "Total operating expenses (all expenses except Cost of Goods Sold)",
+          "journals": [
+            "EXP-00143-81PZ",
+            "EXP-00258-84QZ",
+            "APPMT-00258-98AI"
+          ]
+        },
+        {
+          "after": 699024.65,
+          "before": 698424.7,
+          "changes": [
+            4,
+            6
+          ],
+          "claim": "C17",
+          "item": "Operating result (gross margin minus operating expenses)",
+          "journals": [
+            "EXP-00143-81PZ",
+            "EXP-00258-84QZ",
+            "APPMT-00258-98AI"
+          ]
+        }
+      ],
+      "post_values": {
+        "line_items": [
+          {
+            "claim": "C1",
+            "item": "Income: Retail Sales Revenue (4000)",
+            "kind": "money",
+            "value": 1372758.11
+          },
+          {
+            "claim": "C2",
+            "item": "Income: E-Commerce Revenue (4010)",
+            "kind": "money",
+            "value": 1304010.04
+          },
+          {
+            "claim": "C3",
+            "item": "Income: Wholesale Revenue (4020)",
+            "kind": "money",
+            "value": 1309787.21
+          },
+          {
+            "claim": "C4",
+            "item": "Total income",
+            "kind": "money",
+            "value": 3986555.36
+          },
+          {
+            "claim": "C5",
+            "item": "Cost of Goods Sold (5000)",
+            "kind": "money",
+            "value": 2521628.26
+          },
+          {
+            "claim": "C6",
+            "item": "Gross margin",
+            "kind": "money",
+            "value": 1464927.1
+          },
+          {
+            "claim": "C7",
+            "item": "Gross margin, percent of income",
+            "kind": "percent",
+            "value": 36.7
+          },
+          {
+            "claim": "C8",
+            "item": "Store Operating Expense (5010)",
+            "kind": "money",
+            "value": 110776.48
+          },
+          {
+            "claim": "C9",
+            "item": "Distribution Expense (5020)",
+            "kind": "money",
+            "value": 178228.94
+          },
+          {
+            "claim": "C10",
+            "item": "Marketing Expense (5030)",
+            "kind": "money",
+            "value": 53382.21
+          },
+          {
+            "claim": "C11",
+            "item": "Administrative Expenses (5040)",
+            "kind": "money",
+            "value": 49311.17
+          },
+          {
+            "claim": "C12",
+            "item": "Finance Costs (5900)",
+            "kind": "money",
+            "value": 1283.74
+          },
+          {
+            "claim": "C13",
+            "item": "Bad Debt Expense (5910)",
+            "kind": "money",
+            "value": 46544.43
+          },
+          {
+            "claim": "C14",
+            "item": "Depreciation Expense (5990)",
+            "kind": "money",
+            "value": 9895.53
+          },
+          {
+            "claim": "C15",
+            "item": "Payroll: salaries and benefits (5050, 6010, 6200)",
+            "kind": "money",
+            "value": 316479.95
+          },
+          {
+            "claim": "C16",
+            "item": "Total operating expenses (all expenses except Cost of Goods Sold)",
+            "kind": "money",
+            "value": 765902.45
+          },
+          {
+            "claim": "C17",
+            "item": "Operating result (gross margin minus operating expenses)",
+            "kind": "money",
+            "value": 699024.65
+          },
+          {
+            "claim": "C18",
+            "item": "Gross margin percent, channel E-Commerce",
+            "kind": "percent",
+            "value": 45.0
+          },
+          {
+            "claim": "C19",
+            "item": "Gross margin percent, channel Flagship Stores",
+            "kind": "percent",
+            "value": 40.1
+          },
+          {
+            "claim": "C20",
+            "item": "Gross margin percent, channel Regional Stores",
+            "kind": "percent",
+            "value": 40.1
+          },
+          {
+            "claim": "C21",
+            "item": "Gross margin percent, channel Wholesale",
+            "kind": "percent",
+            "value": 25.0
+          }
+        ],
+        "request": "Prepare an income statement for Q3 of the financial year (1 February to 30 April 2026) for the finance director. Show the line items below, each as a tagged claim, and a short commentary.",
+        "title": "Income statement for Q3 (1 February to 30 April 2026)"
+      },
+      "rule": "Claim wrong at baseline: unsupported. Correct and unchanged: supported. Correct and changed: evidence_changed, naming the changed journals (each claim's 'journals')."
+    },
+    "C2-audit@500": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Total receivables (account 1100, all lines)",
+          "kind": "money",
+          "value": 102194.99
+        },
+        {
+          "claim": "C2",
+          "item": "Ageing bucket 0-30 days",
+          "kind": "money",
+          "value": 68976.4
+        },
+        {
+          "claim": "C3",
+          "item": "Ageing bucket 31-60 days",
+          "kind": "money",
+          "value": 33218.59
+        },
+        {
+          "claim": "C4",
+          "item": "Ageing bucket 61-90 days",
+          "kind": "money",
+          "value": 0.0
+        },
+        {
+          "claim": "C5",
+          "item": "Ageing bucket over 90 days",
+          "kind": "money",
+          "value": 0.0
+        },
+        {
+          "claim": "C6",
+          "item": "Customer owing most, rank 1: name",
+          "kind": "name",
+          "value": "Renner and Sons"
+        },
+        {
+          "claim": "C7",
+          "item": "Customer owing most, rank 1: balance",
+          "kind": "money",
+          "value": 25000.0
+        },
+        {
+          "claim": "C8",
+          "item": "Customer owing most, rank 2: name",
+          "kind": "name",
+          "value": "Keebler Group"
+        },
+        {
+          "claim": "C9",
+          "item": "Customer owing most, rank 2: balance",
+          "kind": "money",
+          "value": 17460.0
+        },
+        {
+          "claim": "C10",
+          "item": "Customer owing most, rank 3: name",
+          "kind": "name",
+          "value": "Waelchi - Shanahan"
+        },
+        {
+          "claim": "C11",
+          "item": "Customer owing most, rank 3: balance",
+          "kind": "money",
+          "value": 14037.26
+        },
+        {
+          "claim": "C12",
+          "item": "Customer owing most, rank 4: name",
+          "kind": "name",
+          "value": "Larkin Trading"
+        },
+        {
+          "claim": "C13",
+          "item": "Customer owing most, rank 4: balance",
+          "kind": "money",
+          "value": 8741.46
+        },
+        {
+          "claim": "C14",
+          "item": "Customer owing most, rank 5: name",
+          "kind": "name",
+          "value": "Klein Retail"
+        },
+        {
+          "claim": "C15",
+          "item": "Customer owing most, rank 5: balance",
+          "kind": "money",
+          "value": 8134.93
+        },
+        {
+          "claim": "C16",
+          "item": "Days sales outstanding for May 2026 (receivables at 31 May / credit sales in May x 31)",
+          "kind": "days",
+          "value": 45.9
+        },
+        {
+          "claim": "C17",
+          "item": "Bad debts written off, 1 August 2025 to 31 May 2026",
+          "kind": "money",
+          "value": 0.0
+        },
+        {
+          "claim": "C18",
+          "item": "Bad debts written off as a percent of credit sales, same period",
+          "kind": "percent",
+          "value": 0.0
+        }
+      ],
+      "rule": "true verdict per claim: supported if the preparer's value matches the line item, else unsupported"
+    },
+    "C2-audit@5000": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Total receivables (account 1100, all lines)",
+          "kind": "money",
+          "value": 1161984.75
+        },
+        {
+          "claim": "C2",
+          "item": "Ageing bucket 0-30 days",
+          "kind": "money",
+          "value": 636458.86
+        },
+        {
+          "claim": "C3",
+          "item": "Ageing bucket 31-60 days",
+          "kind": "money",
+          "value": 500879.14
+        },
+        {
+          "claim": "C4",
+          "item": "Ageing bucket 61-90 days",
+          "kind": "money",
+          "value": 22648.95
+        },
+        {
+          "claim": "C5",
+          "item": "Ageing bucket over 90 days",
+          "kind": "money",
+          "value": 1997.8
+        },
+        {
+          "claim": "C6",
+          "item": "Customer owing most, rank 1: name",
+          "kind": "name",
+          "value": "Cruickshank, Kris and Mills"
+        },
+        {
+          "claim": "C7",
+          "item": "Customer owing most, rank 1: balance",
+          "kind": "money",
+          "value": 59049.59
+        },
+        {
+          "claim": "C8",
+          "item": "Customer owing most, rank 2: name",
+          "kind": "name",
+          "value": "Labadie and Sons"
+        },
+        {
+          "claim": "C9",
+          "item": "Customer owing most, rank 2: balance",
+          "kind": "money",
+          "value": 51102.08
+        },
+        {
+          "claim": "C10",
+          "item": "Customer owing most, rank 3: name",
+          "kind": "name",
+          "value": "Nicolas Group"
+        },
+        {
+          "claim": "C11",
+          "item": "Customer owing most, rank 3: balance",
+          "kind": "money",
+          "value": 49358.1
+        },
+        {
+          "claim": "C12",
+          "item": "Customer owing most, rank 4: name",
+          "kind": "name",
+          "value": "Keebler Stores"
+        },
+        {
+          "claim": "C13",
+          "item": "Customer owing most, rank 4: balance",
+          "kind": "money",
+          "value": 44542.2
+        },
+        {
+          "claim": "C14",
+          "item": "Customer owing most, rank 5: name",
+          "kind": "name",
+          "value": "Keebler Group"
+        },
+        {
+          "claim": "C15",
+          "item": "Customer owing most, rank 5: balance",
+          "kind": "money",
+          "value": 42186.9
+        },
+        {
+          "claim": "C16",
+          "item": "Days sales outstanding for May 2026 (receivables at 31 May / credit sales in May x 31)",
+          "kind": "days",
+          "value": 56.6
+        },
+        {
+          "claim": "C17",
+          "item": "Bad debts written off, 1 August 2025 to 31 May 2026",
+          "kind": "money",
+          "value": 110172.41
+        },
+        {
+          "claim": "C18",
+          "item": "Bad debts written off as a percent of credit sales, same period",
+          "kind": "percent",
+          "value": 1.8
+        }
+      ],
+      "rule": "true verdict per claim: supported if the preparer's value matches the line item, else unsupported"
+    },
+    "C2-planted-audit@5000": {
+      "planted_errors": [
+        {
+          "change": "multiply by a factor between 1.03 and 1.08",
+          "claim_item": "Ageing bucket 31-60 days",
+          "true_verdict": "unsupported"
+        },
+        {
+          "change": "swap the two names, keep the balances",
+          "claim_item": "Customer owing most, rank 1 and rank 2",
+          "true_verdict": "unsupported"
+        },
+        {
+          "change": "point its working-paper entry at other evidence that exists (another receipt id, query or step) and gives another value; the figure stays correct",
+          "claim_item": "Total receivables (account 1100, all lines)",
+          "true_verdict": "unsupported"
+        }
+      ]
+    },
+    "C2-prepare@500": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Total receivables (account 1100, all lines)",
+          "kind": "money",
+          "value": 102194.99
+        },
+        {
+          "claim": "C2",
+          "item": "Ageing bucket 0-30 days",
+          "kind": "money",
+          "value": 68976.4
+        },
+        {
+          "claim": "C3",
+          "item": "Ageing bucket 31-60 days",
+          "kind": "money",
+          "value": 33218.59
+        },
+        {
+          "claim": "C4",
+          "item": "Ageing bucket 61-90 days",
+          "kind": "money",
+          "value": 0.0
+        },
+        {
+          "claim": "C5",
+          "item": "Ageing bucket over 90 days",
+          "kind": "money",
+          "value": 0.0
+        },
+        {
+          "claim": "C6",
+          "item": "Customer owing most, rank 1: name",
+          "kind": "name",
+          "value": "Renner and Sons"
+        },
+        {
+          "claim": "C7",
+          "item": "Customer owing most, rank 1: balance",
+          "kind": "money",
+          "value": 25000.0
+        },
+        {
+          "claim": "C8",
+          "item": "Customer owing most, rank 2: name",
+          "kind": "name",
+          "value": "Keebler Group"
+        },
+        {
+          "claim": "C9",
+          "item": "Customer owing most, rank 2: balance",
+          "kind": "money",
+          "value": 17460.0
+        },
+        {
+          "claim": "C10",
+          "item": "Customer owing most, rank 3: name",
+          "kind": "name",
+          "value": "Waelchi - Shanahan"
+        },
+        {
+          "claim": "C11",
+          "item": "Customer owing most, rank 3: balance",
+          "kind": "money",
+          "value": 14037.26
+        },
+        {
+          "claim": "C12",
+          "item": "Customer owing most, rank 4: name",
+          "kind": "name",
+          "value": "Larkin Trading"
+        },
+        {
+          "claim": "C13",
+          "item": "Customer owing most, rank 4: balance",
+          "kind": "money",
+          "value": 8741.46
+        },
+        {
+          "claim": "C14",
+          "item": "Customer owing most, rank 5: name",
+          "kind": "name",
+          "value": "Klein Retail"
+        },
+        {
+          "claim": "C15",
+          "item": "Customer owing most, rank 5: balance",
+          "kind": "money",
+          "value": 8134.93
+        },
+        {
+          "claim": "C16",
+          "item": "Days sales outstanding for May 2026 (receivables at 31 May / credit sales in May x 31)",
+          "kind": "days",
+          "value": 45.9
+        },
+        {
+          "claim": "C17",
+          "item": "Bad debts written off, 1 August 2025 to 31 May 2026",
+          "kind": "money",
+          "value": 0.0
+        },
+        {
+          "claim": "C18",
+          "item": "Bad debts written off as a percent of credit sales, same period",
+          "kind": "percent",
+          "value": 0.0
+        }
+      ]
+    },
+    "C2-prepare@5000": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Total receivables (account 1100, all lines)",
+          "kind": "money",
+          "value": 1161984.75
+        },
+        {
+          "claim": "C2",
+          "item": "Ageing bucket 0-30 days",
+          "kind": "money",
+          "value": 636458.86
+        },
+        {
+          "claim": "C3",
+          "item": "Ageing bucket 31-60 days",
+          "kind": "money",
+          "value": 500879.14
+        },
+        {
+          "claim": "C4",
+          "item": "Ageing bucket 61-90 days",
+          "kind": "money",
+          "value": 22648.95
+        },
+        {
+          "claim": "C5",
+          "item": "Ageing bucket over 90 days",
+          "kind": "money",
+          "value": 1997.8
+        },
+        {
+          "claim": "C6",
+          "item": "Customer owing most, rank 1: name",
+          "kind": "name",
+          "value": "Cruickshank, Kris and Mills"
+        },
+        {
+          "claim": "C7",
+          "item": "Customer owing most, rank 1: balance",
+          "kind": "money",
+          "value": 59049.59
+        },
+        {
+          "claim": "C8",
+          "item": "Customer owing most, rank 2: name",
+          "kind": "name",
+          "value": "Labadie and Sons"
+        },
+        {
+          "claim": "C9",
+          "item": "Customer owing most, rank 2: balance",
+          "kind": "money",
+          "value": 51102.08
+        },
+        {
+          "claim": "C10",
+          "item": "Customer owing most, rank 3: name",
+          "kind": "name",
+          "value": "Nicolas Group"
+        },
+        {
+          "claim": "C11",
+          "item": "Customer owing most, rank 3: balance",
+          "kind": "money",
+          "value": 49358.1
+        },
+        {
+          "claim": "C12",
+          "item": "Customer owing most, rank 4: name",
+          "kind": "name",
+          "value": "Keebler Stores"
+        },
+        {
+          "claim": "C13",
+          "item": "Customer owing most, rank 4: balance",
+          "kind": "money",
+          "value": 44542.2
+        },
+        {
+          "claim": "C14",
+          "item": "Customer owing most, rank 5: name",
+          "kind": "name",
+          "value": "Keebler Group"
+        },
+        {
+          "claim": "C15",
+          "item": "Customer owing most, rank 5: balance",
+          "kind": "money",
+          "value": 42186.9
+        },
+        {
+          "claim": "C16",
+          "item": "Days sales outstanding for May 2026 (receivables at 31 May / credit sales in May x 31)",
+          "kind": "days",
+          "value": 56.6
+        },
+        {
+          "claim": "C17",
+          "item": "Bad debts written off, 1 August 2025 to 31 May 2026",
+          "kind": "money",
+          "value": 110172.41
+        },
+        {
+          "claim": "C18",
+          "item": "Bad debts written off as a percent of credit sales, same period",
+          "kind": "percent",
+          "value": 1.8
+        }
+      ]
+    },
+    "C2-reaudit@500": {
+      "changed_claims": [
+        {
+          "after": 101251.88,
+          "before": 102194.99,
+          "changes": [
+            1,
+            5
+          ],
+          "claim": "C1",
+          "item": "Total receivables (account 1100, all lines)",
+          "journals": [
+            "INC-00007-65SC",
+            "ARRCPT-00007-02IE",
+            "INC-00087-35US",
+            "ARRCPT-00087-52BL"
+          ]
+        },
+        {
+          "after": 68033.29,
+          "before": 68976.4,
+          "changes": [
+            1,
+            5
+          ],
+          "claim": "C2",
+          "item": "Ageing bucket 0-30 days",
+          "journals": [
+            "INC-00007-65SC",
+            "ARRCPT-00007-02IE",
+            "INC-00087-35US",
+            "ARRCPT-00087-52BL"
+          ]
+        },
+        {
+          "after": 46.1,
+          "before": 45.9,
+          "changes": [
+            5
+          ],
+          "claim": "C16",
+          "item": "Days sales outstanding for May 2026 (receivables at 31 May / credit sales in May x 31)",
+          "journals": [
+            "INC-00087-35US",
+            "ARRCPT-00087-52BL"
+          ]
+        }
+      ],
+      "post_values": {
+        "line_items": [
+          {
+            "claim": "C1",
+            "item": "Total receivables (account 1100, all lines)",
+            "kind": "money",
+            "value": 101251.88
+          },
+          {
+            "claim": "C2",
+            "item": "Ageing bucket 0-30 days",
+            "kind": "money",
+            "value": 68033.29
+          },
+          {
+            "claim": "C3",
+            "item": "Ageing bucket 31-60 days",
+            "kind": "money",
+            "value": 33218.59
+          },
+          {
+            "claim": "C4",
+            "item": "Ageing bucket 61-90 days",
+            "kind": "money",
+            "value": 0.0
+          },
+          {
+            "claim": "C5",
+            "item": "Ageing bucket over 90 days",
+            "kind": "money",
+            "value": 0.0
+          },
+          {
+            "claim": "C6",
+            "item": "Customer owing most, rank 1: name",
+            "kind": "name",
+            "value": "Renner and Sons"
+          },
+          {
+            "claim": "C7",
+            "item": "Customer owing most, rank 1: balance",
+            "kind": "money",
+            "value": 25000.0
+          },
+          {
+            "claim": "C8",
+            "item": "Customer owing most, rank 2: name",
+            "kind": "name",
+            "value": "Keebler Group"
+          },
+          {
+            "claim": "C9",
+            "item": "Customer owing most, rank 2: balance",
+            "kind": "money",
+            "value": 17460.0
+          },
+          {
+            "claim": "C10",
+            "item": "Customer owing most, rank 3: name",
+            "kind": "name",
+            "value": "Waelchi - Shanahan"
+          },
+          {
+            "claim": "C11",
+            "item": "Customer owing most, rank 3: balance",
+            "kind": "money",
+            "value": 14037.26
+          },
+          {
+            "claim": "C12",
+            "item": "Customer owing most, rank 4: name",
+            "kind": "name",
+            "value": "Larkin Trading"
+          },
+          {
+            "claim": "C13",
+            "item": "Customer owing most, rank 4: balance",
+            "kind": "money",
+            "value": 8741.46
+          },
+          {
+            "claim": "C14",
+            "item": "Customer owing most, rank 5: name",
+            "kind": "name",
+            "value": "Klein Retail"
+          },
+          {
+            "claim": "C15",
+            "item": "Customer owing most, rank 5: balance",
+            "kind": "money",
+            "value": 8134.93
+          },
+          {
+            "claim": "C16",
+            "item": "Days sales outstanding for May 2026 (receivables at 31 May / credit sales in May x 31)",
+            "kind": "days",
+            "value": 46.1
+          },
+          {
+            "claim": "C17",
+            "item": "Bad debts written off, 1 August 2025 to 31 May 2026",
+            "kind": "money",
+            "value": 0.0
+          },
+          {
+            "claim": "C18",
+            "item": "Bad debts written off as a percent of credit sales, same period",
+            "kind": "percent",
+            "value": 0.0
+          }
+        ],
+        "request": "Prepare a receivables report at 31 May 2026 for the credit controller. Show the line items below, each as a tagged claim, and a short commentary on collection risk.",
+        "title": "Receivables report at 31 May 2026"
+      },
+      "rule": "Claim wrong at baseline: unsupported. Correct and unchanged: supported. Correct and changed: evidence_changed, naming the changed journals (each claim's 'journals')."
+    },
+    "C2-reaudit@5000": {
+      "changed_claims": [
+        {
+          "after": 1161252.85,
+          "before": 1161984.75,
+          "changes": [
+            1,
+            5
+          ],
+          "claim": "C1",
+          "item": "Total receivables (account 1100, all lines)",
+          "journals": [
+            "INC-01400-93WE",
+            "ARRCPT-01400-05LN",
+            "INC-01901-02XH",
+            "ARRCPT-01901-48BG"
+          ]
+        },
+        {
+          "after": 635726.96,
+          "before": 636458.86,
+          "changes": [
+            1,
+            5
+          ],
+          "claim": "C2",
+          "item": "Ageing bucket 0-30 days",
+          "journals": [
+            "INC-01400-93WE",
+            "ARRCPT-01400-05LN",
+            "INC-01901-02XH",
+            "ARRCPT-01901-48BG"
+          ]
+        }
+      ],
+      "post_values": {
+        "line_items": [
+          {
+            "claim": "C1",
+            "item": "Total receivables (account 1100, all lines)",
+            "kind": "money",
+            "value": 1161252.85
+          },
+          {
+            "claim": "C2",
+            "item": "Ageing bucket 0-30 days",
+            "kind": "money",
+            "value": 635726.96
+          },
+          {
+            "claim": "C3",
+            "item": "Ageing bucket 31-60 days",
+            "kind": "money",
+            "value": 500879.14
+          },
+          {
+            "claim": "C4",
+            "item": "Ageing bucket 61-90 days",
+            "kind": "money",
+            "value": 22648.95
+          },
+          {
+            "claim": "C5",
+            "item": "Ageing bucket over 90 days",
+            "kind": "money",
+            "value": 1997.8
+          },
+          {
+            "claim": "C6",
+            "item": "Customer owing most, rank 1: name",
+            "kind": "name",
+            "value": "Cruickshank, Kris and Mills"
+          },
+          {
+            "claim": "C7",
+            "item": "Customer owing most, rank 1: balance",
+            "kind": "money",
+            "value": 59049.59
+          },
+          {
+            "claim": "C8",
+            "item": "Customer owing most, rank 2: name",
+            "kind": "name",
+            "value": "Labadie and Sons"
+          },
+          {
+            "claim": "C9",
+            "item": "Customer owing most, rank 2: balance",
+            "kind": "money",
+            "value": 51102.08
+          },
+          {
+            "claim": "C10",
+            "item": "Customer owing most, rank 3: name",
+            "kind": "name",
+            "value": "Nicolas Group"
+          },
+          {
+            "claim": "C11",
+            "item": "Customer owing most, rank 3: balance",
+            "kind": "money",
+            "value": 49358.1
+          },
+          {
+            "claim": "C12",
+            "item": "Customer owing most, rank 4: name",
+            "kind": "name",
+            "value": "Keebler Stores"
+          },
+          {
+            "claim": "C13",
+            "item": "Customer owing most, rank 4: balance",
+            "kind": "money",
+            "value": 44542.2
+          },
+          {
+            "claim": "C14",
+            "item": "Customer owing most, rank 5: name",
+            "kind": "name",
+            "value": "Keebler Group"
+          },
+          {
+            "claim": "C15",
+            "item": "Customer owing most, rank 5: balance",
+            "kind": "money",
+            "value": 42186.9
+          },
+          {
+            "claim": "C16",
+            "item": "Days sales outstanding for May 2026 (receivables at 31 May / credit sales in May x 31)",
+            "kind": "days",
+            "value": 56.6
+          },
+          {
+            "claim": "C17",
+            "item": "Bad debts written off, 1 August 2025 to 31 May 2026",
+            "kind": "money",
+            "value": 110172.41
+          },
+          {
+            "claim": "C18",
+            "item": "Bad debts written off as a percent of credit sales, same period",
+            "kind": "percent",
+            "value": 1.8
+          }
+        ],
+        "request": "Prepare a receivables report at 31 May 2026 for the credit controller. Show the line items below, each as a tagged claim, and a short commentary on collection risk.",
+        "title": "Receivables report at 31 May 2026"
+      },
+      "rule": "Claim wrong at baseline: unsupported. Correct and unchanged: supported. Correct and changed: evidence_changed, naming the changed journals (each claim's 'journals')."
+    },
+    "C3-audit@500": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Total owed to suppliers (account 2000 lines with a party)",
+          "kind": "money",
+          "value": 8934.04
+        },
+        {
+          "claim": "C2",
+          "item": "Supplier owed most, rank 1: name",
+          "kind": "name",
+          "value": "Bernier - Wintheiser"
+        },
+        {
+          "claim": "C3",
+          "item": "Supplier owed most, rank 1: balance",
+          "kind": "money",
+          "value": 2749.06
+        },
+        {
+          "claim": "C4",
+          "item": "Supplier owed most, rank 2: name",
+          "kind": "name",
+          "value": "Fadel - Torp"
+        },
+        {
+          "claim": "C5",
+          "item": "Supplier owed most, rank 2: balance",
+          "kind": "money",
+          "value": 1639.74
+        },
+        {
+          "claim": "C6",
+          "item": "Supplier owed most, rank 3: name",
+          "kind": "name",
+          "value": "Zemlak, Grimes and Gottlieb"
+        },
+        {
+          "claim": "C7",
+          "item": "Supplier owed most, rank 3: balance",
+          "kind": "money",
+          "value": 1220.05
+        },
+        {
+          "claim": "C8",
+          "item": "Supplier owed most, rank 4: name",
+          "kind": "name",
+          "value": "Ferry, Emard and Green"
+        },
+        {
+          "claim": "C9",
+          "item": "Supplier owed most, rank 4: balance",
+          "kind": "money",
+          "value": 1134.33
+        },
+        {
+          "claim": "C10",
+          "item": "Supplier owed most, rank 5: name",
+          "kind": "name",
+          "value": "Koepp and Sons"
+        },
+        {
+          "claim": "C11",
+          "item": "Supplier owed most, rank 5: balance",
+          "kind": "money",
+          "value": 784.02
+        },
+        {
+          "claim": "C12",
+          "item": "Tax and pension withheld (2500)",
+          "kind": "money",
+          "value": 4181.09
+        },
+        {
+          "claim": "C13",
+          "item": "Accrued benefits (2200)",
+          "kind": "money",
+          "value": 16873.33
+        },
+        {
+          "claim": "C14",
+          "item": "Payroll cost for Q3 (5050, 6010, 6200)",
+          "kind": "money",
+          "value": 62924.66
+        },
+        {
+          "claim": "C15",
+          "item": "Purchases of stock in Q3 (debits to 1150)",
+          "kind": "money",
+          "value": 28298.61
+        }
+      ],
+      "rule": "true verdict per claim: supported if the preparer's value matches the line item, else unsupported"
+    },
+    "C3-audit@5000": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Total owed to suppliers (account 2000 lines with a party)",
+          "kind": "money",
+          "value": 836346.08
+        },
+        {
+          "claim": "C2",
+          "item": "Supplier owed most, rank 1: name",
+          "kind": "name",
+          "value": "Quitzon, Keeling and Mayer"
+        },
+        {
+          "claim": "C3",
+          "item": "Supplier owed most, rank 1: balance",
+          "kind": "money",
+          "value": 220246.67
+        },
+        {
+          "claim": "C4",
+          "item": "Supplier owed most, rank 2: name",
+          "kind": "name",
+          "value": "Murray and Sons"
+        },
+        {
+          "claim": "C5",
+          "item": "Supplier owed most, rank 2: balance",
+          "kind": "money",
+          "value": 140403.37
+        },
+        {
+          "claim": "C6",
+          "item": "Supplier owed most, rank 3: name",
+          "kind": "name",
+          "value": "Reichert and Sons"
+        },
+        {
+          "claim": "C7",
+          "item": "Supplier owed most, rank 3: balance",
+          "kind": "money",
+          "value": 127641.37
+        },
+        {
+          "claim": "C8",
+          "item": "Supplier owed most, rank 4: name",
+          "kind": "name",
+          "value": "Lueilwitz, Hickle and Corwin"
+        },
+        {
+          "claim": "C9",
+          "item": "Supplier owed most, rank 4: balance",
+          "kind": "money",
+          "value": 101574.34
+        },
+        {
+          "claim": "C10",
+          "item": "Supplier owed most, rank 5: name",
+          "kind": "name",
+          "value": "Hickle Inc"
+        },
+        {
+          "claim": "C11",
+          "item": "Supplier owed most, rank 5: balance",
+          "kind": "money",
+          "value": 44001.29
+        },
+        {
+          "claim": "C12",
+          "item": "Tax and pension withheld (2500)",
+          "kind": "money",
+          "value": 21285.7
+        },
+        {
+          "claim": "C13",
+          "item": "Accrued benefits (2200)",
+          "kind": "money",
+          "value": 36346.57
+        },
+        {
+          "claim": "C14",
+          "item": "Payroll cost for Q3 (5050, 6010, 6200)",
+          "kind": "money",
+          "value": 316479.95
+        },
+        {
+          "claim": "C15",
+          "item": "Purchases of stock in Q3 (debits to 1150)",
+          "kind": "money",
+          "value": 2602147.65
+        }
+      ],
+      "rule": "true verdict per claim: supported if the preparer's value matches the line item, else unsupported"
+    },
+    "C3-prepare@500": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Total owed to suppliers (account 2000 lines with a party)",
+          "kind": "money",
+          "value": 8934.04
+        },
+        {
+          "claim": "C2",
+          "item": "Supplier owed most, rank 1: name",
+          "kind": "name",
+          "value": "Bernier - Wintheiser"
+        },
+        {
+          "claim": "C3",
+          "item": "Supplier owed most, rank 1: balance",
+          "kind": "money",
+          "value": 2749.06
+        },
+        {
+          "claim": "C4",
+          "item": "Supplier owed most, rank 2: name",
+          "kind": "name",
+          "value": "Fadel - Torp"
+        },
+        {
+          "claim": "C5",
+          "item": "Supplier owed most, rank 2: balance",
+          "kind": "money",
+          "value": 1639.74
+        },
+        {
+          "claim": "C6",
+          "item": "Supplier owed most, rank 3: name",
+          "kind": "name",
+          "value": "Zemlak, Grimes and Gottlieb"
+        },
+        {
+          "claim": "C7",
+          "item": "Supplier owed most, rank 3: balance",
+          "kind": "money",
+          "value": 1220.05
+        },
+        {
+          "claim": "C8",
+          "item": "Supplier owed most, rank 4: name",
+          "kind": "name",
+          "value": "Ferry, Emard and Green"
+        },
+        {
+          "claim": "C9",
+          "item": "Supplier owed most, rank 4: balance",
+          "kind": "money",
+          "value": 1134.33
+        },
+        {
+          "claim": "C10",
+          "item": "Supplier owed most, rank 5: name",
+          "kind": "name",
+          "value": "Koepp and Sons"
+        },
+        {
+          "claim": "C11",
+          "item": "Supplier owed most, rank 5: balance",
+          "kind": "money",
+          "value": 784.02
+        },
+        {
+          "claim": "C12",
+          "item": "Tax and pension withheld (2500)",
+          "kind": "money",
+          "value": 4181.09
+        },
+        {
+          "claim": "C13",
+          "item": "Accrued benefits (2200)",
+          "kind": "money",
+          "value": 16873.33
+        },
+        {
+          "claim": "C14",
+          "item": "Payroll cost for Q3 (5050, 6010, 6200)",
+          "kind": "money",
+          "value": 62924.66
+        },
+        {
+          "claim": "C15",
+          "item": "Purchases of stock in Q3 (debits to 1150)",
+          "kind": "money",
+          "value": 28298.61
+        }
+      ]
+    },
+    "C3-prepare@5000": {
+      "line_items": [
+        {
+          "claim": "C1",
+          "item": "Total owed to suppliers (account 2000 lines with a party)",
+          "kind": "money",
+          "value": 836346.08
+        },
+        {
+          "claim": "C2",
+          "item": "Supplier owed most, rank 1: name",
+          "kind": "name",
+          "value": "Quitzon, Keeling and Mayer"
+        },
+        {
+          "claim": "C3",
+          "item": "Supplier owed most, rank 1: balance",
+          "kind": "money",
+          "value": 220246.67
+        },
+        {
+          "claim": "C4",
+          "item": "Supplier owed most, rank 2: name",
+          "kind": "name",
+          "value": "Murray and Sons"
+        },
+        {
+          "claim": "C5",
+          "item": "Supplier owed most, rank 2: balance",
+          "kind": "money",
+          "value": 140403.37
+        },
+        {
+          "claim": "C6",
+          "item": "Supplier owed most, rank 3: name",
+          "kind": "name",
+          "value": "Reichert and Sons"
+        },
+        {
+          "claim": "C7",
+          "item": "Supplier owed most, rank 3: balance",
+          "kind": "money",
+          "value": 127641.37
+        },
+        {
+          "claim": "C8",
+          "item": "Supplier owed most, rank 4: name",
+          "kind": "name",
+          "value": "Lueilwitz, Hickle and Corwin"
+        },
+        {
+          "claim": "C9",
+          "item": "Supplier owed most, rank 4: balance",
+          "kind": "money",
+          "value": 101574.34
+        },
+        {
+          "claim": "C10",
+          "item": "Supplier owed most, rank 5: name",
+          "kind": "name",
+          "value": "Hickle Inc"
+        },
+        {
+          "claim": "C11",
+          "item": "Supplier owed most, rank 5: balance",
+          "kind": "money",
+          "value": 44001.29
+        },
+        {
+          "claim": "C12",
+          "item": "Tax and pension withheld (2500)",
+          "kind": "money",
+          "value": 21285.7
+        },
+        {
+          "claim": "C13",
+          "item": "Accrued benefits (2200)",
+          "kind": "money",
+          "value": 36346.57
+        },
+        {
+          "claim": "C14",
+          "item": "Payroll cost for Q3 (5050, 6010, 6200)",
+          "kind": "money",
+          "value": 316479.95
+        },
+        {
+          "claim": "C15",
+          "item": "Purchases of stock in Q3 (debits to 1150)",
+          "kind": "money",
+          "value": 2602147.65
+        }
+      ]
+    },
+    "C3-reaudit@500": {
+      "changed_claims": [
+        {
+          "after": 8150.02,
+          "before": 8934.04,
+          "changes": [
+            6
+          ],
+          "claim": "C1",
+          "item": "Total owed to suppliers (account 2000 lines with a party)",
+          "journals": [
+            "EXP-00020-19HO",
+            "APPMT-00020-59PW"
+          ]
+        },
+        {
+          "after": "Greenfelder, Berge and Rice",
+          "before": "Koepp and Sons",
+          "changes": [
+            6
+          ],
+          "claim": "C10",
+          "item": "Supplier owed most, rank 5: name",
+          "journals": [
+            "EXP-00020-19HO",
+            "APPMT-00020-59PW"
+          ]
+        },
+        {
+          "after": 649.13,
+          "before": 784.02,
+          "changes": [
+            6
+          ],
+          "claim": "C11",
+          "item": "Supplier owed most, rank 5: balance",
+          "journals": [
+            "EXP-00020-19HO",
+            "APPMT-00020-59PW"
+          ]
+        }
+      ],
+      "post_values": {
+        "line_items": [
+          {
+            "claim": "C1",
+            "item": "Total owed to suppliers (account 2000 lines with a party)",
+            "kind": "money",
+            "value": 8150.02
+          },
+          {
+            "claim": "C2",
+            "item": "Supplier owed most, rank 1: name",
+            "kind": "name",
+            "value": "Bernier - Wintheiser"
+          },
+          {
+            "claim": "C3",
+            "item": "Supplier owed most, rank 1: balance",
+            "kind": "money",
+            "value": 2749.06
+          },
+          {
+            "claim": "C4",
+            "item": "Supplier owed most, rank 2: name",
+            "kind": "name",
+            "value": "Fadel - Torp"
+          },
+          {
+            "claim": "C5",
+            "item": "Supplier owed most, rank 2: balance",
+            "kind": "money",
+            "value": 1639.74
+          },
+          {
+            "claim": "C6",
+            "item": "Supplier owed most, rank 3: name",
+            "kind": "name",
+            "value": "Zemlak, Grimes and Gottlieb"
+          },
+          {
+            "claim": "C7",
+            "item": "Supplier owed most, rank 3: balance",
+            "kind": "money",
+            "value": 1220.05
+          },
+          {
+            "claim": "C8",
+            "item": "Supplier owed most, rank 4: name",
+            "kind": "name",
+            "value": "Ferry, Emard and Green"
+          },
+          {
+            "claim": "C9",
+            "item": "Supplier owed most, rank 4: balance",
+            "kind": "money",
+            "value": 1134.33
+          },
+          {
+            "claim": "C10",
+            "item": "Supplier owed most, rank 5: name",
+            "kind": "name",
+            "value": "Greenfelder, Berge and Rice"
+          },
+          {
+            "claim": "C11",
+            "item": "Supplier owed most, rank 5: balance",
+            "kind": "money",
+            "value": 649.13
+          },
+          {
+            "claim": "C12",
+            "item": "Tax and pension withheld (2500)",
+            "kind": "money",
+            "value": 4181.09
+          },
+          {
+            "claim": "C13",
+            "item": "Accrued benefits (2200)",
+            "kind": "money",
+            "value": 16873.33
+          },
+          {
+            "claim": "C14",
+            "item": "Payroll cost for Q3 (5050, 6010, 6200)",
+            "kind": "money",
+            "value": 62924.66
+          },
+          {
+            "claim": "C15",
+            "item": "Purchases of stock in Q3 (debits to 1150)",
+            "kind": "money",
+            "value": 28298.61
+          }
+        ],
+        "request": "Prepare a note on amounts owed to suppliers and staff-related liabilities at 30 April 2026 for the year-end file. Show the line items below, each as a tagged claim.",
+        "title": "Payables and payroll liabilities note at 30 April 2026"
+      },
+      "rule": "Claim wrong at baseline: unsupported. Correct and unchanged: supported. Correct and changed: evidence_changed, naming the changed journals (each claim's 'journals')."
+    },
+    "C3-reaudit@5000": {
+      "changed_claims": [
+        {
+          "after": 835268.88,
+          "before": 836346.08,
+          "changes": [
+            6
+          ],
+          "claim": "C1",
+          "item": "Total owed to suppliers (account 2000 lines with a party)",
+          "journals": [
+            "EXP-00258-84QZ",
+            "APPMT-00258-98AI"
+          ]
+        }
+      ],
+      "post_values": {
+        "line_items": [
+          {
+            "claim": "C1",
+            "item": "Total owed to suppliers (account 2000 lines with a party)",
+            "kind": "money",
+            "value": 835268.88
+          },
+          {
+            "claim": "C2",
+            "item": "Supplier owed most, rank 1: name",
+            "kind": "name",
+            "value": "Quitzon, Keeling and Mayer"
+          },
+          {
+            "claim": "C3",
+            "item": "Supplier owed most, rank 1: balance",
+            "kind": "money",
+            "value": 220246.67
+          },
+          {
+            "claim": "C4",
+            "item": "Supplier owed most, rank 2: name",
+            "kind": "name",
+            "value": "Murray and Sons"
+          },
+          {
+            "claim": "C5",
+            "item": "Supplier owed most, rank 2: balance",
+            "kind": "money",
+            "value": 140403.37
+          },
+          {
+            "claim": "C6",
+            "item": "Supplier owed most, rank 3: name",
+            "kind": "name",
+            "value": "Reichert and Sons"
+          },
+          {
+            "claim": "C7",
+            "item": "Supplier owed most, rank 3: balance",
+            "kind": "money",
+            "value": 127641.37
+          },
+          {
+            "claim": "C8",
+            "item": "Supplier owed most, rank 4: name",
+            "kind": "name",
+            "value": "Lueilwitz, Hickle and Corwin"
+          },
+          {
+            "claim": "C9",
+            "item": "Supplier owed most, rank 4: balance",
+            "kind": "money",
+            "value": 101574.34
+          },
+          {
+            "claim": "C10",
+            "item": "Supplier owed most, rank 5: name",
+            "kind": "name",
+            "value": "Hickle Inc"
+          },
+          {
+            "claim": "C11",
+            "item": "Supplier owed most, rank 5: balance",
+            "kind": "money",
+            "value": 44001.29
+          },
+          {
+            "claim": "C12",
+            "item": "Tax and pension withheld (2500)",
+            "kind": "money",
+            "value": 21285.7
+          },
+          {
+            "claim": "C13",
+            "item": "Accrued benefits (2200)",
+            "kind": "money",
+            "value": 36346.57
+          },
+          {
+            "claim": "C14",
+            "item": "Payroll cost for Q3 (5050, 6010, 6200)",
+            "kind": "money",
+            "value": 316479.95
+          },
+          {
+            "claim": "C15",
+            "item": "Purchases of stock in Q3 (debits to 1150)",
+            "kind": "money",
+            "value": 2602147.65
+          }
+        ],
+        "request": "Prepare a note on amounts owed to suppliers and staff-related liabilities at 30 April 2026 for the year-end file. Show the line items below, each as a tagged claim.",
+        "title": "Payables and payroll liabilities note at 30 April 2026"
+      },
+      "rule": "Claim wrong at baseline: unsupported. Correct and unchanged: supported. Correct and changed: evidence_changed, naming the changed journals (each claim's 'journals')."
+    },
+    "D1.1@5000": {
+      "answer_obc": {
+        "journals": [
+          {
+            "action": "corrected",
+            "change": 4,
+            "journal": "EXP-00143-81PZ"
+          },
+          {
+            "action": "voided",
+            "change": 6,
+            "journal": "EXP-00258-84QZ"
+          }
+        ],
+        "when": "PublishedAt of version 2 in JournalVersions (the change-set apply time in the result log)"
+      },
+      "answer_plain_csv": {
+        "answer_status": "cannot_answer",
+        "reason": "The data holds only the current state: no versions, period records or publish records."
+      },
+      "params": {
+        "period": "April 2026"
+      }
+    },
+    "D1.2@5000": {
+      "answer_obc": {
+        "journals": [
+          {
+            "action": "voided",
+            "change": 6,
+            "journal": "APPMT-00258-98AI"
+          },
+          {
+            "action": "corrected",
+            "change": 1,
+            "journal": "ARRCPT-01400-05LN"
+          },
+          {
+            "action": "voided",
+            "change": 5,
+            "journal": "ARRCPT-01901-48BG"
+          },
+          {
+            "action": "corrected",
+            "change": 3,
+            "journal": "EXP-00426-67IS"
+          },
+          {
+            "action": "corrected",
+            "change": 2,
+            "journal": "INC-01019-59EL"
+          },
+          {
+            "action": "corrected",
+            "change": 1,
+            "journal": "INC-01400-93WE"
+          },
+          {
+            "action": "voided",
+            "change": 5,
+            "journal": "INC-01901-02XH"
+          }
+        ],
+        "when": "PublishedAt of version 2 in JournalVersions (the change-set apply time in the result log)"
+      },
+      "answer_plain_csv": {
+        "answer_status": "cannot_answer",
+        "reason": "The data holds only the current state: no versions, period records or publish records."
+      },
+      "params": {
+        "period": "Q4 (May to July 2026)"
+      }
+    },
+    "D2.1@5000": {
+      "answer_obc": {
+        "closed": true,
+        "reopened": 1
+      },
+      "answer_plain_csv": {
+        "answer_status": "cannot_answer",
+        "reason": "The data holds only the current state: no versions, period records or publish records."
+      },
+      "params": {
+        "month": "2026-04"
+      }
+    },
+    "D2.2@5000": {
+      "answer_obc": {
+        "closed": true,
+        "reopened": 0
+      },
+      "answer_plain_csv": {
+        "answer_status": "cannot_answer",
+        "reason": "The data holds only the current state: no versions, period records or publish records."
+      },
+      "params": {
+        "month": "2026-03"
+      }
+    },
+    "D2.3@5000": {
+      "answer_obc": {
+        "closed": false,
+        "reopened": 0
+      },
+      "answer_plain_csv": {
+        "answer_status": "cannot_answer",
+        "reason": "The data holds only the current state: no versions, period records or publish records."
+      },
+      "params": {
+        "month": "2026-05"
+      }
+    },
+    "D3.1@5000": {
+      "answer_obc": {
+        "complete": true,
+        "members_per_closed_month": {
+          "2025-08": {
+            "live": 273,
+            "members": 273,
+            "voided": 0
+          },
+          "2025-09": {
+            "live": 338,
+            "members": 338,
+            "voided": 0
+          },
+          "2025-10": {
+            "live": 405,
+            "members": 405,
+            "voided": 0
+          },
+          "2025-11": {
+            "live": 407,
+            "members": 407,
+            "voided": 0
+          },
+          "2025-12": {
+            "live": 396,
+            "members": 396,
+            "voided": 0
+          },
+          "2026-01": {
+            "live": 411,
+            "members": 411,
+            "voided": 0
+          },
+          "2026-02": {
+            "live": 473,
+            "members": 473,
+            "voided": 0
+          },
+          "2026-03": {
+            "live": 408,
+            "members": 408,
+            "voided": 0
+          },
+          "2026-04": {
+            "live": 456,
+            "members": 457,
+            "voided": 1
+          }
+        },
+        "note": "Members include voided journals (tombstones), as acc-period-close/1 requires."
+      },
+      "answer_plain_csv": {
+        "answer_status": "cannot_answer",
+        "reason": "The data holds only the current state: no versions, period records or publish records."
+      },
+      "params": {}
+    },
+    "D4.1@5000": {
+      "answer_obc": {
+        "published": "version 1 at the T1 publish, version 2 at the change-set apply time (JournalVersions.PublishedAt; the result log)",
+        "signed_by_org_wallet": true,
+        "versions": [
+          {
+            "n": 1,
+            "status": "published"
+          },
+          {
+            "n": 2,
+            "status": "corrected"
+          }
+        ]
+      },
+      "answer_plain_csv": {
+        "answer_status": "cannot_answer",
+        "reason": "The data holds only the current state: no versions, period records or publish records."
+      },
+      "note": "Asks for the publishing wallet, not a named approver: neither the v3 record nor FinAI holds the approver's name.",
+      "params": {
+        "journal": "INC-01400-93WE"
+      }
+    },
+    "D5.1@5000": {
+      "answer_obc": {
+        "at_first_close": 457,
+        "live_now": 456,
+        "note": "A void keeps the journal as a member (a tombstone), so the member count does not drop.",
+        "now": 457,
+        "voided_now": 1
+      },
+      "answer_plain_csv": {
+        "answer_status": "partial",
+        "live_now": 456,
+        "reason": "Can count the journals in the data now; cannot tell what the close listed or what was voided."
+      },
+      "params": {
+        "month": "2026-04"
+      }
+    },
+    "D6.1@5000": {
+      "answer_obc": {
+        "after": [
+          {
+            "account": "5030",
+            "credit": 0.0,
+            "date": "2026-04-22",
+            "debit": 4454.31,
+            "name": "Marketing Expense"
+          },
+          {
+            "account": "1000",
+            "credit": 4454.31,
+            "date": "2026-04-22",
+            "debit": 0.0,
+            "name": "Operating Bank"
+          }
+        ],
+        "before": [
+          {
+            "account": "5030",
+            "credit": 0.0,
+            "date": "2026-04-22",
+            "debit": 3977.06,
+            "name": "Marketing Expense"
+          },
+          {
+            "account": "1000",
+            "credit": 3977.06,
+            "date": "2026-04-22",
+            "debit": 0.0,
+            "name": "Operating Bank"
+          }
+        ],
+        "changed": "amounts raised by 12% (closed period, April reopened)"
+      },
+      "answer_plain_csv": {
+        "answer_status": "cannot_answer",
+        "reason": "The data holds only the current version of each journal."
+      },
+      "params": {
+        "change": 4,
+        "journal": "EXP-00143-81PZ"
+      }
+    },
+    "D6.2@5000": {
+      "answer_obc": {
+        "after": [
+          {
+            "account": "1000",
+            "credit": 0.0,
+            "date": "2026-06-30",
+            "debit": 6200.0,
+            "name": "Operating Bank"
+          },
+          {
+            "account": "4020",
+            "credit": 6200.0,
+            "date": "2026-06-30",
+            "debit": 0.0,
+            "name": "Wholesale Revenue"
+          },
+          {
+            "account": "5000",
+            "credit": 0.0,
+            "date": "2026-06-30",
+            "debit": 3719.09,
+            "name": "Cost of Goods Sold"
+          },
+          {
+            "account": "1150",
+            "credit": 3719.09,
+            "date": "2026-06-30",
+            "debit": 0.0,
+            "name": "Inventory"
+          }
+        ],
+        "before": [
+          {
+            "account": "1000",
+            "credit": 0.0,
+            "date": "2026-06-30",
+            "debit": 6200.0,
+            "name": "Operating Bank"
+          },
+          {
+            "account": "4000",
+            "credit": 6200.0,
+            "date": "2026-06-30",
+            "debit": 0.0,
+            "name": "Retail Sales Revenue"
+          },
+          {
+            "account": "5000",
+            "credit": 0.0,
+            "date": "2026-06-30",
+            "debit": 3719.09,
+            "name": "Cost of Goods Sold"
+          },
+          {
+            "account": "1150",
+            "credit": 3719.09,
+            "date": "2026-06-30",
+            "debit": 0.0,
+            "name": "Inventory"
+          }
+        ],
+        "changed": "income account 4000 Retail Sales Revenue to 4020 Wholesale Revenue"
+      },
+      "answer_plain_csv": {
+        "answer_status": "cannot_answer",
+        "reason": "The data holds only the current version of each journal."
+      },
+      "params": {
+        "change": 2,
+        "journal": "INC-01019-59EL"
+      }
+    },
+    "D6.3@5000": {
+      "answer_obc": {
+        "after": [
+          {
+            "account": "1150",
+            "credit": 0.0,
+            "date": "2026-07-29",
+            "debit": 17481.41,
+            "name": "Inventory"
+          },
+          {
+            "account": "2000",
+            "credit": 17481.41,
+            "date": "2026-07-29",
+            "debit": 0.0,
+            "name": "Accounts Payable"
+          }
+        ],
+        "before": [
+          {
+            "account": "1150",
+            "credit": 0.0,
+            "date": "2026-07-31",
+            "debit": 17481.41,
+            "name": "Inventory"
+          },
+          {
+            "account": "2000",
+            "credit": 17481.41,
+            "date": "2026-07-31",
+            "debit": 0.0,
+            "name": "Accounts Payable"
+          }
+        ],
+        "changed": "date moved two days earlier"
+      },
+      "answer_plain_csv": {
+        "answer_status": "cannot_answer",
+        "reason": "The data holds only the current version of each journal."
+      },
+      "params": {
+        "change": 3,
+        "journal": "EXP-00426-67IS"
+      }
+    }
+  }
+}

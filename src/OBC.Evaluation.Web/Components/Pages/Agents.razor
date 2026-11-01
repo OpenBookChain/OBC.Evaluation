@@ -1,0 +1,50 @@
+@page "/agents"
+@inject IConfiguration Config
+@inject IDbContextFactory<EvalDb> Dbs
+
+<PageTitle>Agent runner · OBC Evaluation</PageTitle>
+<h1>Agent runner</h1>
+
+<div class="panel">
+    <p>Agent models are run by <code>src/OBC.Evaluation.Runner</code>, not in the wizard. For each run it asks this app for the next one, starts a <b>fresh agent process</b> in an empty folder with only that setup's data source, and posts the reply back with its token use and time. The prompt is the same text the wizard shows, and the agent never sees the repo, the answer key or another run.</p>
+    <p>Don't let one agent conversation answer many questions: later answers would see earlier ones, which manual runs can't.</p>
+    <p>API: @if (string.IsNullOrWhiteSpace(Config["Evaluation:AgentApiKey"])) { <span class="badge bad">off</span> <span class="small">Set <code>Evaluation:AgentApiKey</code> (user secrets or an environment variable <code>Evaluation__AgentApiKey</code>) and restart.</span> } else { <span class="badge ok">on</span> }</p>
+</div>
+
+<h2>Agent models</h2>
+<div class="panel">
+    @if (agents.Count == 0)
+    {
+        <p class="muted">No model is in agent mode. Set a model's mode to agent on the <a href="models">Models</a> page.</p>
+    }
+    else
+    {
+        <table>
+            <thead><tr><th>Id</th><th>Name</th><th>Model version</th><th>Tool</th></tr></thead>
+            <tbody>@foreach (var m in agents) { <tr><td>@m.Id</td><td>@m.Name</td><td><code>@m.ModelVersion</code></td><td>@m.App</td></tr> }</tbody>
+        </table>
+    }
+</div>
+
+<h2>Run it</h2>
+<div class="panel">
+    <ol>
+        <li>Copy <code>runner.example.json</code> to <code>runner.json</code> (it is git-ignored) and set <code>model</code> to the id above, and the command for each setup.</li>
+        <li>Give each setup only its own data source: an MCP config with just the OBC server, just the plain Postgres server, or none for CSV (the runner copies the CSV into the run's folder).</li>
+        <li>Run the agent with a clean profile: no memory, no user instructions or skills of its own. For Claude Code, point <code>CLAUDE_CONFIG_DIR</code> at an empty folder you signed in from once.</li>
+        <li>Start with one run and check it on the <a href="runs">Runs</a> page:</li>
+    </ol>
+    <pre>$env:OBC_EVAL_API_KEY = "…"
+dotnet run --project src/OBC.Evaluation.Runner -- --config runner.json --max 1</pre>
+    <p class="small muted">An attempt with no result after @EvalService.StaleAgentAttempt.TotalHours hours is abandoned, and its run is offered again.</p>
+</div>
+
+@code {
+    private List<ModelProfile> agents = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await Dbs.CreateDbContextAsync();
+        agents = await db.Models.AsNoTracking().Where(m => m.Mode == Modes.Agent && m.Active).ToListAsync();
+    }
+}

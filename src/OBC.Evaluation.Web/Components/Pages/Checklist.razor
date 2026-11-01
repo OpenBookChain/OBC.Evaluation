@@ -1,0 +1,69 @@
+@page "/checklist"
+@inject EvalService Eval
+@inject IDbContextFactory<EvalDb> Dbs
+@inject DataFiles Data
+
+<PageTitle>Checklist · OBC Evaluation</PageTitle>
+<h1>Checklist</h1>
+<p class="muted">Each size goes through T1 to T8 in order. Runs of a phase unlock when the steps before it are ticked. Write down the evidence: what you saw and where it is saved.</p>
+
+@foreach (var size in Eval.Bundle.Checklist.Select(s => s.Size).Distinct().OrderBy(s => s))
+{
+    var dataset = Eval.Bundle.Datasets.First(d => d.Size == size);
+    <h2>@size.ToString("N0") journals</h2>
+    <div class="panel">
+        <div class="row small">
+            @foreach (var file in dataset.Files.Keys)
+            {
+                var match = Data.Matches(dataset, file);
+                <span>@file <span class="badge @(match == true ? "ok" : "bad")">@(match == true ? "matches bundle" : match == false ? "differs" : "missing")</span></span>
+            }
+        </div>
+        <span class="muted small">Files in @Data.PathOf(dataset, "")</span>
+    </div>
+    @foreach (var step in Eval.Bundle.Checklist.Where(s => s.Size == size))
+    {
+        var state = states.GetValueOrDefault(step.Id);
+        <div class="panel">
+            <div class="row">
+                <label class="inline"><input type="checkbox" checked="@(state?.Done == true)" @onchange="e => ToggleAsync(step.Id, (bool)e.Value!)" /> <b>@step.Step · @step.Title</b></label>
+                @if (state?.DoneAt != null) { <span class="muted small">done @state.DoneAt.Value.ToLocalTime().ToString("g")</span> }
+            </div>
+            <p class="small">@step.Details</p>
+            <label>Evidence
+                <textarea rows="2" value="@(evidence.GetValueOrDefault(step.Id) ?? state?.Evidence)" @onchange="e => evidence[step.Id] = e.Value?.ToString()"></textarea>
+            </label>
+            @if (evidence.ContainsKey(step.Id))
+            {
+                <button style="margin-top:0.4rem" @onclick="() => SaveEvidenceAsync(step.Id)">Save evidence</button>
+            }
+        </div>
+    }
+}
+
+@code {
+    private Dictionary<string, ChecklistState> states = new();
+    private readonly Dictionary<string, string?> evidence = new();
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        await using var db = await Dbs.CreateDbContextAsync();
+        states = await db.Checklist.AsNoTracking().ToDictionaryAsync(c => c.Id);
+    }
+
+    private async Task ToggleAsync(string id, bool done)
+    {
+        await Eval.SetStepAsync(id, done, evidence.GetValueOrDefault(id) ?? states.GetValueOrDefault(id)?.Evidence);
+        evidence.Remove(id);
+        await LoadAsync();
+    }
+
+    private async Task SaveEvidenceAsync(string id)
+    {
+        await Eval.SetStepAsync(id, states.GetValueOrDefault(id)?.Done == true, evidence[id]);
+        evidence.Remove(id);
+        await LoadAsync();
+    }
+}

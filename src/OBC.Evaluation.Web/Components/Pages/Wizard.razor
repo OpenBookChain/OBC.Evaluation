@@ -1,0 +1,280 @@
+@page "/run"
+@implements IDisposable
+@inject EvalService Eval
+@inject IDbContextFactory<EvalDb> Dbs
+@inject DataFiles Data
+@inject IJSRuntime JS
+
+<PageTitle>Run wizard · OBC Evaluation</PageTitle>
+<h1>Run wizard</h1>
+
+<div class="panel row">
+    <label>Model
+        <select @bind="ModelId" @bind:after="LoadAsync">
+            <option value="0">Choose a model…</option>
+            @foreach (var m in models)
+            {
+                <option value="@m.Id">@m.Name (@m.App)</option>
+            }
+        </select>
+    </label>
+    <label>Size
+        <select @bind="Size" @bind:after="LoadAsync">
+            <option value="0">Any</option>
+            @foreach (var s in Eval.Bundle.Datasets.Select(d => d.Size))
+            {
+                <option value="@s">@s.ToString("N0")</option>
+            }
+        </select>
+    </label>
+    <label>Setup
+        <select @bind="Setup" @bind:after="LoadAsync">
+            <option value="">Any</option>
+            @foreach (var s in Eval.Bundle.Setups)
+            {
+                <option value="@s">@SetupName(s)</option>
+            }
+        </select>
+    </label>
+    <span class="muted small">Filter by setup to keep one connector on while you work through its runs.</span>
+</div>
+
+@if (ModelId == 0)
+{
+    <p class="muted">Choose a manually run model. Agent models are run by the <a href="agents">agent runner</a>.</p>
+}
+else if (view == null)
+{
+    <div class="panel"><p>Nothing can run with these filters. The <a href="">dashboard</a> shows what is blocking the rest.</p></div>
+}
+else
+{
+    var task = view.Task;
+    var model = view.Run.Model;
+    <div class="panel">
+        <div class="row">
+            <span class="badge @Shown">@Shown</span>
+            <b>@task.Id</b>
+            <span class="muted">· @SetupName(view.Run.Setup) · @task.Size.ToString("N0") journals · @task.Phase@(view.Run.Repeat > 1 ? $" · repeat {view.Run.Repeat}" : "")</span>
+            <a class="small" href="runs/@view.Run.Id">Run details</a>
+        </div>
+        <p style="margin-bottom:0">@task.Title</p>
+    </div>
+
+    <ol class="steps">
+        <li>
+            <h3>Open a clean chat</h3>
+            <ul>
+                <li>A <b>new chat</b> in <b>@model.App</b> with <b>@model.ModelVersion</b>. Memory, chat history and web search off; no custom instructions.</li>
+                @if (view.Run.Setup == "csv")
+                {
+                    var dataset = Eval.Bundle.Datasets.First(d => d.Size == task.Size);
+                    var match = Data.Matches(dataset, task.DataFile);
+                    <li>No connectors. Attach <a href="data/@task.Size/@task.DataFile" target="_blank">@task.DataFile</a> (@task.Size.ToString("N0") journals)
+                        @if (match == true) { <span class="badge ok">SHA-256 matches the bundle</span> }
+                        else if (match == false) { <span class="badge bad">differs from the bundle: don't run</span> }
+                        else { <span class="badge bad">file not found</span> }
+                    </li>
+                }
+                else
+                {
+                    <li>Only the <b>@SetupName(view.Run.Setup)</b> connector on, signed in to the <b>@task.Size.ToString("N0")-journal</b> evaluation org@(task.Phase == "T7" ? " (after the change set)" : ""). No other connector.</li>
+                }
+            </ul>
+        </li>
+        <li>
+            <h3>Send the prompt</h3>
+            @if (attempt == null)
+            {
+                <p>Starting records the time and the exact text you will send.</p>
+                <button class="primary" @onclick="StartAsync">Start run</button>
+            }
+            else
+            {
+                <div class="row small muted">
+                    <span>Attempt @attempt.Number · started @attempt.StartedAt.ToLocalTime().ToString("t") · @Elapsed</span>
+                    <span>@attempt.Prompt.Length.ToString("N0") characters · sha256 <code>@attempt.PromptSha256[..12]</code> · skill @attempt.SkillName</span>
+                </div>
+                <textarea class="mono" rows="10" readonly>@attempt.Prompt</textarea>
+                <div class="row">
+                    <button class="primary" @onclick="CopyAsync">Copy prompt</button>
+                    @if (copied != null) { <span class="small @(copied == true ? "" : "muted")">@(copied == true ? "Copied. Paste it as the first message." : "Copy failed; select the text and copy it.")</span> }
+                </div>
+            }
+        </li>
+        <li>
+            <h3>Paste the final reply</h3>
+            @if (attempt != null && check == null)
+            {
+                <p class="small muted">Copy the model's final message exactly as shown, using the app's copy button.</p>
+                <textarea class="mono" rows="10" @bind="reply" @bind:event="oninput" placeholder="Paste the reply here"></textarea>
+                <div class="row" style="margin-top:0.5rem">
+                    <label>Model version shown in the app <input @bind="modelVersion" /></label>
+                    <label>Tool calls (if shown) <input type="number" min="0" style="width:7rem" @bind="toolCalls" /></label>
+                    <label style="flex:1">Notes <input @bind="notes" placeholder="Anything unusual: retries, errors, tool failures" /></label>
+                </div>
+                <div class="row" style="margin-top:0.75rem">
+                    <button class="primary" disabled="@string.IsNullOrWhiteSpace(reply)" @onclick="SaveAsync">Save reply</button>
+                    <button @onclick="() => abandoning = !abandoning">Abandon attempt…</button>
+                    <button @onclick="() => skipping = !skipping">Skip run…</button>
+                </div>
+                @if (abandoning)
+                {
+                    <div class="row" style="margin-top:0.5rem">
+                        <input style="flex:1" @bind="reason" @bind:event="oninput" placeholder="Why, e.g. the connector failed or the app errored" />
+                        <button class="danger" disabled="@string.IsNullOrWhiteSpace(reason)" @onclick="AbandonAsync">Abandon</button>
+                    </div>
+                }
+            }
+            else if (check != null)
+            {
+                <p><span class="badge @check.Status">@check.Status</span> Reply saved@(check.ReceiptIds.Count > 0 ? $" with {check.ReceiptIds.Count} receipt id(s)" : "").</p>
+                @if (check.Messages.Count > 0)
+                {
+                    <ul class="messages">@foreach (var m in check.Messages) { <li>@m</li> }</ul>
+                    <p class="small muted">If this came from a bad paste, retry the run. If the model really replied this way, keep it: it is a result.</p>
+                }
+                <div class="row">
+                    <button class="primary" @onclick="NextAsync">Next run</button>
+                    @if (check.Status != ReplyCheck.Valid)
+                    {
+                        <button @onclick="RetryAsync">Retry this run</button>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="muted small">Start the run first.</p>
+            }
+            @if (skipping && check == null)
+            {
+                <div class="row" style="margin-top:0.5rem">
+                    <input style="flex:1" @bind="reason" @bind:event="oninput" placeholder="Why this run is left out of the matrix" />
+                    <button class="danger" disabled="@string.IsNullOrWhiteSpace(reason)" @onclick="SkipAsync">Skip run</button>
+                </div>
+            }
+            @if (error != null) { <p class="badge bad">@error</p> }
+        </li>
+    </ol>
+}
+
+@code {
+    [SupplyParameterFromQuery(Name = "model")] public int ModelId { get; set; }
+    [SupplyParameterFromQuery(Name = "size")] public int Size { get; set; }
+    [SupplyParameterFromQuery(Name = "setup")] public string? Setup { get; set; }
+    [SupplyParameterFromQuery(Name = "run")] public int RunId { get; set; }
+
+    private List<ModelProfile> models = new();
+    private RunView? view;
+    private Attempt? attempt;
+    private ReplyCheck? check;
+    private string reply = "", modelVersion = "", notes = "", reason = "";
+    private int? toolCalls;
+    private bool? copied;
+    private bool abandoning, skipping;
+    private string? error;
+    private Timer? timer;
+
+    private string Elapsed => attempt == null ? "" : check != null ? "saved" : $"{(DateTime.UtcNow - attempt.StartedAt):hh\\:mm\\:ss} elapsed";
+
+    private RunState Shown => check != null ? RunState.Done : attempt != null ? RunState.InProgress : view!.State;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using (var db = await Dbs.CreateDbContextAsync())
+            models = await db.Models.Where(m => m.Active && m.Mode == Modes.Manual).OrderBy(m => m.Name).ToListAsync();
+        if (ModelId == 0 && models.Count == 1)
+            ModelId = models[0].Id;
+        await LoadAsync();
+        timer = new Timer(_ => InvokeAsync(StateHasChanged), null, 1000, 1000);
+    }
+
+    private async Task LoadAsync()
+    {
+        Reset();
+        if (ModelId == 0)
+            return;
+        if (RunId != 0)
+        {
+            var chosen = await Eval.ViewAsync(RunId);
+            RunId = 0;
+            if (chosen.Run.ModelId == ModelId && chosen.State is RunState.Ready or RunState.InProgress)
+            {
+                await Show(chosen);
+                return;
+            }
+        }
+        var next = await Eval.NextAsync(ModelId, Size == 0 ? null : Size, string.IsNullOrEmpty(Setup) ? null : Setup);
+        await Show(next);
+    }
+
+    private Task Show(RunView? next)
+    {
+        view = next;
+        attempt = next?.Run.Attempts.FirstOrDefault(a => a.Status == AttemptStatus.Open);
+        modelVersion = attempt?.ModelVersion ?? next?.Run.Model.ModelVersion ?? "";
+        return Task.CompletedTask;
+    }
+
+    private void Reset()
+    {
+        view = null; attempt = null; check = null; error = null; copied = null;
+        reply = notes = reason = ""; toolCalls = null; abandoning = skipping = false;
+    }
+
+    private async Task StartAsync() => await Guard(async () => attempt = await Eval.StartAsync(view!.Run.Id, Modes.Manual));
+
+    private async Task RetryAsync() => await Guard(async () =>
+    {
+        var runId = view!.Run.Id;
+        Reset();
+        view = await Eval.ViewAsync(runId);
+        attempt = await Eval.StartAsync(runId, Modes.Manual, retry: true);
+        modelVersion = attempt.ModelVersion;
+    });
+
+    private async Task CopyAsync() => copied = await JS.InvokeAsync<bool>("evalCopy", attempt!.Prompt);
+
+    private async Task SaveAsync() => await Guard(async () =>
+    {
+        check = await Eval.SubmitAsync(attempt!.Id, reply, a =>
+        {
+            a.ModelVersion = string.IsNullOrWhiteSpace(modelVersion) ? a.ModelVersion : modelVersion.Trim();
+            a.ToolCalls = toolCalls;
+            a.Notes = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim();
+        });
+    });
+
+    private async Task AbandonAsync() => await Guard(async () =>
+    {
+        await Eval.AbandonAsync(attempt!.Id, reason.Trim());
+        await LoadAsync();
+    });
+
+    private async Task SkipAsync() => await Guard(async () =>
+    {
+        if (attempt != null)
+            await Eval.AbandonAsync(attempt.Id, $"Run skipped: {reason.Trim()}");
+        await Eval.SkipAsync(view!.Run.Id, reason.Trim());
+        await LoadAsync();
+    });
+
+    private Task NextAsync() => LoadAsync();
+
+    private async Task Guard(Func<Task> action)
+    {
+        error = null;
+        try { await action(); }
+        catch (InvalidOperationException ex) { error = ex.Message; }
+    }
+
+    public static string SetupName(string setup) => setup switch
+    {
+        "obc" => "OBC MCP",
+        "plain" => "plain Postgres MCP",
+        "csv" => "CSV file",
+        _ => setup
+    };
+
+    public void Dispose() => timer?.Dispose();
+}

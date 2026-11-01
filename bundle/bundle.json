@@ -1,0 +1,1617 @@
+{
+  "schema": 1,
+  "name": "obc-evaluation-round-1",
+  "source": {
+    "repo": "OBC.SimulationDataGenerator",
+    "commit": "1b76c6a"
+  },
+  "setups": [
+    "obc",
+    "plain",
+    "csv"
+  ],
+  "datasets": [
+    {
+      "size": 500,
+      "folder": "retailer-500",
+      "files": {
+        "base.csv": "3b916f8b3a2b04c205c10b9b4dd587f6b1934fdadfed1b43ef3991d57135982d",
+        "post.csv": "fb8465db0ddfc0888b8c83a3a3d9adb74c8769d350a4eced6eced5eee754d708",
+        "changeset.zip": "8fe6e522f86673b875c9f8cb709d28728c5bb152229b0824e5e53c34c47c40f9",
+        "close.zip": "6a71e7ef4442be3d86ee00c04895d343bf7d655d4e91b44f157a528f970623c6"
+      }
+    },
+    {
+      "size": 5000,
+      "folder": "retailer-5000",
+      "files": {
+        "base.csv": "1b69b39b9f2364be458657713c27eba032dbf06bfd06bd07568d66bf7dc8e4c2",
+        "post.csv": "be31ebe2f91bdf0d04f96aed8b98fe536351dc3670e8699be8d78faaf12f4b10",
+        "changeset.zip": "654132f5a96fd0c17a01f2a1791761fdc3bca126aa0c1ba6c468b7fa2070be11",
+        "close.zip": "3f2de051d452c56c6a7cc17b30f0ef0363242b2c476c7474e89c0748a6dd7b8b"
+      }
+    }
+  ],
+  "skills": [
+    {
+      "name": "audit-csv",
+      "file": "skills/audit-csv.md",
+      "sha256": "43f7e45e1b896d89e371d3d4bc619eb195c72bdaea10970db5dfde9cd8d6b717"
+    },
+    {
+      "name": "audit-obc",
+      "file": "skills/audit-obc.md",
+      "sha256": "13c6be1afe3629acee21858fd051a2e2ff0f2c2ec0cf688506c25d66208815a4"
+    },
+    {
+      "name": "audit-plain",
+      "file": "skills/audit-plain.md",
+      "sha256": "df68ca9741ba4a2d0d4e4fbf34ae131ae59c2c8684ed75bb6c8a02ebe8ced67d"
+    },
+    {
+      "name": "financial-data-answering",
+      "file": "skills/financial-data-answering.md",
+      "sha256": "9c5cb736d94465f4a5c3a6d4538591d5db61332868e132677ea7b570cc10a39f"
+    },
+    {
+      "name": "prepare-csv",
+      "file": "skills/prepare-csv.md",
+      "sha256": "c00f11466483edacbf608843c96e9b0e7208254b6a65d72cc650eb78972dfe1e"
+    },
+    {
+      "name": "prepare-obc",
+      "file": "skills/prepare-obc.md",
+      "sha256": "2f56444149dce83c36a9862976511f33a87dd12bd461ea10598a10cc24307b4f"
+    },
+    {
+      "name": "prepare-plain",
+      "file": "skills/prepare-plain.md",
+      "sha256": "e56158918bd02dd3313d91a693a6aa29a25147a2e82d77f8034b7b86e510f061"
+    }
+  ],
+  "qaSkill": "financial-data-answering",
+  "tasks": [
+    {
+      "id": "B1.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B1",
+      "title": "B1.1: Which customers owed money at 30 November 2025, and how much? Count Accounts Receivable (a",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which customers owed money at 30 November 2025, and how much? Count Accounts Receivable (account 1100) lines that have a party (customer name). List the 10 largest balances and give the total owed by all customers.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B1.2@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B1",
+      "title": "B1.2: Which customers owed money at 31 January 2026, and how much? Count Accounts Receivable (ac",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which customers owed money at 31 January 2026, and how much? Count Accounts Receivable (account 1100) lines that have a party (customer name). List the 10 largest balances and give the total owed by all customers.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B2.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B2",
+      "title": "B2.1: Age the amount customers owed at 30 April 2026 into 0-30, 31-60, 61-90 and over 90 days fr",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Age the amount customers owed at 30 April 2026 into 0-30, 31-60, 61-90 and over 90 days from the invoice date. Count Accounts Receivable (account 1100) lines that have a party (customer name). Each receipt or write-off settles that customer's invoice of the same amount; if several invoices match, the oldest. Give the total in each bucket.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B2.2@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B2",
+      "title": "B2.2: Age the amount customers owed at 30 November 2025 into 0-30, 31-60, 61-90 and over 90 days",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Age the amount customers owed at 30 November 2025 into 0-30, 31-60, 61-90 and over 90 days from the invoice date. Count Accounts Receivable (account 1100) lines that have a party (customer name). Each receipt or write-off settles that customer's invoice of the same amount; if several invoices match, the oldest. Give the total in each bucket.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B3.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B3",
+      "title": "B3.1: What were days sales outstanding for Q2 (November 2025 to January 2026)? Use receivables a",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What were days sales outstanding for Q2 (November 2025 to January 2026)? Use receivables at the quarter end (account 1100, all lines) divided by credit sales in the quarter, times the number of days in the quarter (92). Credit sales are debits to account 1100 in journals that also credit an income account.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B3.2@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B3",
+      "title": "B3.2: What were days sales outstanding for Q4 (May 2026 to July 2026)? Use receivables at the qu",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What were days sales outstanding for Q4 (May 2026 to July 2026)? Use receivables at the quarter end (account 1100, all lines) divided by credit sales in the quarter, times the number of days in the quarter (92). Credit sales are debits to account 1100 in journals that also credit an income account.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B4.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B4",
+      "title": "B4.1: Which customers had receivables written off as bad debts in the whole year (01 August 2025",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which customers had receivables written off as bad debts in the whole year (01 August 2025 to 31 July 2026), and how much? Write-offs are credits to account 1100 in journals that debit Bad Debt Expense (account 5910). Also give total write-offs as a percentage of credit sales in the same period (debits to account 1100 in journals that also credit an income account).",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B5.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B5",
+      "title": "B5.1: Which suppliers were still owed money at 31 March 2026, and how much? Count Accounts Payab",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which suppliers were still owed money at 31 March 2026, and how much? Count Accounts Payable (account 2000) lines that have a party (supplier name), so net pay owed to staff is left out. List the 10 largest balances and give the total owed to all suppliers.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B5.2@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B5",
+      "title": "B5.2: Which suppliers were still owed money at 30 November 2025, and how much? Count Accounts Pa",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which suppliers were still owed money at 30 November 2025, and how much? Count Accounts Payable (account 2000) lines that have a party (supplier name), so net pay owed to staff is left out. List the 10 largest balances and give the total owed to all suppliers.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B6.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B6",
+      "title": "B6.1: What did the business owe for payroll taxes and benefits at 30 June 2026? Give tax and pen",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What did the business owe for payroll taxes and benefits at 30 June 2026? Give tax and pension withheld (account 2500) and accrued benefits (account 2200), and the total.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B6.2@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B6",
+      "title": "B6.2: What did the business owe for payroll taxes and benefits at 31 May 2026? Give tax and pens",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What did the business owe for payroll taxes and benefits at 31 May 2026? Give tax and pension withheld (account 2500) and accrued benefits (account 2200), and the total.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B7.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B7",
+      "title": "B7.1: What was the gross margin, in money and as a percentage of income, for each channel in Q4 ",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What was the gross margin, in money and as a percentage of income, for each channel in Q4 (May 2026 to July 2026)? Gross margin is income minus Cost of Goods Sold (account 5000). List the channels from highest to lowest margin in money.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B7.2@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B7",
+      "title": "B7.2: What was the gross margin, in money and as a percentage of income, for each channel in Q2 ",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What was the gross margin, in money and as a percentage of income, for each channel in Q2 (November 2025 to January 2026)? Gross margin is income minus Cost of Goods Sold (account 5000). List the channels from highest to lowest margin in money.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B8.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B8",
+      "title": "B8.1: What was the operating result (income minus expenses) for each financial quarter, and whic",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What was the operating result (income minus expenses) for each financial quarter, and which quarter was highest?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B9.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B9",
+      "title": "B9.1: Who were the top 5 customers by income in Q1 (August 2025 to October 2025)? Give each with",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Who were the top 5 customers by income in Q1 (August 2025 to October 2025)? Give each with a rank and their total.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B9.2@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B9",
+      "title": "B9.2: Who were the top 5 customers by income in Q4 (May 2026 to July 2026)? Give each with a ran",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Who were the top 5 customers by income in Q4 (May 2026 to July 2026)? Give each with a rank and their total.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B10.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B10",
+      "title": "B10.1: Which customers bought in fewer than 6 of the 12 calendar months of the financial year? Co",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which customers bought in fewer than 6 of the 12 calendar months of the financial year? Count only customers who bought at least once. List each with the number of months they bought in and their total income for the year, ordered by months (fewest first), then by total income (highest first).",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B10.2@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B10",
+      "title": "B10.2: Which customers bought in fewer than 8 of the 12 calendar months of the financial year? Co",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which customers bought in fewer than 8 of the 12 calendar months of the financial year? Count only customers who bought at least once. List each with the number of months they bought in and their total income for the year, ordered by months (fewest first), then by total income (highest first).",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B11.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B11",
+      "title": "B11.1: Which region's income grew most from Q1 (August 2025 to October 2025) to Q2 (November 2025",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which region's income grew most from Q1 (August 2025 to October 2025) to Q2 (November 2025 to January 2026), and by how much?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B11.2@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B11",
+      "title": "B11.2: Which region's income grew most from H1 (August 2025 to January 2026) to H2 (February 2026",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which region's income grew most from H1 (August 2025 to January 2026) to H2 (February 2026 to July 2026), and by how much?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B12.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B12",
+      "title": "B12.1: Why did Wholesale Revenue income fall from Q2 (November 2025 to January 2026) to Q3 (Febru",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Why did Wholesale Revenue income fall from Q2 (November 2025 to January 2026) to Q3 (February 2026 to April 2026)?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B12.2@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B12",
+      "title": "B12.2: Why did E-Commerce Revenue income fall from Q3 (February 2026 to April 2026) to Q4 (May 20",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Why did E-Commerce Revenue income fall from Q3 (February 2026 to April 2026) to Q4 (May 2026 to July 2026)?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B13.1@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B13",
+      "title": "B13.1: What was the sales budget for Q1 (August 2025 to October 2025), and how did actual sales c",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What was the sales budget for Q1 (August 2025 to October 2025), and how did actual sales compare?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B13.2@500",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 500,
+      "template": "B13",
+      "title": "B13.2: What was the sales budget for Q4 (May 2026 to July 2026), and how did actual sales compare",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What was the sales budget for Q4 (May 2026 to July 2026), and how did actual sales compare?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "C1-prepare@500",
+      "family": "C",
+      "kind": "prepare",
+      "phase": "T4",
+      "size": 500,
+      "template": "C1",
+      "title": "C1 preparer: Income statement for Q3 (1 February to 30 April 2026)",
+      "request": "Prepare an income statement for Q3 of the financial year (1 February to 30 April 2026) for the finance director. Show the line items below, each as a tagged claim, and a short commentary.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "C1-audit@500",
+      "family": "C",
+      "kind": "audit",
+      "phase": "T4",
+      "size": 500,
+      "template": "C1",
+      "title": "C1 auditor: Income statement for Q3 (1 February to 30 April 2026)",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "dependsOn": "C1-prepare@500",
+      "heldOut": false
+    },
+    {
+      "id": "C1-reaudit@500",
+      "family": "D",
+      "kind": "reaudit",
+      "phase": "T7",
+      "size": 500,
+      "template": "C1",
+      "title": "C1 re-audit after the change set: Income statement for Q3 (1 February to 30 April 2026)",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "dependsOn": "C1-prepare@500",
+      "heldOut": false
+    },
+    {
+      "id": "C2-prepare@500",
+      "family": "C",
+      "kind": "prepare",
+      "phase": "T4",
+      "size": 500,
+      "template": "C2",
+      "title": "C2 preparer: Receivables report at 31 May 2026",
+      "request": "Prepare a receivables report at 31 May 2026 for the credit controller. Show the line items below, each as a tagged claim, and a short commentary on collection risk.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "C2-audit@500",
+      "family": "C",
+      "kind": "audit",
+      "phase": "T4",
+      "size": 500,
+      "template": "C2",
+      "title": "C2 auditor: Receivables report at 31 May 2026",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "dependsOn": "C2-prepare@500",
+      "heldOut": false
+    },
+    {
+      "id": "C2-reaudit@500",
+      "family": "D",
+      "kind": "reaudit",
+      "phase": "T7",
+      "size": 500,
+      "template": "C2",
+      "title": "C2 re-audit after the change set: Receivables report at 31 May 2026",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "dependsOn": "C2-prepare@500",
+      "heldOut": false
+    },
+    {
+      "id": "C3-prepare@500",
+      "family": "C",
+      "kind": "prepare",
+      "phase": "T4",
+      "size": 500,
+      "template": "C3",
+      "title": "C3 preparer: Payables and payroll liabilities note at 30 April 2026",
+      "request": "Prepare a note on amounts owed to suppliers and staff-related liabilities at 30 April 2026 for the year-end file. Show the line items below, each as a tagged claim.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "C3-audit@500",
+      "family": "C",
+      "kind": "audit",
+      "phase": "T4",
+      "size": 500,
+      "template": "C3",
+      "title": "C3 auditor: Payables and payroll liabilities note at 30 April 2026",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "dependsOn": "C3-prepare@500",
+      "heldOut": false
+    },
+    {
+      "id": "C3-reaudit@500",
+      "family": "D",
+      "kind": "reaudit",
+      "phase": "T7",
+      "size": 500,
+      "template": "C3",
+      "title": "C3 re-audit after the change set: Payables and payroll liabilities note at 30 April 2026",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "dependsOn": "C3-prepare@500",
+      "heldOut": false
+    },
+    {
+      "id": "B1.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B1",
+      "title": "B1.1: Which customers owed money at 31 May 2026, and how much? Count Accounts Receivable (accoun",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which customers owed money at 31 May 2026, and how much? Count Accounts Receivable (account 1100) lines that have a party (customer name). List the 10 largest balances and give the total owed by all customers.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B1.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B1",
+      "title": "B1.2: Which customers owed money at 30 September 2025, and how much? Count Accounts Receivable (",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which customers owed money at 30 September 2025, and how much? Count Accounts Receivable (account 1100) lines that have a party (customer name). List the 10 largest balances and give the total owed by all customers.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B2.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B2",
+      "title": "B2.1: Age the amount customers owed at 31 December 2025 into 0-30, 31-60, 61-90 and over 90 days",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Age the amount customers owed at 31 December 2025 into 0-30, 31-60, 61-90 and over 90 days from the invoice date. Count Accounts Receivable (account 1100) lines that have a party (customer name). Each receipt or write-off settles that customer's invoice of the same amount; if several invoices match, the oldest. Give the total in each bucket.",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B2.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B2",
+      "title": "B2.2: Age the amount customers owed at 30 September 2025 into 0-30, 31-60, 61-90 and over 90 day",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Age the amount customers owed at 30 September 2025 into 0-30, 31-60, 61-90 and over 90 days from the invoice date. Count Accounts Receivable (account 1100) lines that have a party (customer name). Each receipt or write-off settles that customer's invoice of the same amount; if several invoices match, the oldest. Give the total in each bucket.",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B3.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B3",
+      "title": "B3.1: What were days sales outstanding for Q2 (November 2025 to January 2026)? Use receivables a",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What were days sales outstanding for Q2 (November 2025 to January 2026)? Use receivables at the quarter end (account 1100, all lines) divided by credit sales in the quarter, times the number of days in the quarter (92). Credit sales are debits to account 1100 in journals that also credit an income account.",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B3.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B3",
+      "title": "B3.2: What were days sales outstanding for Q1 (August 2025 to October 2025)? Use receivables at ",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What were days sales outstanding for Q1 (August 2025 to October 2025)? Use receivables at the quarter end (account 1100, all lines) divided by credit sales in the quarter, times the number of days in the quarter (92). Credit sales are debits to account 1100 in journals that also credit an income account.",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B4.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B4",
+      "title": "B4.1: Which customers had receivables written off as bad debts in Q4 (May 2026 to July 2026), an",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which customers had receivables written off as bad debts in Q4 (May 2026 to July 2026), and how much? Write-offs are credits to account 1100 in journals that debit Bad Debt Expense (account 5910). Also give total write-offs as a percentage of credit sales in the same period (debits to account 1100 in journals that also credit an income account).",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B4.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B4",
+      "title": "B4.2: Which customers had receivables written off as bad debts in Q3 (February 2026 to April 202",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which customers had receivables written off as bad debts in Q3 (February 2026 to April 2026), and how much? Write-offs are credits to account 1100 in journals that debit Bad Debt Expense (account 5910). Also give total write-offs as a percentage of credit sales in the same period (debits to account 1100 in journals that also credit an income account).",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B5.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B5",
+      "title": "B5.1: Which suppliers were still owed money at 30 November 2025, and how much? Count Accounts Pa",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which suppliers were still owed money at 30 November 2025, and how much? Count Accounts Payable (account 2000) lines that have a party (supplier name), so net pay owed to staff is left out. List the 10 largest balances and give the total owed to all suppliers.",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B5.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B5",
+      "title": "B5.2: Which suppliers were still owed money at 31 March 2026, and how much? Count Accounts Payab",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which suppliers were still owed money at 31 March 2026, and how much? Count Accounts Payable (account 2000) lines that have a party (supplier name), so net pay owed to staff is left out. List the 10 largest balances and give the total owed to all suppliers.",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B6.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B6",
+      "title": "B6.1: What did the business owe for payroll taxes and benefits at 31 July 2026? Give tax and pen",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What did the business owe for payroll taxes and benefits at 31 July 2026? Give tax and pension withheld (account 2500) and accrued benefits (account 2200), and the total.",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B6.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B6",
+      "title": "B6.2: What did the business owe for payroll taxes and benefits at 28 February 2026? Give tax and",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What did the business owe for payroll taxes and benefits at 28 February 2026? Give tax and pension withheld (account 2500) and accrued benefits (account 2200), and the total.",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B7.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B7",
+      "title": "B7.1: What was the gross margin, in money and as a percentage of income, for each channel in Q1 ",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What was the gross margin, in money and as a percentage of income, for each channel in Q1 (August 2025 to October 2025)? Gross margin is income minus Cost of Goods Sold (account 5000). List the channels from highest to lowest margin in money.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B7.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B7",
+      "title": "B7.2: What was the gross margin, in money and as a percentage of income, for each channel in Q3 ",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What was the gross margin, in money and as a percentage of income, for each channel in Q3 (February 2026 to April 2026)? Gross margin is income minus Cost of Goods Sold (account 5000). List the channels from highest to lowest margin in money.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B8.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B8",
+      "title": "B8.1: What was the operating result (income minus expenses) for each financial quarter, and whic",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What was the operating result (income minus expenses) for each financial quarter, and which quarter was highest?",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B9.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B9",
+      "title": "B9.1: Who were the top 5 customers by income in H1 (August 2025 to January 2026)? Give each with",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Who were the top 5 customers by income in H1 (August 2025 to January 2026)? Give each with a rank and their total.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B9.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B9",
+      "title": "B9.2: Who were the top 5 customers by income in Q4 (May 2026 to July 2026)? Give each with a ran",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Who were the top 5 customers by income in Q4 (May 2026 to July 2026)? Give each with a rank and their total.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B10.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B10",
+      "title": "B10.1: Which customers bought in fewer than 11 of the 12 calendar months of the financial year? C",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which customers bought in fewer than 11 of the 12 calendar months of the financial year? Count only customers who bought at least once. List each with the number of months they bought in and their total income for the year, ordered by months (fewest first), then by total income (highest first).",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B10.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B10",
+      "title": "B10.2: Which customers bought in fewer than 10 of the 12 calendar months of the financial year? C",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which customers bought in fewer than 10 of the 12 calendar months of the financial year? Count only customers who bought at least once. List each with the number of months they bought in and their total income for the year, ordered by months (fewest first), then by total income (highest first).",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B11.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B11",
+      "title": "B11.1: Which region's income grew most from Q1 (August 2025 to October 2025) to Q2 (November 2025",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which region's income grew most from Q1 (August 2025 to October 2025) to Q2 (November 2025 to January 2026), and by how much?",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B11.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B11",
+      "title": "B11.2: Which region's income grew most from H1 (August 2025 to January 2026) to H2 (February 2026",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Which region's income grew most from H1 (August 2025 to January 2026) to H2 (February 2026 to July 2026), and by how much?",
+      "setups": [
+        "obc",
+        "plain"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B12.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B12",
+      "title": "B12.1: Why did Wholesale Revenue income fall from Q1 (August 2025 to October 2025) to Q2 (Novembe",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Why did Wholesale Revenue income fall from Q1 (August 2025 to October 2025) to Q2 (November 2025 to January 2026)?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B12.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B12",
+      "title": "B12.2: Why did Wholesale Revenue income fall from Q2 (November 2025 to January 2026) to Q3 (Febru",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: Why did Wholesale Revenue income fall from Q2 (November 2025 to January 2026) to Q3 (February 2026 to April 2026)?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "B13.1@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B13",
+      "title": "B13.1: What was the sales budget for Q1 (August 2025 to October 2025), and how did actual sales c",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What was the sales budget for Q1 (August 2025 to October 2025), and how did actual sales compare?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "B13.2@5000",
+      "family": "B",
+      "kind": "qa",
+      "phase": "T4",
+      "size": 5000,
+      "template": "B13",
+      "title": "B13.2: What was the sales budget for Q4 (May 2026 to July 2026), and how did actual sales compare",
+      "request": "Definitions used in this question unless it says otherwise:\n- Income (sales) = credits minus debits on accounts whose code starts with 4. Expenses = debits minus credits on accounts whose code starts with 5 or 6. Gross margin = income minus Cost of Goods Sold (account 5000).\n- Dates are journal dates. Date ranges include both ends. A balance \"at\" a date includes every journal up to and including that date, including the opening-balance journal on the first day of the year.\n- The financial year runs from 01 August 2025 to 31 July 2026. Quarters are financial quarters: Q1 (August 2025 to October 2025); Q2 (November 2025 to January 2026); Q3 (February 2026 to April 2026); Q4 (May 2026 to July 2026).\n- Department = account code 2 name, channel = account code 3 name, initiative = account code 4 name, region = account code 5 name.\n- Party = the customer or supplier name (the CustomerName column).\n- Give money to 2 decimals, percentages to 1 decimal, days to 1 decimal. Ranked lists are highest first, ties broken alphabetically by name. Name parties by name, never by id.\n\nQuestion: What was the sales budget for Q4 (May 2026 to July 2026), and how did actual sales compare?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "C1-prepare@5000",
+      "family": "C",
+      "kind": "prepare",
+      "phase": "T4",
+      "size": 5000,
+      "template": "C1",
+      "title": "C1 preparer: Income statement for Q3 (1 February to 30 April 2026)",
+      "request": "Prepare an income statement for Q3 of the financial year (1 February to 30 April 2026) for the finance director. Show the line items below, each as a tagged claim, and a short commentary.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "C1-audit@5000",
+      "family": "C",
+      "kind": "audit",
+      "phase": "T4",
+      "size": 5000,
+      "template": "C1",
+      "title": "C1 auditor: Income statement for Q3 (1 February to 30 April 2026)",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "dependsOn": "C1-prepare@5000",
+      "heldOut": false
+    },
+    {
+      "id": "C1-reaudit@5000",
+      "family": "D",
+      "kind": "reaudit",
+      "phase": "T7",
+      "size": 5000,
+      "template": "C1",
+      "title": "C1 re-audit after the change set: Income statement for Q3 (1 February to 30 April 2026)",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "dependsOn": "C1-prepare@5000",
+      "heldOut": false
+    },
+    {
+      "id": "C2-prepare@5000",
+      "family": "C",
+      "kind": "prepare",
+      "phase": "T4",
+      "size": 5000,
+      "template": "C2",
+      "title": "C2 preparer: Receivables report at 31 May 2026",
+      "request": "Prepare a receivables report at 31 May 2026 for the credit controller. Show the line items below, each as a tagged claim, and a short commentary on collection risk.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "C2-audit@5000",
+      "family": "C",
+      "kind": "audit",
+      "phase": "T4",
+      "size": 5000,
+      "template": "C2",
+      "title": "C2 auditor: Receivables report at 31 May 2026",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "dependsOn": "C2-prepare@5000",
+      "heldOut": false
+    },
+    {
+      "id": "C2-reaudit@5000",
+      "family": "D",
+      "kind": "reaudit",
+      "phase": "T7",
+      "size": 5000,
+      "template": "C2",
+      "title": "C2 re-audit after the change set: Receivables report at 31 May 2026",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "dependsOn": "C2-prepare@5000",
+      "heldOut": false
+    },
+    {
+      "id": "C3-prepare@5000",
+      "family": "C",
+      "kind": "prepare",
+      "phase": "T4",
+      "size": 5000,
+      "template": "C3",
+      "title": "C3 preparer: Payables and payroll liabilities note at 30 April 2026",
+      "request": "Prepare a note on amounts owed to suppliers and staff-related liabilities at 30 April 2026 for the year-end file. Show the line items below, each as a tagged claim.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "C3-audit@5000",
+      "family": "C",
+      "kind": "audit",
+      "phase": "T4",
+      "size": 5000,
+      "template": "C3",
+      "title": "C3 auditor: Payables and payroll liabilities note at 30 April 2026",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "dependsOn": "C3-prepare@5000",
+      "heldOut": false
+    },
+    {
+      "id": "C3-reaudit@5000",
+      "family": "D",
+      "kind": "reaudit",
+      "phase": "T7",
+      "size": 5000,
+      "template": "C3",
+      "title": "C3 re-audit after the change set: Payables and payroll liabilities note at 30 April 2026",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "dependsOn": "C3-prepare@5000",
+      "heldOut": false
+    },
+    {
+      "id": "C2-planted-audit@5000",
+      "family": "C",
+      "kind": "planted-audit",
+      "phase": "T4",
+      "size": 5000,
+      "template": "C2",
+      "title": "C2 auditor on a copy with 3 planted errors",
+      "request": "Audit the report and working papers below.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "base.csv",
+      "dependsOn": "C2-prepare@5000",
+      "plantSpec": [
+        {
+          "claim_item": "Ageing bucket 31-60 days",
+          "change": "multiply by a factor between 1.03 and 1.08",
+          "true_verdict": "unsupported"
+        },
+        {
+          "claim_item": "Customer owing most, rank 1 and rank 2",
+          "change": "swap the two names, keep the balances",
+          "true_verdict": "unsupported"
+        },
+        {
+          "claim_item": "Total receivables (account 1100, all lines)",
+          "change": "point its working-paper entry at other evidence that exists (another receipt id, query or step) and gives another value; the figure stays correct",
+          "true_verdict": "unsupported"
+        }
+      ],
+      "heldOut": false
+    },
+    {
+      "id": "D1.1@5000",
+      "family": "D",
+      "kind": "qa",
+      "phase": "T7",
+      "size": 5000,
+      "template": "D1",
+      "title": "D1.1: Which journals dated in April 2026 were corrected or voided after they were first recorded",
+      "request": "Question: Which journals dated in April 2026 were corrected or voided after they were first recorded, and when?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "D1.2@5000",
+      "family": "D",
+      "kind": "qa",
+      "phase": "T7",
+      "size": 5000,
+      "template": "D1",
+      "title": "D1.2: Which journals dated in Q4 (1 May to 31 July 2026) were corrected or voided after they wer",
+      "request": "Question: Which journals dated in Q4 (1 May to 31 July 2026) were corrected or voided after they were first recorded, and when?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "D2.1@5000",
+      "family": "D",
+      "kind": "qa",
+      "phase": "T7",
+      "size": 5000,
+      "template": "D2",
+      "title": "D2.1: Is April 2026 closed? How many times has it been reopened since its first close?",
+      "request": "Question: Is April 2026 closed? How many times has it been reopened since its first close?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "D2.2@5000",
+      "family": "D",
+      "kind": "qa",
+      "phase": "T7",
+      "size": 5000,
+      "template": "D2",
+      "title": "D2.2: Is March 2026 closed? How many times has it been reopened since its first close?",
+      "request": "Question: Is March 2026 closed? How many times has it been reopened since its first close?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "D2.3@5000",
+      "family": "D",
+      "kind": "qa",
+      "phase": "T7",
+      "size": 5000,
+      "template": "D2",
+      "title": "D2.3: Is May 2026 closed? How many times has it been reopened since its first close?",
+      "request": "Question: Is May 2026 closed? How many times has it been reopened since its first close?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "D3.1@5000",
+      "family": "D",
+      "kind": "qa",
+      "phase": "T7",
+      "size": 5000,
+      "template": "D3",
+      "title": "D3.1: Is every closed period complete? Does each hold exactly the journals listed when it was la",
+      "request": "Question: Is every closed period complete? Does each hold exactly the journals listed when it was last closed?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "D4.1@5000",
+      "family": "D",
+      "kind": "qa",
+      "phase": "T7",
+      "size": 5000,
+      "template": "D4",
+      "title": "D4.1: How many versions of journal INC-01400-93WE have been published, when was each published, ",
+      "request": "Question: How many versions of journal INC-01400-93WE have been published, when was each published, and was each signed by the organization's wallet?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "D5.1@5000",
+      "family": "D",
+      "kind": "qa",
+      "phase": "T7",
+      "size": 5000,
+      "template": "D5",
+      "title": "D5.1: How many journals did April 2026 list when it was first closed? How many does it list now,",
+      "request": "Question: How many journals did April 2026 list when it was first closed? How many does it list now, and how many of those are voided?",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "D6.1@5000",
+      "family": "D",
+      "kind": "qa",
+      "phase": "T7",
+      "size": 5000,
+      "template": "D6",
+      "title": "D6.1: Journal EXP-00143-81PZ was corrected. What did it say before the correction? Give the date",
+      "request": "Question: Journal EXP-00143-81PZ was corrected. What did it say before the correction? Give the date, account and debit or credit of each line in the previous version, and say what changed.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "heldOut": false,
+      "dependsOn": null
+    },
+    {
+      "id": "D6.2@5000",
+      "family": "D",
+      "kind": "qa",
+      "phase": "T7",
+      "size": 5000,
+      "template": "D6",
+      "title": "D6.2: Journal INC-01019-59EL was corrected. What did it say before the correction? Give the date",
+      "request": "Question: Journal INC-01019-59EL was corrected. What did it say before the correction? Give the date, account and debit or credit of each line in the previous version, and say what changed.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "heldOut": true,
+      "dependsOn": null
+    },
+    {
+      "id": "D6.3@5000",
+      "family": "D",
+      "kind": "qa",
+      "phase": "T7",
+      "size": 5000,
+      "template": "D6",
+      "title": "D6.3: Journal EXP-00426-67IS was corrected. What did it say before the correction? Give the date",
+      "request": "Question: Journal EXP-00426-67IS was corrected. What did it say before the correction? Give the date, account and debit or credit of each line in the previous version, and say what changed.",
+      "setups": [
+        "obc",
+        "plain",
+        "csv"
+      ],
+      "dataFile": "post.csv",
+      "heldOut": true,
+      "dependsOn": null
+    }
+  ],
+  "checklist": [
+    {
+      "id": "T1@500",
+      "size": 500,
+      "step": "T1",
+      "title": "Load the base data",
+      "details": "Import base.csv into a new org (CSV import, process, approve, publish), sync FinAI, and load the same file into plain Postgres. Expect 500 journals and 1716 lines."
+    },
+    {
+      "id": "T2@500",
+      "size": 500,
+      "step": "T2",
+      "title": "Close August 2025 to April 2026",
+      "details": "Apply close.zip on the change-set page, then sync FinAI. Expect 9 closed periods, version 1 each; May to July open."
+    },
+    {
+      "id": "T3@500",
+      "size": 500,
+      "step": "T3",
+      "title": "Family A data check",
+      "details": "In OBC, plain Postgres and the CSV: 500 journals, 1716 lines, debits 4488970.27, income 1152392.60, receivables 144066.14, payables 160440.92; get_sync_status shows dataComplete. Record the values."
+    },
+    {
+      "id": "T4@500",
+      "size": 500,
+      "step": "T4",
+      "title": "Baseline runs",
+      "details": "Families B and C. Every run in the T4 matrix is saved before the change set."
+    },
+    {
+      "id": "T5@500",
+      "size": 500,
+      "step": "T5",
+      "title": "Apply the change set",
+      "details": "Apply changeset.zip with 'continue on errors', save the change-set result log, sync FinAI, and reload plain Postgres from post.csv. Step 7 must be refused."
+    },
+    {
+      "id": "T6@500",
+      "size": 500,
+      "step": "T6",
+      "title": "Family A data check after the change set",
+      "details": "497 live journals, 1710 lines, debits 4487566.00, income 1153027.09, 4 voided journals."
+    },
+    {
+      "id": "T7@500",
+      "size": 500,
+      "step": "T7",
+      "title": "Family D runs",
+      "details": "Re-audits of the T4 reports and the direct history questions."
+    },
+    {
+      "id": "T8@500",
+      "size": 500,
+      "step": "T8",
+      "title": "Score and export",
+      "details": "Unseal the answer key, score, and export the evidence."
+    },
+    {
+      "id": "T1@5000",
+      "size": 5000,
+      "step": "T1",
+      "title": "Load the base data",
+      "details": "Import base.csv into a new org (CSV import, process, approve, publish), sync FinAI, and load the same file into plain Postgres. Expect 5000 journals and 16044 lines."
+    },
+    {
+      "id": "T2@5000",
+      "size": 5000,
+      "step": "T2",
+      "title": "Close August 2025 to April 2026",
+      "details": "Apply close.zip on the change-set page, then sync FinAI. Expect 9 closed periods, version 1 each; May to July open."
+    },
+    {
+      "id": "T3@5000",
+      "size": 5000,
+      "step": "T3",
+      "title": "Family A data check",
+      "details": "In OBC, plain Postgres and the CSV: 5000 journals, 16044 lines, debits 51166034.20, income 15208201.38, receivables 1128966.84, payables 960440.86; get_sync_status shows dataComplete. Record the values."
+    },
+    {
+      "id": "T4@5000",
+      "size": 5000,
+      "step": "T4",
+      "title": "Baseline runs",
+      "details": "Families B and C. Every run in the T4 matrix is saved before the change set."
+    },
+    {
+      "id": "T5@5000",
+      "size": 5000,
+      "step": "T5",
+      "title": "Apply the change set",
+      "details": "Apply changeset.zip with 'continue on errors', save the change-set result log, sync FinAI, and reload plain Postgres from post.csv. Step 7 must be refused."
+    },
+    {
+      "id": "T6@5000",
+      "size": 5000,
+      "step": "T6",
+      "title": "Family A data check after the change set",
+      "details": "4997 live journals, 16038 lines, debits 51167637.13, income 15210661.79, 4 voided journals."
+    },
+    {
+      "id": "T7@5000",
+      "size": 5000,
+      "step": "T7",
+      "title": "Family D runs",
+      "details": "Re-audits of the T4 reports and the direct history questions."
+    },
+    {
+      "id": "T8@5000",
+      "size": 5000,
+      "step": "T8",
+      "title": "Score and export",
+      "details": "Unseal the answer key, score, and export the evidence."
+    }
+  ],
+  "answerKey": {
+    "file": "answer-key.json",
+    "sha256": "d1d818ccc3af7a9a8f6feb060de24bea9b6415c018e7e61a2b98c6cb2d989491"
+  }
+}

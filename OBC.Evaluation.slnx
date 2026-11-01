@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OBC.Evaluation.Core/OBC.Evaluation.Core.csproj" />
+    <Project Path="src/OBC.Evaluation.Runner/OBC.Evaluation.Runner.csproj" />
+    <Project Path="src/OBC.Evaluation.Web/OBC.Evaluation.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OBC.Evaluation.Tests/OBC.Evaluation.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,45 @@
+{
+  // Copy to runner.json (git-ignored). Set the API key in OBC_EVAL_API_KEY rather than here.
+  "api": "http://localhost:5234",
+  "model": 0,              // the model's id on the Models page; it must be in agent mode
+  "size": 500,             // optional: only runs of this size
+  "setup": null,           // optional: obc, plain or csv
+  "maxRuns": 0,            // 0 = until nothing is left
+  "timeoutMinutes": 30,
+  "dataRoot": "../OBC.SimulationDataGenerator/evaluation/data",
+  "workRoot": null,        // each run gets an empty folder here; default is the system temp folder
+  "keepWorkDirs": false,
+
+  // One command per setup. Each run starts a fresh process in its own empty folder, so the agent sees no repo,
+  // no answer key and no other run. {promptFile}, {prompt} and {workDir} are filled in per run.
+  // On Windows, give the full path of the executable (e.g. claude.exe), or use "cmd" with "/c" for a .cmd shim.
+  "setups": {
+    "obc": {
+      "command": "claude",
+      "args": [ "-p", "--output-format", "json", "--model", "claude-opus-5-5",
+                "--mcp-config", "C:/eval/mcp-obc.json", "--strict-mcp-config",
+                "--allowedTools", "mcp__obc" ],
+      "prompt": "stdin",
+      "output": "claude-json",
+      "env": { "CLAUDE_CONFIG_DIR": "C:/eval/claude-clean" }
+    },
+    "plain": {
+      "command": "claude",
+      "args": [ "-p", "--output-format", "json", "--model", "claude-opus-5-5",
+                "--mcp-config", "C:/eval/mcp-plain.json", "--strict-mcp-config",
+                "--allowedTools", "mcp__plain" ],
+      "prompt": "stdin",
+      "output": "claude-json",
+      "env": { "CLAUDE_CONFIG_DIR": "C:/eval/claude-clean" }
+    },
+    "csv": {
+      "command": "claude",
+      "args": [ "-p", "--output-format", "json", "--model", "claude-opus-5-5",
+                "--mcp-config", "C:/eval/mcp-none.json", "--strict-mcp-config",
+                "--allowedTools", "Read", "Bash(python:*)" ],
+      "prompt": "stdin",
+      "output": "claude-json",
+      "env": { "CLAUDE_CONFIG_DIR": "C:/eval/claude-clean" }
+    }
+  }
+}

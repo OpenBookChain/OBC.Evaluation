@@ -1,0 +1,138 @@
+@page "/runs/{Id:int}"
+@inject EvalService Eval
+
+<PageTitle>Run @Id · OBC Evaluation</PageTitle>
+
+@if (view == null)
+{
+    <p class="muted">Loading…</p>
+    return;
+}
+
+<h1>@view.Task.Id · @view.Run.Setup@(view.Run.Repeat > 1 ? $" · repeat {view.Run.Repeat}" : "")</h1>
+
+<div class="panel">
+    <div class="row">
+        <span class="badge @view.State">@view.State</span>
+        <span>@view.Run.Model.Name (@view.Run.Model.ModelVersion, @view.Run.Model.App, @view.Run.Model.Mode)</span>
+        <span class="muted">· @view.Task.Size.ToString("N0") journals · @view.Task.Phase · family @view.Task.Family · @view.Task.Kind</span>
+    </div>
+    <p>@view.Task.Title</p>
+    @if (view.BlockedBy != null) { <p class="muted">Blocked: @view.BlockedBy</p> }
+    @if (view.Run.Skipped) { <p class="muted">Skipped: @view.Run.SkipReason</p> }
+    <div class="row">
+        @if (view.Run.Model.Mode == Modes.Manual && view.State is RunState.Ready or RunState.InProgress)
+        {
+            <a class="button primary" href="run?model=@view.Run.ModelId&run=@view.Run.Id">Run it in the wizard</a>
+        }
+        @if (view.Run.Skipped)
+        {
+            <button @onclick="UnskipAsync">Put back in the matrix</button>
+        }
+        else if (view.State != RunState.Done)
+        {
+            <input @bind="reason" @bind:event="oninput" placeholder="Reason to skip" />
+            <button class="danger" disabled="@string.IsNullOrWhiteSpace(reason)" @onclick="SkipAsync">Skip run</button>
+        }
+        <button @onclick="RepeatAsync" title="Add another run of this task and setup, to measure variance">Add a repeat</button>
+    </div>
+</div>
+
+@if (view.Task.Kind == TaskKinds.PlantedAudit)
+{
+    <h2>Planted errors</h2>
+    <div class="panel">
+        <p>Plant these errors in a copy of the preparer's report and working papers. The same three line items in every setup.</p>
+        <pre>@view.Task.PlantSpec?.ToString()</pre>
+        @if (view.Run.PlantedSource != null)
+        {
+            <p><span class="badge ok">Planted copy saved</span> from attempt @view.Run.PlantedFromAttemptId · sha256 <code>@Hashing.Sha256(view.Run.PlantedSource)[..12]</code></p>
+            @if (!string.IsNullOrWhiteSpace(view.Run.PlantedNotes)) { <p class="small">@view.Run.PlantedNotes</p> }
+            <details><summary>Show the planted copy</summary><pre>@view.Run.PlantedSource</pre></details>
+        }
+        else if (preparer == null)
+        {
+            <p class="muted">Waiting for the preparer run (@view.Task.DependsOn, @view.Run.Setup).</p>
+        }
+        else
+        {
+            <p class="small muted">Edited from preparer attempt @preparer.Id. Change only the planted items, then save. It can't change once the audit has started.</p>
+            <textarea class="mono" rows="18" @bind="planted"></textarea>
+            <label>What you changed, item by item <textarea rows="3" @bind="plantedNotes"></textarea></label>
+            <button class="primary" disabled="@(planted == original)" @onclick="SavePlantedAsync">Save planted copy</button>
+        }
+    </div>
+}
+
+<h2>Attempts</h2>
+@if (view.Run.Attempts.Count == 0)
+{
+    <p class="muted">No attempts yet.</p>
+}
+@foreach (var a in view.Run.Attempts.OrderByDescending(a => a.Number))
+{
+    <div class="panel">
+        <div class="row">
+            <b>Attempt @a.Number</b>
+            <span class="badge @(a.Status == AttemptStatus.Submitted ? "ok" : a.Status == AttemptStatus.Open ? "warn" : "")">@a.Status</span>
+            @if (a.Validation != null) { <span class="badge @a.Validation">@a.Validation</span> }
+            <span class="muted small">@a.Mode · @a.ModelVersion · @a.App · started @a.StartedAt.ToLocalTime().ToString("g")@(a.DurationSeconds is double d ? $" · {TimeSpan.FromSeconds(d):hh\\:mm\\:ss}" : "")</span>
+        </div>
+        <div class="small muted">
+            skill @a.SkillName <code>@a.SkillSha256[..12]</code> · prompt <code>@a.PromptSha256[..12]</code>@if (a.ReplySha256 != null) { <span> · reply <code>@a.ReplySha256[..12]</code></span> }
+            @if (a.SourceAttemptId != null) { <span> · audits attempt @a.SourceAttemptId</span> }
+            @if (a.InputTokens != null) { <span> · tokens in @a.InputTokens out @a.OutputTokens cache @a.CacheReadTokens</span> }
+            @if (a.CostUsd != null) { <span> · $@a.CostUsd</span> }
+            @if (a.NumTurns != null) { <span> · @a.NumTurns turns</span> }
+            @if (a.ToolCalls != null) { <span> · @a.ToolCalls tool calls</span> }
+        </div>
+        @if (a.ValidationMessages != null) { <ul class="messages small">@foreach (var m in a.ValidationMessages.Split('\n')) { <li>@m</li> }</ul> }
+        @if (a.AbandonReason != null) { <p class="small">Abandoned: @a.AbandonReason</p> }
+        @if (a.Notes != null) { <p class="small">Notes: @a.Notes</p> }
+        @if (a.ReceiptIds != null) { <p class="small">Receipts: <code>@a.ReceiptIds.Replace("\n", ", ")</code></p> }
+        <details><summary>Prompt</summary><pre>@a.Prompt</pre></details>
+        @if (a.Reply != null) { <details open="@(a.Number == view.Run.Attempts.Count)"><summary>Reply</summary><pre>@a.Reply</pre></details> }
+        @if (a.AgentCommand != null) { <p class="small muted">Agent command: <code>@a.AgentCommand</code></p> }
+    </div>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private RunView? view;
+    private Attempt? preparer;
+    private string reason = "", planted = "", original = "", plantedNotes = "";
+
+    protected override async Task OnParametersSetAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        view = await Eval.ViewAsync(Id);
+        if (view.Task.Kind == TaskKinds.PlantedAudit && view.Run.PlantedSource == null)
+        {
+            preparer = await Eval.PreparerAttemptAsync(view.Run.ModelId, view.Task.DependsOn!, view.Run.Setup);
+            if (preparer?.Reply != null && planted == "")
+            {
+                try { planted = original = PromptBuilder.AuditSource(preparer.Reply); }
+                catch (InvalidOperationException ex) { planted = original = ex.Message; }
+            }
+        }
+    }
+
+    private async Task SkipAsync() { await Eval.SkipAsync(Id, reason.Trim()); await LoadAsync(); }
+
+    private async Task UnskipAsync() { await Eval.UnskipAsync(Id); await LoadAsync(); }
+
+    private async Task RepeatAsync()
+    {
+        var run = await Eval.AddRunAsync(view!.Run.ModelId, view.Task.Id, view.Run.Setup);
+        Id = run.Id;
+        await LoadAsync();
+    }
+
+    private async Task SavePlantedAsync()
+    {
+        await Eval.SavePlantedAsync(Id, planted, preparer!.Id, plantedNotes);
+        await LoadAsync();
+    }
+}
