@@ -12,7 +12,7 @@ namespace OBC.Evaluation.Web.Services;
 /// models, the checklist, every run and attempt with its exact prompt and reply, and the event log. Each file's
 /// SHA-256 is listed in manifest.json, so anyone can check nothing was edited after export.
 /// </summary>
-public sealed class ExportService(IDbContextFactory<EvalDb> dbs, Bundle bundle, TimeProvider clock)
+public sealed class ExportService(IDbContextFactory<EvalDb> dbs, Bundle bundle, TimeProvider clock, IConfiguration config)
 {
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web) { WriteIndented = true };
     private static readonly DateTime ZipTime = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -44,7 +44,7 @@ public sealed class ExportService(IDbContextFactory<EvalDb> dbs, Bundle bundle, 
         var runs = await db.Runs.Include(r => r.Attempts).OrderBy(r => r.Id).ToListAsync();
         AddJson("runs.json", runs.Select(r => new
         {
-            r.Id, r.ModelId, r.TaskId, r.Setup, r.Size, r.Phase, r.Repeat, r.Skipped, r.SkipReason,
+            r.Id, r.ModelId, r.TaskId, r.Setup, r.Size, r.Phase, r.Repeat, r.Skipped, r.SkipReason, r.CreatedAt,
             PlantedSourceSha256 = r.PlantedSource == null ? null : Hashing.Sha256(r.PlantedSource),
             r.PlantedFromAttemptId, r.PlantedNotes,
             Attempts = r.Attempts.OrderBy(a => a.Number).Select(a => $"attempts/{a.Id:D5}").ToList(),
@@ -76,6 +76,7 @@ public sealed class ExportService(IDbContextFactory<EvalDb> dbs, Bundle bundle, 
         var manifest = new
         {
             exportedAt = clock.GetUtcNow().UtcDateTime,
+            exportedBy = config["Evaluation:Operator"],
             bundle = new { bundle.Name, sha256 = bundle.Sha256, answerKeySha256 = bundle.AnswerKey.Sha256 },
             counts = new
             {

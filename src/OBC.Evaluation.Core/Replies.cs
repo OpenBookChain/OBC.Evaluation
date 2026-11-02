@@ -34,7 +34,7 @@ public static partial class Blocks
         return FencePattern().Replace(rest, "").Trim();
     }
 
-    [GeneratedRegex(@"<<<([A-Z ]+)>>>\s*\n(.*?)\n\s*<<<END \1>>>", RegexOptions.Singleline)]
+    [GeneratedRegex(@"<<<([A-Z ]+)>>>\s*(.*?)\s*<<<END \1>>>", RegexOptions.Singleline)]
     private static partial Regex BlockPattern();
 
     [GeneratedRegex(@"^\s*```[a-z]*\s*$", RegexOptions.Multiline)]

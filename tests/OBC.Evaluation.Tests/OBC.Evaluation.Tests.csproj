@@ -22,7 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\OBC.Evaluation.Core\OBC.Evaluation.Core.csproj" />
     <ProjectReference Include="..\..\src\OBC.Evaluation.Web\OBC.Evaluation.Web.csproj" />
-    <ProjectReference Include="..\..\src\OBC.Evaluation.Runner\OBC.Evaluation.Runner.csproj" />
   </ItemGroup>
 
 </Project>

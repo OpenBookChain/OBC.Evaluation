@@ -481,6 +481,9 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
-# Evaluation state and local runner settings
+# Evaluation state and local agent settings
 state/
-runner.json
+agents.json
+
+# local eval profiles and MCP configs
+eval/

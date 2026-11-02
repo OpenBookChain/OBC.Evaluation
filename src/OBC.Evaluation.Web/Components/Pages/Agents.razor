@@ -1,17 +1,19 @@
 @page "/agents"
-@inject IConfiguration Config
+@implements IDisposable
+@inject AgentRunService Runner
+@inject AgentSettings Settings
 @inject IDbContextFactory<EvalDb> Dbs
+@inject EvalService Eval
 
 <PageTitle>Agent runner · OBC Evaluation</PageTitle>
 <h1>Agent runner</h1>
 
 <div class="panel">
-    <p>Agent models are run by <code>src/OBC.Evaluation.Runner</code>, not in the wizard. For each run it asks this app for the next one, starts a <b>fresh agent process</b> in an empty folder with only that setup's data source, and posts the reply back with its token use and time. The prompt is the same text the wizard shows, and the agent never sees the repo, the answer key or another run.</p>
-    <p>Don't let one agent conversation answer many questions: later answers would see earlier ones, which manual runs can't.</p>
-    <p>API: @if (string.IsNullOrWhiteSpace(Config["Evaluation:AgentApiKey"])) { <span class="badge bad">off</span> <span class="small">Set <code>Evaluation:AgentApiKey</code> (user secrets or an environment variable <code>Evaluation__AgentApiKey</code>) and restart.</span> } else { <span class="badge ok">on</span> }</p>
+    <p>Agent models are run from here, not in the wizard. For each run the app starts a <b>fresh agent process</b> in an empty folder with only that setup's data source, gives it the same prompt the wizard shows, and saves the reply with its time and, where the tool reports them, tokens and cost.</p>
+    <p class="small muted">Each tool has its own eval profile: a config folder you signed in from once, holding only the sign-in and that setup's MCP server. The commands for each tool and setup are in <code>agents.json</code> (start from <code>agents.example.json</code>). A model's <b>App</b> on the Models page must match a tool name in that file.</p>
+    <p>Config: @if (File.Exists(Settings.ConfigPath)) { <span class="badge ok">agents.json found</span> } else { <span class="badge bad">missing</span> <span class="small">Copy <code>agents.example.json</code> to <code>agents.json</code> in the repo root.</span> }</p>
 </div>
 
-<h2>Agent models</h2>
 <div class="panel">
     @if (agents.Count == 0)
     {
@@ -19,32 +21,131 @@
     }
     else
     {
-        <table>
-            <thead><tr><th>Id</th><th>Name</th><th>Model version</th><th>Tool</th></tr></thead>
-            <tbody>@foreach (var m in agents) { <tr><td>@m.Id</td><td>@m.Name</td><td><code>@m.ModelVersion</code></td><td>@m.App</td></tr> }</tbody>
-        </table>
+        <div class="row">
+            <label>Model
+                <select @bind="modelId" disabled="@busy">
+                    @foreach (var m in agents) { <option value="@m.Id">@m.Name · @m.ModelVersion · @m.App</option> }
+                </select>
+            </label>
+            <label>Size
+                <select @bind="size" disabled="@busy">
+                    <option value="0">Any</option>
+                    @foreach (var s in Eval.Bundle.Datasets.Select(d => d.Size)) { <option value="@s">@s.ToString("N0")</option> }
+                </select>
+            </label>
+            <label>Setup
+                <select @bind="setup" disabled="@busy">
+                    <option value="">Any</option>
+                    @foreach (var s in Eval.Bundle.Setups) { <option value="@s">@Wizard.SetupName(s)</option> }
+                </select>
+            </label>
+            <label>Max runs (0 = all)
+                <input type="number" min="0" style="width:7rem" @bind="maxRuns" disabled="@busy" />
+            </label>
+            <label>Cost cap, USD (optional)
+                <input type="number" min="0" step="0.5" style="width:8rem" @bind="maxCost" disabled="@busy" />
+            </label>
+        </div>
+        <div class="row" style="margin-top:0.75rem">
+            <button class="primary" @onclick="StartAsync" disabled="@(busy || modelId == 0)">Start</button>
+            <button @onclick="Runner.Pause" disabled="@(status.State != AgentServiceState.Running)">Pause after this run</button>
+            <button class="danger" @onclick="Runner.Stop" disabled="@(!busy)">Stop now</button>
+            <button @onclick="PreflightAsync" disabled="@(busy || checking || modelId == 0)">@(checking ? "Checking…" : "Check setup")</button>
+        </div>
+        @if (error != null) { <p class="badge bad" style="margin-top:0.5rem">@error</p> }
     }
 </div>
 
-<h2>Run it</h2>
+@if (preflight != null)
+{
+    <h2>Setup check</h2>
+    <div class="panel">
+        <table>
+            <thead><tr><th>Setup</th><th>Result</th><th>Details</th><th>Seen by the agent</th></tr></thead>
+            <tbody>
+                @foreach (var r in preflight)
+                {
+                    <tr>
+                        <td>@Wizard.SetupName(r.Setup)</td>
+                        <td><span class="badge @(r.Ok ? "ok" : "bad")">@(r.Ok ? "ok" : "problem")</span> <span class="small muted">@r.Seconds.ToString("0")s</span></td>
+                        <td class="small">@r.Message</td>
+                        <td class="small">
+                            @if (r.Context is { } c)
+                            {
+                                <div>model: <code>@(c.Model ?? "not reported")</code></div>
+                                @if (c.McpServers.Count > 0) { <div>MCP servers: @string.Join(", ", c.McpServers)</div> }
+                                @if (c.DataToolCalls is { } calls) { <div>Data tool calls: @calls</div> }
+                                <div>skills: @(c.Skills.Count > 0 ? string.Join(", ", c.Skills) : "none")</div>
+                            }
+                            else { <span class="muted">not reported by this tool</span> }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p class="small muted">The check sends a one-word prompt through each setup's command. It proves the tool starts and is signed in; it can't prove the MCP tools return the right data. Do a 3-run trial before a full session.</p>
+    </div>
+}
+
+<h2>Session</h2>
 <div class="panel">
-    <ol>
-        <li>Copy <code>runner.example.json</code> to <code>runner.json</code> (it is git-ignored) and set <code>model</code> to the id above, and the command for each setup.</li>
-        <li>Give each setup only its own data source: an MCP config with just the OBC server, just the plain Postgres server, or none for CSV (the runner copies the CSV into the run's folder).</li>
-        <li>Run the agent with a clean profile: no memory, no user instructions or skills of its own. For Claude Code, point <code>CLAUDE_CONFIG_DIR</code> at an empty folder you signed in from once.</li>
-        <li>Start with one run and check it on the <a href="runs">Runs</a> page:</li>
-    </ol>
-    <pre>$env:OBC_EVAL_API_KEY = "…"
-dotnet run --project src/OBC.Evaluation.Runner -- --config runner.json --max 1</pre>
-    <p class="small muted">An attempt with no result after @EvalService.StaleAgentAttempt.TotalHours hours is abandoned, and its run is offered again.</p>
+    <div class="row">
+        <span class="badge @(status.State == AgentServiceState.Idle ? "" : "warn")">@status.State</span>
+        @if (status.Current != null) { <b>@status.Current</b> @if (Runner.Progress != null) { <span class="muted"> · @Runner.Progress</span> } }
+        <span class="muted small">@status.Done saved · @status.Failed failed@(status.CostUsd > 0 ? $" · ${status.CostUsd:0.####}" : "")@(status.StartedAt is { } t ? $" · started {t:t}" : "")</span>
+        <a class="small" href="runs">Runs</a>
+    </div>
+    @if (logLines.Count == 0) { <p class="muted small">Nothing yet.</p> }
+    else { <pre style="max-height:20rem">@string.Join("\n", logLines)</pre> }
+    <p class="small muted">After @MaxFailures failed runs in a row the session stops, and a run that fails to start or sign in is abandoned with its reason and offered again. An attempt with no result after @EvalService.StaleAgentAttempt.TotalHours hours (for example after the app was closed) is abandoned the same way.</p>
 </div>
 
 @code {
+    private static int MaxFailures => AgentRunService.MaxFailuresInARow;
+
     private List<ModelProfile> agents = new();
+    private AgentStatus status = null!;
+    private List<string> logLines = new();
+    private List<PreflightResult>? preflight;
+    private int modelId, size, maxRuns;
+    private string? setup;
+    private decimal? maxCost;
+    private bool checking;
+    private string? error;
+
+    private bool busy => status.State != AgentServiceState.Idle;
 
     protected override async Task OnInitializedAsync()
     {
         await using var db = await Dbs.CreateDbContextAsync();
-        agents = await db.Models.AsNoTracking().Where(m => m.Mode == Modes.Agent && m.Active).ToListAsync();
+        agents = await db.Models.AsNoTracking().Where(m => m.Mode == Modes.Agent && m.Active).OrderBy(m => m.Name).ToListAsync();
+        modelId = agents.FirstOrDefault()?.Id ?? 0;
+        Refresh();
+        Runner.Changed += OnChanged;
     }
+
+    private void Refresh()
+    {
+        status = Runner.Status;
+        logLines = Runner.Log.ToList();
+    }
+
+    private void OnChanged() => InvokeAsync(() => { Refresh(); StateHasChanged(); });
+
+    private async Task StartAsync()
+    {
+        error = await Runner.StartAsync(new AgentRunRequest(modelId, size == 0 ? null : size, string.IsNullOrEmpty(setup) ? null : setup, maxRuns, maxCost is > 0 ? maxCost : null));
+        Refresh();
+    }
+
+    private async Task PreflightAsync()
+    {
+        checking = true;
+        preflight = null;
+        StateHasChanged();
+        try { preflight = await Runner.PreflightAsync(modelId); }
+        finally { checking = false; }
+    }
+
+    public void Dispose() => Runner.Changed -= OnChanged;
 }

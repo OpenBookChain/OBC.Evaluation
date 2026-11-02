@@ -1,6 +1,5 @@
 using System.IO.Compression;
 using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -13,14 +12,39 @@ namespace OBC.Evaluation.Tests;
 
 public sealed class AppFactory : WebApplicationFactory<Program>
 {
-    public const string ApiKey = "test-key";
     private readonly string dbPath = Path.Combine(Path.GetTempPath(), "obc-eval-tests", $"{Guid.NewGuid():N}.db");
+    private readonly string agentsPath;
+
+    /// <summary>Answers for the fake agent: given the work folder, the reply it "produces".</summary>
+    public Func<string, AgentResult> Agent { get; set; } = _ => throw new InvalidOperationException("No fake agent set.");
+
+    public AppFactory()
+    {
+        agentsPath = Path.ChangeExtension(dbPath, ".agents.json");
+        Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+        File.WriteAllText(agentsPath, """{"agents": {"Test app": {"obc": {"command": "fake", "output": "text"}}}}""");
+    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("Evaluation:DatabasePath", dbPath);
-        builder.UseSetting("Evaluation:AgentApiKey", ApiKey);
+        builder.UseSetting("Evaluation:AgentsConfig", agentsPath);
         builder.UseEnvironment("Development");
+        builder.ConfigureServices(s => s.AddSingleton<IAgentLauncher>(new FakeLauncher(this)));
+    }
+
+    private sealed class FakeLauncher(AppFactory app) : IAgentLauncher
+    {
+        public Task<AgentResult> RunAsync(AgentCommand agent, string prompt, string workDir, string promptFile, TimeSpan timeout, CancellationToken cancel, Action<string>? onLine = null) =>
+            Task.FromResult(app.Agent(workDir));
+    }
+
+    public async Task<AgentStatus> RunSessionAsync(AgentRunRequest request)
+    {
+        var runner = Services.GetRequiredService<AgentRunService>();
+        Assert.Null(await runner.StartAsync(request));
+        await runner.Completion;
+        return runner.Status;
     }
 
     public async Task<T> WithEval<T>(Func<EvalService, Task<T>> action)
@@ -34,8 +58,8 @@ public sealed class AppFactory : WebApplicationFactory<Program>
 
 public class FlowTests : IClassFixture<AppFactory>
 {
-    private const string QaReply = """{"answer_status":"answered","answer_type":"number","final_answer":1.5,"unit":"GBP","method":"Summed.","assumptions":[],"data_warnings":[],"source_references":[],"confidence":"high"}""";
-    private const string PreparerReply = "<<<REPORT>>>\nIncome £1.50 [C1].\n<<<END REPORT>>>\n<<<WORKING PAPERS>>>\nWP-C1\n<<<END WORKING PAPERS>>>\n<<<CLAIMS JSON>>>\n{\"claims\":[]}\n<<<END CLAIMS JSON>>>";
+    internal const string QaReply ="""{"answer_status":"answered","answer_type":"number","final_answer":1.5,"unit":"GBP","method":"Summed.","assumptions":[],"data_warnings":[],"source_references":[],"confidence":"high"}""";
+    internal const string PreparerReply ="<<<REPORT>>>\nIncome £1.50 [C1].\n<<<END REPORT>>>\n<<<WORKING PAPERS>>>\nWP-C1\n<<<END WORKING PAPERS>>>\n<<<CLAIMS JSON>>>\n{\"claims\":[]}\n<<<END CLAIMS JSON>>>";
 
     private readonly AppFactory app;
 
@@ -126,42 +150,85 @@ public class FlowTests : IClassFixture<AppFactory>
         });
     }
 
-    [Fact]
-    public async Task The_agent_api_hands_out_runs_and_takes_back_replies_with_their_measures()
-    {
-        var client = app.CreateClient();
-        var agent = await AddModel(Modes.Agent);
-        var manual = await AddModel(Modes.Manual);
+    private static AgentResult Ok(AgentContext? context = null) =>
+        new(true, QaReply, null, 42.5, new AgentUsage(100, 20, 300, 40, 0.01m), 3, "fake-agent", "{}", context, 2);
 
-        var noKey = await client.PostAsync($"api/agent/next?model={agent.Id}", null);
-        Assert.True(noKey.StatusCode == HttpStatusCode.Unauthorized, await noKey.Content.ReadAsStringAsync());
-        client.DefaultRequestHeaders.Add(AgentApi.KeyHeader, AppFactory.ApiKey);
-        Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync($"api/agent/next?model={manual.Id}", null)).StatusCode);
+    [Fact]
+    public async Task An_agent_session_runs_ready_runs_in_fresh_folders_and_saves_their_measures()
+    {
+        var agent = await AddModel(Modes.Agent);
+        var folders = new List<string>();
+        app.Agent = workDir =>
+        {
+            Assert.Empty(Directory.GetFileSystemEntries(workDir));
+            folders.Add(workDir);
+            return Ok(new AgentContext("test-1", [], ["obc"], null));
+        };
 
         await TickAsync(500, "T1", "T2", "T3");
-        var response = await client.PostAsync($"api/agent/next?model={agent.Id}&size=500&setup=csv", null);
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var run = (await response.Content.ReadFromJsonAsync<AgentRun>())!;
-        Assert.Equal("csv", run.Setup);
-        Assert.Equal(new AgentDataFile("retailer-500", "base.csv", "3b916f8b3a2b04c205c10b9b4dd587f6b1934fdadfed1b43ef3991d57135982d"), run.DataFile);
+        var status = await app.RunSessionAsync(new AgentRunRequest(agent.Id, 500, "obc", 2, null));
 
-        // The run is taken: the next call gets the next one
-        var other = (await (await client.PostAsync($"api/agent/next?model={agent.Id}&size=500&setup=csv", null)).Content.ReadFromJsonAsync<AgentRun>())!;
-        Assert.NotEqual(run.RunId, other.RunId);
-        await client.PostAsJsonAsync($"api/agent/attempts/{other.AttemptId}/abandon", new AgentAbandon("test", "raw"));
-
-        var submit = await client.PostAsJsonAsync($"api/agent/attempts/{run.AttemptId}/submit",
-            new AgentSubmit(QaReply, 42.5, new AgentUsage(100, 20, 300, 40, 0.01m), 3, null, "fake-agent", "{}"));
-        var result = (await submit.Content.ReadFromJsonAsync<AgentSubmitResult>())!;
-        Assert.Equal(ReplyCheck.Valid, result.Status);
-
+        Assert.Equal((AgentServiceState.Idle, 2, 0, 0.02m), (status.State, status.Done, status.Failed, status.CostUsd));
+        Assert.Equal(2, folders.Distinct().Count());
         await app.WithEval(async e =>
         {
-            var saved = (await e.ViewAsync(run.RunId)).Latest!;
-            Assert.Equal((Modes.Agent, 42.5, 100L, 0.01m, 3), (saved.Mode, saved.DurationSeconds!.Value, saved.InputTokens!.Value, saved.CostUsd!.Value, saved.NumTurns!.Value));
-            var abandoned = await e.ViewAsync(other.RunId);
-            Assert.Equal(RunState.Ready, abandoned.State);
+            var views = (await e.ViewsAsync(agent.Id)).Where(v => v.Latest?.Status == AttemptStatus.Submitted).ToList();
+            Assert.Equal(2, views.Count);
+            var saved = views[0].Latest!;
+            Assert.Equal((Modes.Agent, 42.5, 100L, 0.01m, 3, 2), (saved.Mode, saved.DurationSeconds!.Value, saved.InputTokens!.Value, saved.CostUsd!.Value, saved.NumTurns!.Value, saved.ToolCalls!.Value));
+            Assert.Equal(ReplyCheck.Valid, saved.Validation);
+            Assert.Contains("Model reported: test-1.", saved.Notes);
+            Assert.Equal(Hashing.Sha256(saved.Prompt), saved.PromptSha256);
         });
+    }
+
+    [Fact]
+    public async Task A_run_whose_agent_loaded_a_skill_is_thrown_away_and_the_session_stops()
+    {
+        var agent = await AddModel(Modes.Agent);
+        await TickAsync(500, "T1", "T2", "T3");
+        app.Agent = _ => Ok(new AgentContext("test-1", ["caveman"], [], null));
+
+        var status = await app.RunSessionAsync(new AgentRunRequest(agent.Id, 500, "obc", 5, null));
+
+        Assert.Equal((0, 1), (status.Done, status.Failed));
+        await app.WithEval(async e =>
+            Assert.Contains((await e.ViewsAsync(agent.Id)).Select(v => v.Latest?.AbandonReason), r => r != null && r.Contains("caveman")));
+    }
+
+    [Fact]
+    public async Task A_session_stops_after_three_failures_in_a_row_and_abandons_each_attempt()
+    {
+        var agent = await AddModel(Modes.Agent);
+        await TickAsync(500, "T1", "T2", "T3");
+        app.Agent = _ => new AgentResult(false, null, "not signed in", 1, null, null, "fake-agent", "raw");
+
+        var status = await app.RunSessionAsync(new AgentRunRequest(agent.Id, 500, "obc", 0, null));
+
+        Assert.Equal((0, AgentRunService.MaxFailuresInARow), (status.Done, status.Failed));
+        // A failed run is offered again, so the same run holds all the abandoned attempts
+        await app.WithEval(async e =>
+        {
+            var run = (await e.ViewsAsync(agent.Id)).Single(v => v.Latest?.AbandonReason == "not signed in");
+            var attempts = (await e.ViewAsync(run.Run.Id)).Run.Attempts;
+            Assert.Equal(AgentRunService.MaxFailuresInARow, attempts.Count(a => a.Status == AttemptStatus.Abandoned && a.AbandonReason == "not signed in"));
+        });
+    }
+
+    [Fact]
+    public void One_command_serves_every_model_of_a_tool_through_the_model_placeholder()
+    {
+        var template = new AgentCommand { Command = "claude", Args = ["-p", "--model", "{model}"] };
+        var command = AgentRunService.ForModel(template, new ModelProfile { ModelVersion = "claude-sonnet-5-5" });
+        Assert.Equal(["-p", "--model", "claude-sonnet-5-5"], command.Args);
+    }
+
+    [Fact]
+    public async Task A_manual_model_cannot_start_an_agent_session()
+    {
+        var manual = await AddModel(Modes.Manual);
+        var runner = app.Services.GetRequiredService<AgentRunService>();
+        Assert.NotNull(await runner.StartAsync(new AgentRunRequest(manual.Id, null, null, 1, null)));
     }
 
     [Fact]
