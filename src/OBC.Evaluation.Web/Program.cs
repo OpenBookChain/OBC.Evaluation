@@ -20,6 +20,11 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddDbContextFactory<EvalDb>(o => o.UseSqlite($"Data Source={dbPath}"));
 builder.Services.AddScoped<EvalService>();
 builder.Services.AddScoped<ExportService>();
+builder.Services.AddScoped<ImportService>();
+builder.Services.AddSingleton(new AgentSettings(RepoPath("Evaluation:AgentsConfig", "agents.json")));
+builder.Services.AddSingleton<IAgentLauncher, AgentProcess>();
+builder.Services.AddSingleton<AgentRunService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<AgentRunService>());
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -39,16 +44,13 @@ using (var scope = app.Services.CreateScope())
 
 if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-// API callers get their status codes as they are, not the not-found page
-app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"),
-    branch => branch.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true));
+app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.MapAgentApi();
 app.MapGet("/export.zip", async (ExportService export, TimeProvider clock) =>
     Results.File(await export.ExportAsync(), "application/zip", $"obc-evaluation-evidence-{clock.GetUtcNow():yyyyMMdd-HHmm}.zip"));
 app.MapGet("/data/{size:int}/{file}", (int size, string file, Bundle b, DataFiles data) =>

@@ -82,6 +82,10 @@
             skill @a.SkillName <code>@a.SkillSha256[..12]</code> · prompt <code>@a.PromptSha256[..12]</code>@if (a.ReplySha256 != null) { <span> · reply <code>@a.ReplySha256[..12]</code></span> }
             @if (a.SourceAttemptId != null) { <span> · audits attempt @a.SourceAttemptId</span> }
             @if (a.InputTokens != null) { <span> · tokens in @a.InputTokens out @a.OutputTokens cache @a.CacheReadTokens</span> }
+            @if (a.Reply != null && UsageReport.TryParse(view.Task.Kind, a.Reply) is { } said)
+            {
+                <span> · model says (unverified) in @(said.InputTokens?.ToString("N0") ?? "?") out @(said.OutputTokens?.ToString("N0") ?? "?") @(said.Seconds is double s ? $"{s:0.#}s" : "")</span>
+            }
             @if (a.CostUsd != null) { <span> · $@a.CostUsd</span> }
             @if (a.NumTurns != null) { <span> · @a.NumTurns turns</span> }
             @if (a.ToolCalls != null) { <span> · @a.ToolCalls tool calls</span> }

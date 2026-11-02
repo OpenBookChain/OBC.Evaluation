@@ -1,0 +1,85 @@
+{
+  // Copy to agents.json (git-ignored). Each tool has one command per setup. A model's "App" on the Models page
+  // must equal the tool name below. Every run starts a fresh process in its own empty folder, so the agent sees
+  // no repo, no answer key and no other run. {promptFile}, {prompt} and {workDir} are filled in per run.
+  //
+  // Each tool needs an EVAL PROFILE: a config folder you signed in from once, holding the sign-in and only that
+  // setup's MCP server, with no memory, skills, plugins or custom instructions. Set it with the "env" entries.
+  // "{model}" in args is replaced by the model's exact version from the Models page, so one entry serves every
+  // model of a tool (claude-opus-5-5, claude-sonnet-5-5, claude-haiku-5-5, …).
+  // On Windows, give the full path of the executable if the tool is a .cmd shim, or use "cmd" with "/c".
+  "timeoutMinutes": 30,
+  "workRoot": null,          // default: a folder in the system temp folder
+  "keepWorkDirs": false,
+
+  "agents": {
+    "Claude Code": {
+      "obc": {
+        "command": "claude",
+        "args": [ "-p", "--output-format", "json", "--model", "{model}",
+                  "--mcp-config", "C:/eval/mcp-obc.json", "--strict-mcp-config",
+                  "--allowedTools", "mcp__obc" ],
+        "prompt": "stdin",
+        "output": "claude-json",
+        "env": { "CLAUDE_CONFIG_DIR": "C:/eval/claude-profile" }
+      },
+      "plain": {
+        "command": "claude",
+        "args": [ "-p", "--output-format", "json", "--model", "{model}",
+                  "--mcp-config", "C:/eval/mcp-plain.json", "--strict-mcp-config",
+                  "--allowedTools", "mcp__plain" ],
+        "prompt": "stdin",
+        "output": "claude-json",
+        "env": { "CLAUDE_CONFIG_DIR": "C:/eval/claude-profile" }
+      },
+      "csv": {
+        "command": "claude",
+        "args": [ "-p", "--output-format", "json", "--model", "{model}",
+                  "--mcp-config", "C:/eval/mcp-none.json", "--strict-mcp-config",
+                  "--allowedTools", "Read", "Bash(python:*)" ],
+        "prompt": "stdin",
+        "output": "claude-json",
+        "env": { "CLAUDE_CONFIG_DIR": "C:/eval/claude-profile" }
+      }
+    },
+
+    // Copilot CLI: pin the model (never "auto"). Its output lists the skills and MCP servers it loaded, and the
+    // runner throws a run away if it loaded a skill not listed in "allowSkills". COPILOT_HOME moves its config,
+    // but personal skills in ~/.agents/skills are still found, so check the Setup check on the Agents page.
+    "Copilot CLI": {
+      "obc": {
+        "command": "copilot",
+        "args": [ "-p", "{prompt}", "--model", "{model}", "--output-format", "json",
+                  "--allow-all-tools", "--no-ask-user", "--no-custom-instructions", "--disable-builtin-mcps",
+                  "--no-auto-update", "--additional-mcp-config", "@C:/eval/mcp-obc.json" ],
+        "prompt": "arg",
+        "output": "copilot-jsonl",
+        "env": { "COPILOT_HOME": "C:/eval/copilot-profile" },
+        "allowSkills": []
+      },
+      "plain": {
+        "command": "copilot",
+        "args": [ "-p", "{prompt}", "--model", "{model}", "--output-format", "json",
+                  "--allow-all-tools", "--no-ask-user", "--no-custom-instructions", "--disable-builtin-mcps",
+                  "--no-auto-update", "--additional-mcp-config", "@C:/eval/mcp-plain.json" ],
+        "prompt": "arg",
+        "output": "copilot-jsonl",
+        "env": { "COPILOT_HOME": "C:/eval/copilot-profile" },
+        "allowSkills": []
+      },
+      "csv": {
+        "command": "copilot",
+        "args": [ "-p", "{prompt}", "--model", "{model}", "--output-format", "json",
+                  "--allow-all-tools", "--no-ask-user", "--no-custom-instructions", "--disable-builtin-mcps",
+                  "--no-auto-update" ],
+        "prompt": "arg",
+        "output": "copilot-jsonl",
+        "env": { "COPILOT_HOME": "C:/eval/copilot-profile" },
+        "allowSkills": []
+      }
+    }
+
+    // Antigravity (agy): add an entry once `agy --help` shows how to run a prompt and read its output.
+    // Use "output": "text" if it prints only the reply.
+  }
+}

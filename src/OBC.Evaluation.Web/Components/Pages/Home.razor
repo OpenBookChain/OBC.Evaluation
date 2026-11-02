@@ -1,5 +1,6 @@
 @page "/"
 @inject EvalService Eval
+@inject ImportService Import
 @inject IDbContextFactory<EvalDb> Dbs
 
 <PageTitle>Dashboard · OBC Evaluation</PageTitle>
@@ -97,13 +98,80 @@ else
     <a class="button primary" href="export.zip" target="_blank">Export evidence (.zip)</a>
 </div>
 
+<h2>Team sync</h2>
+<div class="panel">
+    <p>Import a teammate's evidence export to merge their models, runs and attempts into this database. Nothing here is overwritten, and importing the same file twice adds no results. Their checklist is not applied: it gates runs on your own data.</p>
+    <InputFile OnChange="ImportAsync" accept=".zip" disabled="@importing" />
+    @if (importing)
+    {
+        <p class="muted">Importing…</p>
+    }
+    @if (importError != null)
+    {
+        <p><b>Not imported.</b> @importError</p>
+    }
+    @if (imported != null)
+    {
+        <p><b>Imported from @imported.From:</b> @imported.ModelsAdded models, @imported.RunsAdded runs, @imported.AttemptsAdded attempts and @imported.EventsAdded log entries added; @imported.AttemptsAlreadyHere attempts were already here.</p>
+        @if (imported.ModelsAdded > 0)
+        {
+            <p class="small">New models are inactive here, so they stay out of your wizard and runner. Tick Active on the <a href="models">Models</a> page to see them above.</p>
+        }
+        @if (imported.OpenAttemptsSkipped > 0)
+        {
+            <p class="small">@imported.OpenAttemptsSkipped attempts were still open in that export and were left out. They arrive with a later export.</p>
+        }
+        @if (imported.ChecklistNotApplied.Count > 0)
+        {
+            <p class="small">Done there but not here, and left as they are: @string.Join(", ", imported.ChecklistNotApplied).</p>
+        }
+        @if (imported.Conflicts.Count > 0)
+        {
+            <p><b>Run on both machines:</b></p>
+            <ul class="small">
+                @foreach (var conflict in imported.Conflicts)
+                {
+                    <li>@conflict</li>
+                }
+            </ul>
+        }
+        @if (imported.HashWarnings.Count > 0)
+        {
+            <p><b>Prompt or reply text differs from its recorded hash:</b> @string.Join("; ", imported.HashWarnings)</p>
+        }
+    }
+</div>
+
 @code {
+    private const long MaxImportBytes = 1024L * 1024 * 1024;
+
+    private bool importing;
+    private string? importError;
+    private ImportReport? imported;
     private List<RunView>? views;
     private List<ModelProfile> models = new();
     private List<(string Phase, int Size)> cells = new();
     private List<string> nextSteps = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync() => LoadAsync();
+
+    private async Task ImportAsync(InputFileChangeEventArgs e)
+    {
+        (importing, importError, imported) = (true, null, null);
+        try
+        {
+            await using var stream = e.File.OpenReadStream(MaxImportBytes);
+            imported = await Import.ImportAsync(stream, e.File.Name);
+            await LoadAsync();
+        }
+        catch (Exception ex) when (ex is InvalidDataException or IOException)
+        {
+            importError = ex.Message;
+        }
+        importing = false;
+    }
+
+    private async Task LoadAsync()
     {
         await using var db = await Dbs.CreateDbContextAsync();
         models = await db.Models.Where(m => m.Active).OrderBy(m => m.Name).ToListAsync();

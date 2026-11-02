@@ -111,6 +111,8 @@ else
                 <div class="row" style="margin-top:0.5rem">
                     <label>Model version shown in the app <input @bind="modelVersion" /></label>
                     <label>Tool calls (if shown) <input type="number" min="0" style="width:7rem" @bind="toolCalls" /></label>
+                    <label>Input tokens (if shown) <input type="number" min="0" style="width:8rem" @bind="inputTokens" /></label>
+                    <label>Output tokens (if shown) <input type="number" min="0" style="width:8rem" @bind="outputTokens" /></label>
                     <label style="flex:1">Notes <input @bind="notes" placeholder="Anything unusual: retries, errors, tool failures" /></label>
                 </div>
                 <div class="row" style="margin-top:0.75rem">
@@ -170,6 +172,7 @@ else
     private ReplyCheck? check;
     private string reply = "", modelVersion = "", notes = "", reason = "";
     private int? toolCalls;
+    private long? inputTokens, outputTokens;
     private bool? copied;
     private bool abandoning, skipping;
     private string? error;
@@ -219,7 +222,7 @@ else
     private void Reset()
     {
         view = null; attempt = null; check = null; error = null; copied = null;
-        reply = notes = reason = ""; toolCalls = null; abandoning = skipping = false;
+        reply = notes = reason = ""; toolCalls = null; inputTokens = outputTokens = null; abandoning = skipping = false;
     }
 
     private async Task StartAsync() => await Guard(async () => attempt = await Eval.StartAsync(view!.Run.Id, Modes.Manual));
@@ -241,6 +244,8 @@ else
         {
             a.ModelVersion = string.IsNullOrWhiteSpace(modelVersion) ? a.ModelVersion : modelVersion.Trim();
             a.ToolCalls = toolCalls;
+            a.InputTokens = inputTokens;
+            a.OutputTokens = outputTokens;
             a.Notes = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim();
         });
     });

@@ -1,5 +1,4 @@
 using OBC.Evaluation.Core;
-using OBC.Evaluation.Runner;
 
 namespace OBC.Evaluation.Tests;
 
@@ -21,10 +20,28 @@ public class CoreTests
         """;
 
     [Fact]
-    public void A_prompt_is_the_skill_then_the_request()
+    public void A_prompt_is_the_skill_then_the_request_then_the_usage_ask()
     {
         var prompt = PromptBuilder.Build(Qa, "obc", "# Skill\n\nRules.\n");
-        Assert.Equal("# Skill\n\nRules.\n\n---\n\n## Request\n\nQuestion: How much?\n", prompt);
+        Assert.StartsWith("# Skill\n\nRules.\n\n---\n\n## Request\n\nQuestion: How much?\n\n", prompt);
+        Assert.EndsWith(UsageReport.Instruction(Qa.Kind), prompt);
+    }
+
+    [Fact]
+    public void A_qa_reply_can_report_its_usage_in_the_json()
+    {
+        var usage = UsageReport.TryParse(TaskKinds.Qa, "{\"final_answer\": \"1\", \"usage_report\": {\"input_tokens\": 1200, \"output_tokens\": 300, \"seconds\": 14.5}}");
+        Assert.Equal(new UsageReport(1200, 300, 14.5), usage);
+        Assert.Null(UsageReport.TryParse(TaskKinds.Qa, "{\"final_answer\": \"1\"}"));
+        Assert.Null(UsageReport.TryParse(TaskKinds.Qa, "{\"usage_report\": {\"input_tokens\": null, \"output_tokens\": null, \"seconds\": null}}"));
+    }
+
+    [Fact]
+    public void A_block_reply_reports_its_usage_in_its_own_block_without_a_warning()
+    {
+        var reply = PreparerReply + "\n<<<USAGE>>>\n{\"input_tokens\": 900, \"output_tokens\": null, \"seconds\": 20}\n<<<END USAGE>>>";
+        Assert.Equal(new UsageReport(900, null, 20), UsageReport.TryParse(TaskKinds.Prepare, reply));
+        Assert.Equal(ReplyCheck.Valid, ReplyValidator.Check(TaskKinds.Prepare, "plain", reply).Status);
     }
 
     [Fact]
@@ -96,15 +113,98 @@ public class CoreTests
     public void The_runner_reads_claude_json_output()
     {
         const string output = """{"type":"result","is_error":false,"result":"{\"answer_status\":\"answered\"}","num_turns":4,"total_cost_usd":0.0123,"usage":{"input_tokens":1200,"output_tokens":300,"cache_read_input_tokens":5000,"cache_creation_input_tokens":800}}""";
-        var result = AgentProcess.ReadClaudeJson(output, 12.5, "claude -p", output);
+        var result = AgentOutput.ReadClaudeJson(output, 12.5, "claude -p", output);
         Assert.True(result.Ok);
         Assert.Equal("{\"answer_status\":\"answered\"}", result.Reply);
         Assert.Equal(4, result.NumTurns);
         Assert.Equal(new AgentUsage(1200, 300, 5000, 800, 0.0123m), result.Usage);
 
-        var failed = AgentProcess.ReadClaudeJson("""{"is_error":true,"result":"MCP server failed"}""", 1, "claude -p", "");
+        var failed = AgentOutput.ReadClaudeJson("""{"is_error":true,"result":"MCP server failed"}""", 1, "claude -p", "");
         Assert.False(failed.Ok);
         Assert.Contains("MCP server failed", failed.Error);
+    }
+
+    [Fact]
+    public void The_runner_counts_the_connector_tool_calls_of_a_claude_stream()
+    {
+        var output = string.Join(Environment.NewLine,
+            """{"type":"assistant","message":{"content":[{"type":"tool_use","name":"ToolSearch","input":{}}]}}""",
+            """{"type":"assistant","message":{"content":[{"type":"tool_use","name":"mcp__claude_ai_plain_postgres__execute_raw_query","input":{}}]}}""",
+            """{"type":"result","is_error":false,"result":"done","num_turns":3}""");
+
+        var result = AgentOutput.ReadClaudeStream(output, 5, "claude -p", output);
+
+        Assert.Equal(2, result.ToolCalls);
+        Assert.Equal(1, result.Context!.DataToolCalls);
+    }
+
+    [Fact]
+    public void The_runner_reads_claude_stream_events_the_reply_and_what_the_run_had()
+    {
+        var output = string.Join("\n",
+            """{"type":"system","subtype":"init","model":"claude-opus-5-5","skills":[],"mcp_servers":[{"name":"claude.ai OBC SyncDB MCP","status":"pending"}]}""",
+            """{"type":"assistant","message":{"content":[]}}""",
+            """{"type":"result","is_error":false,"result":"OK","num_turns":2,"total_cost_usd":0.05,"usage":{"input_tokens":10,"output_tokens":3}}""");
+
+        var result = AgentOutput.ReadClaudeStream(output, 5, "claude -p", output);
+
+        Assert.True(result.Ok);
+        Assert.Equal("OK", result.Reply);
+        Assert.Equal(2, result.NumTurns);
+        Assert.Equal(0.05m, result.Usage!.CostUsd);
+        Assert.Equal("claude-opus-5-5", result.Context!.Model);
+        Assert.Empty(result.Context.Skills);
+        Assert.Equal(["claude.ai OBC SyncDB MCP"], result.Context.McpServers);
+
+        var failed = AgentOutput.ReadClaudeStream("""{"type":"result","is_error":true,"result":"Not logged in"}""", 1, "claude -p", "");
+        Assert.False(failed.Ok);
+        Assert.Contains("Not logged in", failed.Error);
+        Assert.False(AgentOutput.ReadClaudeStream("""{"type":"system","subtype":"init"}""", 1, "claude -p", "").Ok);
+    }
+
+    [Fact]
+    public void A_failed_exit_carries_the_tools_own_reason()
+    {
+        var claude = new AgentCommand { Command = "C:/x/claude.exe", Output = "claude-json" };
+        Assert.Equal("claude.exe exited with code 1. Not logged in. Please run /login",
+            AgentProcess.ExitMessage(claude, 1, """{"is_error":true,"result":"Not logged in. Please run /login"}""", "", 1, "claude"));
+        Assert.Equal("claude.exe exited with code 1. Error: Invalid MCP configuration:",
+            AgentProcess.ExitMessage(claude, 1, "", "Error: Invalid MCP configuration:\nMCP config file not found", 0, "claude"));
+        Assert.Equal("copilot exited with code 2. unknown option",
+            AgentProcess.ExitMessage(new AgentCommand { Command = "copilot", Output = "copilot-jsonl" }, 2, "", "unknown option\nmore", 1, "copilot"));
+    }
+
+    [Fact]
+    public void The_runner_reads_copilot_events_the_reply_the_model_the_skills_and_the_premium_requests()
+    {
+        var output = string.Join("\n",
+            """{"type":"session.mcp_servers_loaded","data":{"servers":[{"name":"obc","status":"connected"},{"name":"github-mcp-server","status":"disabled"}]}}""",
+            """{"type":"session.skills_loaded","data":{"skills":[{"name":"caveman","enabled":true},{"name":"off","enabled":false}]}}""",
+            """{"type":"session.tools_updated","data":{"model":"gpt-5.3-codex"}}""",
+            """{"type":"assistant.turn_start","data":{"turnId":"0"}}""",
+            """{"type":"assistant.message","data":{"content":"","model":"gpt-5.3-codex","toolRequests":[{"name":"query"},{"name":"query"}]}}""",
+            """{"type":"assistant.turn_start","data":{"turnId":"1"}}""",
+            """{"type":"assistant.message","data":{"content":"{\"answer_status\":\"answered\"}","model":"gpt-5.3-codex","toolRequests":[]}}""",
+            """{"type":"result","exitCode":0,"usage":{"premiumRequests":6,"totalApiDurationMs":1474}}""");
+
+        var result = AgentOutput.ReadCopilotJsonl(output, 9, "copilot -p", output);
+
+        Assert.True(result.Ok);
+        Assert.Equal("{\"answer_status\":\"answered\"}", result.Reply);
+        Assert.Equal((2, 2), (result.NumTurns, result.ToolCalls));
+        Assert.Equal(new AgentContext("gpt-5.3-codex", ["caveman"], ["obc"], 6), result.Context, new ContextComparer());
+
+        var failed = AgentOutput.ReadCopilotJsonl("""{"type":"result","exitCode":1,"usage":{}}""", 1, "copilot -p", "");
+        Assert.False(failed.Ok);
+    }
+
+    private sealed class ContextComparer : IEqualityComparer<AgentContext?>
+    {
+        public bool Equals(AgentContext? a, AgentContext? b) =>
+            a != null && b != null && a.Model == b.Model && a.PremiumRequests == b.PremiumRequests
+            && a.Skills.SequenceEqual(b.Skills) && a.McpServers.SequenceEqual(b.McpServers);
+
+        public int GetHashCode(AgentContext? c) => c?.Model?.GetHashCode() ?? 0;
     }
 
     [Fact]

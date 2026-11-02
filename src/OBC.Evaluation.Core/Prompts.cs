@@ -15,6 +15,7 @@ public static class PromptBuilder
                 throw new InvalidOperationException($"{task.Id} needs the preparer's report and working papers.");
             text += "\n" + auditSource.Trim() + "\n";
         }
+        text += "\n" + UsageReport.Instruction(task.Kind);
         if (setup == "csv")
             text += $"\nData file: {task.DataFile}\n";
         return text;
