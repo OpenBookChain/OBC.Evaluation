@@ -487,3 +487,5 @@ agents.json
 
 # local eval profiles and MCP configs
 eval/
+runner.json
+/eval

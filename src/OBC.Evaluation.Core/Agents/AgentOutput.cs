@@ -5,6 +5,71 @@ namespace OBC.Evaluation.Core;
 /// <summary>Readers for what each CLI prints. One per tool; each turns the output into an <see cref="AgentResult"/>.</summary>
 public static class AgentOutput
 {
+    /// <summary>Reads Codex CLI's JSONL stream and returns its final assistant message and usage.</summary>
+    public static AgentResult ReadCodexJsonl(string output, double seconds, string commandLine, string raw)
+    {
+        string? reply = null, failure = null;
+        long? inputTokens = null, outputTokens = null, cacheReadTokens = null;
+        var turns = 0;
+        var toolIds = new HashSet<string>(StringComparer.Ordinal);
+        var anonymousTools = 0;
+        var dataCalls = 0;
+
+        foreach (var line in Lines(output))
+        {
+            JsonDocument doc;
+            try { doc = JsonDocument.Parse(line); }
+            catch (JsonException) { continue; }
+            using (doc)
+            {
+                var root = doc.RootElement;
+                var type = Text(root, "type");
+                if (type == "item.completed" && root.TryGetProperty("item", out var item) && Text(item, "type") == "agent_message")
+                    reply = Text(item, "text") ?? ReadItemText(item);
+                else if (type == "item.started" && root.TryGetProperty("item", out var started))
+                {
+                    var itemType = Text(started, "type");
+                    if (itemType is "mcp_tool_call" or "command_execution")
+                    {
+                        var id = Text(started, "id");
+                        if (id == null) anonymousTools++;
+                        else toolIds.Add(id);
+                        if (itemType == "mcp_tool_call") dataCalls++;
+                    }
+                }
+                else if (type == "turn.completed")
+                {
+                    turns++;
+                    if (root.TryGetProperty("usage", out var usage))
+                    {
+                        inputTokens = Long(usage, "input_tokens") ?? inputTokens;
+                        outputTokens = Long(usage, "output_tokens") ?? outputTokens;
+                        cacheReadTokens = Long(usage, "cached_input_tokens") ?? Long(usage, "cache_read_input_tokens") ?? cacheReadTokens;
+                    }
+                }
+                else if (type == "turn.failed")
+                    failure = root.TryGetProperty("error", out var error) ? error.ToString() : "Codex reported a failed turn.";
+            }
+        }
+
+        AgentUsage? usageResult = inputTokens is null && outputTokens is null && cacheReadTokens is null
+            ? null : new AgentUsage(inputTokens, outputTokens, cacheReadTokens, null, null);
+        var context = new AgentContext(null, [], [], null, dataCalls);
+        var toolCalls = toolIds.Count + anonymousTools;
+        if (failure != null)
+            return new AgentResult(false, null, failure, seconds, usageResult, turns == 0 ? null : turns, commandLine, raw, context, toolCalls);
+        return reply == null
+            ? new AgentResult(false, null, "The Codex JSONL output has no completed assistant message.", seconds, usageResult, turns == 0 ? null : turns, commandLine, raw, context, toolCalls)
+            : new AgentResult(true, reply, null, seconds, usageResult, turns == 0 ? null : turns, commandLine, raw, context, toolCalls);
+    }
+
+    private static string? ReadItemText(JsonElement item)
+    {
+        if (!item.TryGetProperty("content", out var content) || content.ValueKind != JsonValueKind.Array)
+            return null;
+        return string.Concat(content.EnumerateArray().Where(part => Text(part, "type") == "text").Select(part => Text(part, "text")));
+    }
+
     /// <summary>claude -p --output-format json prints one object: the final message in 'result', plus usage, cost and turns.</summary>
     public static AgentResult ReadClaudeJson(string output, double seconds, string commandLine, string raw)
     {

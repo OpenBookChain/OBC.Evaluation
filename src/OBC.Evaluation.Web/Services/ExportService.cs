@@ -30,7 +30,7 @@ public sealed class ExportService(IDbContextFactory<EvalDb> dbs, Bundle bundle, 
             Add($"bundle/{skill.File}", bundle.SkillTexts[skill.Name]);
 
         var models = await db.Models.OrderBy(m => m.Id).ToListAsync();
-        AddJson("models.json", models.Select(m => new { m.Id, m.Name, m.Provider, m.ModelVersion, m.App, m.Mode, m.Notes, m.Active, m.CreatedAt }));
+        AddJson("models.json", models.Select(m => new { m.Id, m.Name, m.Provider, m.ModelVersion, m.App, m.Mode, m.AgentCli, m.AgentConfigJson, m.Notes, m.Active, m.CreatedAt }));
 
         var steps = await db.Checklist.ToDictionaryAsync(c => c.Id);
         AddJson("checklist.json", bundle.Checklist.Select(s => new

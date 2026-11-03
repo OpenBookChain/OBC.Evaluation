@@ -8,7 +8,7 @@
 
 <div class="panel table-wrap">
     <table>
-        <thead><tr><th>Id</th><th>Name</th><th>Model version</th><th>App</th><th>Mode</th><th>Active</th><th>Notes</th></tr></thead>
+        <thead><tr><th>Id</th><th>Name</th><th>Model version</th><th>App</th><th>CLI</th><th>Mode</th><th>Active</th><th>Notes</th></tr></thead>
         <tbody>
             @foreach (var m in models)
             {
@@ -17,6 +17,15 @@
                     <td>@m.Name<div class="muted small">@m.Provider</div></td>
                     <td><code>@m.ModelVersion</code></td>
                     <td>@m.App</td>
+                    <td>
+                        @if (m.Mode == Modes.Agent)
+                        {
+                            <select value="@m.AgentCli" @onchange="e => UpdateCliAsync(m.Id, e.Value!.ToString()!)">
+                                <option value="codex">Codex CLI</option>
+                                <option value="claude">Claude Code CLI</option>
+                            </select>
+                        }
+                    </td>
                     <td>
                         <select value="@m.Mode" @onchange="e => UpdateAsync(m.Id, x => x.Mode = e.Value!.ToString()!)">
                             <option value="@Modes.Manual">manual</option>
@@ -44,6 +53,16 @@
                 <option value="@Modes.Agent">agent: run by the agent runner</option>
             </select>
         </label>
+        @if (draft.Mode == Modes.Agent)
+        {
+            <label>CLI
+                <select @bind="draft.AgentCli">
+                    <option value="">Select automatically from provider</option>
+                    <option value="codex">Codex CLI</option>
+                    <option value="claude">Claude Code CLI</option>
+                </select>
+            </label>
+        }
     </div>
     <label style="margin-top:0.75rem">Notes <input @bind="draft.Notes" placeholder="Plan, settings, reasoning effort, anything that affects results" /></label>
     <button class="primary" style="margin-top:0.75rem" disabled="@(!CanAdd)" @onclick="AddAsync">Add model and create its runs</button>
@@ -76,8 +95,28 @@
         {
             var model = await db.Models.FindAsync(id);
             change(model!);
+            if (model!.Mode == Modes.Agent && string.IsNullOrWhiteSpace(model.AgentConfigJson))
+            {
+                model.AgentCli = model.Provider.Equals("OpenAI", StringComparison.OrdinalIgnoreCase) ? "codex" : "claude";
+                model.AgentConfigJson = AgentProfileDefaults.Create(model.AgentCli);
+            }
             await db.SaveChangesAsync();
-            await Eval.LogAsync("model", $"Model {id}: mode {model!.Mode}, active {model.Active}.");
+            await Eval.LogAsync("model", $"Model {id}: mode {model.Mode}, active {model.Active}.");
+        }
+        await LoadAsync();
+    }
+
+    private async Task UpdateCliAsync(int id, string cli)
+    {
+        if (cli is not ("codex" or "claude")) return;
+        await using (var db = await Dbs.CreateDbContextAsync())
+        {
+            var model = await db.Models.FindAsync(id);
+            if (model == null || model.Mode != Modes.Agent) return;
+            model.AgentCli = cli;
+            model.AgentConfigJson = AgentProfileDefaults.Create(cli);
+            await db.SaveChangesAsync();
+            await Eval.LogAsync("model", $"Model {id}: CLI set to {cli}; runner profile refreshed.");
         }
         await LoadAsync();
     }

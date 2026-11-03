@@ -17,7 +17,7 @@ public static class PromptBuilder
         }
         text += "\n" + UsageReport.Instruction(task.Kind);
         if (setup == "csv")
-            text += $"\nData file: {task.DataFile}\n";
+            text += $"\nData file: ./{task.DataFile}\nThe file is in your current working directory. Read it from disk before answering; do not assume its contents or report that it is unavailable without checking.\n";
         return text;
     }
 

@@ -21,7 +21,6 @@ builder.Services.AddDbContextFactory<EvalDb>(o => o.UseSqlite($"Data Source={dbP
 builder.Services.AddScoped<EvalService>();
 builder.Services.AddScoped<ExportService>();
 builder.Services.AddScoped<ImportService>();
-builder.Services.AddSingleton(new AgentSettings(RepoPath("Evaluation:AgentsConfig", "agents.json")));
 builder.Services.AddSingleton<IAgentLauncher, AgentProcess>();
 builder.Services.AddSingleton<AgentRunService>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<AgentRunService>());
@@ -35,6 +34,19 @@ using (var scope = app.Services.CreateScope())
 {
     await using var db = await scope.ServiceProvider.GetRequiredService<IDbContextFactory<EvalDb>>().CreateDbContextAsync();
     await db.Database.MigrateAsync();
+
+    // Keep the launch command and setup-specific source selection on each model profile.
+    var agentProfiles = await db.Models.Where(m => m.Mode == Modes.Agent).ToListAsync();
+    foreach (var profile in agentProfiles)
+    {
+        if (string.IsNullOrWhiteSpace(profile.AgentCli))
+            profile.AgentCli = profile.Provider.Equals("OpenAI", StringComparison.OrdinalIgnoreCase) ? "codex" : "claude";
+        if (string.IsNullOrWhiteSpace(profile.AgentConfigJson))
+            profile.AgentConfigJson = AgentProfileDefaults.Create(profile.AgentCli);
+        else if (string.Equals(profile.AgentCli, "codex", StringComparison.OrdinalIgnoreCase))
+            profile.AgentConfigJson = AgentProfileDefaults.UpgradeLegacyCodexMcpProfiles(profile.AgentConfigJson);
+    }
+    await db.SaveChangesAsync();
 
     // A rebuilt bundle may add tasks; give every model the runs it is missing
     var eval = scope.ServiceProvider.GetRequiredService<EvalService>();
