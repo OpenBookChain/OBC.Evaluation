@@ -1,11 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using OBC.Evaluation.Core;
 using OBC.Evaluation.Web.Data;
 
 namespace OBC.Evaluation.Web.Services;
-
-/// <summary>Where agents.json is.</summary>
-public sealed record AgentSettings(string ConfigPath);
 
 public sealed record AgentRunRequest(int ModelId, int? Size, string? Setup, int MaxRuns, decimal? MaxCostUsd);
 
@@ -21,9 +19,11 @@ public sealed record PreflightResult(string Setup, bool Ok, string Message, Agen
 /// or at a cost cap, and never carries one run's conversation into the next.
 /// </summary>
 public sealed class AgentRunService(
-    IServiceScopeFactory scopes, IDbContextFactory<EvalDb> dbs, Bundle bundle, DataFiles data, IAgentLauncher launcher, AgentSettings settings) : IHostedService
+    IServiceScopeFactory scopes, IDbContextFactory<EvalDb> dbs, Bundle bundle, DataFiles data, IAgentLauncher launcher) : IHostedService
 {
     public const int MaxFailuresInARow = 3;
+    private static readonly JsonSerializerOptions ProfileJson = new(JsonSerializerDefaults.Web);
+    private static readonly TimeSpan AgentTimeout = TimeSpan.FromMinutes(30);
     private const string Probe = "Reply with exactly the word OK and nothing else.";
     private const string DataProbe = "Find the database schema tool and call it once. Then reply with exactly the word OK and nothing else.";
 
@@ -68,16 +68,13 @@ public sealed class AgentRunService(
             if (state != AgentServiceState.Idle)
                 return "A session is already running.";
 
-        var (config, error) = LoadConfig();
-        if (config == null)
-            return error;
         ModelProfile? model;
         await using (var db = await dbs.CreateDbContextAsync())
             model = await db.Models.AsNoTracking().FirstOrDefaultAsync(m => m.Id == request.ModelId);
         if (model == null || model.Mode != Modes.Agent)
             return "Choose a model that is in agent mode.";
-        if (!config.Agents.ContainsKey(model.App))
-            return $"agents.json has no entry for the tool '{model.App}'. A model's App must match a tool name in agents.json.";
+        if (!TryGetProfile(model, out var config, out var error))
+            return error;
 
         lock (gate)
         {
@@ -92,8 +89,8 @@ public sealed class AgentRunService(
             startedAt = DateTime.Now;
             log.Clear();
         }
-        Say($"Started {model.Name} ({model.ModelVersion}) in {model.App}.");
-        Completion = Task.Run(() => LoopAsync(request, model, config, stop!.Token));
+        Say($"Started {model.Name} ({model.ModelVersion}) with {model.AgentCli} CLI.");
+        Completion = Task.Run(() => LoopAsync(request, model, config!, stop!.Token));
         return null;
     }
 
@@ -124,7 +121,7 @@ public sealed class AgentRunService(
         Changed?.Invoke();
     }
 
-    private async Task LoopAsync(AgentRunRequest request, ModelProfile model, AgentsConfig config, CancellationToken cancel)
+    private async Task LoopAsync(AgentRunRequest request, ModelProfile model, AgentProfileConfig config, CancellationToken cancel)
     {
         var failuresInARow = 0;
         try
@@ -168,7 +165,7 @@ public sealed class AgentRunService(
         }
     }
 
-    private async Task<Outcome> RunOneAsync(AgentRunRequest request, ModelProfile model, AgentsConfig config, CancellationToken cancel)
+    private async Task<Outcome> RunOneAsync(AgentRunRequest request, ModelProfile model, AgentProfileConfig config, CancellationToken cancel)
     {
         using var scope = scopes.CreateScope();
         var eval = scope.ServiceProvider.GetRequiredService<EvalService>();
@@ -179,10 +176,9 @@ public sealed class AgentRunService(
             Say("Nothing left to run for this model with these filters. Check the dashboard for what is blocking the rest.");
             return Outcome.NothingLeft;
         }
-        var command = config.Find(model.App, next.Run.Setup) is { } found ? ForModel(found, model) : null;
-        if (command == null)
+        if (!config.Setups.TryGetValue(next.Run.Setup, out var template))
         {
-            Say($"agents.json has no command for '{model.App}' in the {next.Run.Setup} setup.");
+            Say($"Model profile has no CLI command for the {next.Run.Setup} setup.");
             return Outcome.Fatal;
         }
 
@@ -192,12 +188,16 @@ public sealed class AgentRunService(
             current = label;
         Changed?.Invoke();
 
-        var workRoot = WorkRoot(config);
+        var workRoot = WorkRoot();
         var workDir = Path.Combine(workRoot, $"attempt-{attempt.Id}");
         var promptFile = Path.Combine(workRoot, $"attempt-{attempt.Id}.prompt.md");
+        var mcpConfigFile = Path.Combine(workDir, "mcp-config.json");
+        var command = ForModel(template, model, mcpConfigFile);
         try
         {
             Directory.CreateDirectory(workDir);
+            if (command.McpConfigJson != null)
+                await File.WriteAllTextAsync(mcpConfigFile, command.McpConfigJson, cancel);
             if (next.Run.Setup == "csv")
             {
                 var dataset = bundle.Datasets.First(d => d.Size == next.Task.Size);
@@ -212,7 +212,7 @@ public sealed class AgentRunService(
             }
             await File.WriteAllTextAsync(promptFile, attempt.Prompt, cancel);
 
-            var result = await launcher.RunAsync(command, attempt.Prompt, workDir, promptFile, TimeSpan.FromMinutes(config.TimeoutMinutes), cancel, Track(started: DateTime.Now));
+            var result = await launcher.RunAsync(command, attempt.Prompt, workDir, promptFile, AgentTimeout, cancel, Track(started: DateTime.Now));
             if (!result.Ok)
             {
                 await eval.AbandonAsync(attempt.Id, result.Error!, result.RawOutput);
@@ -272,12 +272,9 @@ public sealed class AgentRunService(
                 progress = null;
             }
             Changed?.Invoke();
-            if (!config.KeepWorkDirs)
-            {
-                TryDelete(() => Directory.Delete(workDir, recursive: true));
-                TryDelete(() => File.Delete(promptFile));
-                TryDelete(() => File.Delete(AgentProcess.OutputFile(promptFile)));
-            }
+            TryDelete(() => Directory.Delete(workDir, recursive: true));
+            TryDelete(() => File.Delete(promptFile));
+            TryDelete(() => File.Delete(AgentProcess.OutputFile(promptFile)));
         }
     }
 
@@ -294,9 +291,26 @@ public sealed class AgentRunService(
             {
                 using var doc = System.Text.Json.JsonDocument.Parse(line);
                 var root = doc.RootElement;
-                if (!root.TryGetProperty("type", out var type) || type.GetString() != "assistant"
-                    || !root.TryGetProperty("message", out var message) || !message.TryGetProperty("content", out var content))
+                var eventType = root.TryGetProperty("type", out var eventProp) ? eventProp.GetString() : null;
+                if (eventType == "item.started" && root.TryGetProperty("item", out var item)
+                    && Text(item, "type") is "mcp_tool_call" or "command_execution")
+                {
+                    turns++;
+                    tools++;
+                    last = Text(item, "name") ?? Text(item, "type");
+                    lock (gate) progress = $"last event at {(DateTime.Now - started).TotalSeconds:0}s · {turns} events · {tools} tool calls · last: {last}";
+                    Changed?.Invoke();
                     return;
+                }
+                if (eventType == "turn.completed")
+                {
+                    turns++;
+                    lock (gate) progress = $"last event at {(DateTime.Now - started).TotalSeconds:0}s · {turns} turns · {tools} tool calls";
+                    Changed?.Invoke();
+                    return;
+                }
+                if (eventType != "assistant" || !root.TryGetProperty("message", out var message)
+                    || !message.TryGetProperty("content", out var content)) return;
                 turns++;
                 foreach (var block in content.EnumerateArray().Where(b => b.TryGetProperty("type", out var t) && t.GetString() == "tool_use"))
                 {
@@ -311,30 +325,36 @@ public sealed class AgentRunService(
         };
     }
 
+    private static string? Text(System.Text.Json.JsonElement element, string name) =>
+        element.ValueKind == System.Text.Json.JsonValueKind.Object && element.TryGetProperty(name, out var value)
+            && value.ValueKind == System.Text.Json.JsonValueKind.String ? value.GetString() : null;
+
     /// <summary>Runs a trivial prompt for each setup the model's tool has a command for, to check it starts and what it loads.</summary>
     public async Task<List<PreflightResult>> PreflightAsync(int modelId)
     {
-        var (config, error) = LoadConfig();
-        if (config == null)
-            return [new PreflightResult("config", false, error!, null, 0)];
         ModelProfile? model;
         await using (var db = await dbs.CreateDbContextAsync())
             model = await db.Models.AsNoTracking().FirstOrDefaultAsync(m => m.Id == modelId);
-        if (model == null || !config.Agents.TryGetValue(model.App, out var setups))
-            return [new PreflightResult("config", false, $"agents.json has no entry for the tool '{model?.App}'.", null, 0)];
+        if (model == null)
+            return [new PreflightResult("profile", false, "Model profile was not found.", null, 0)];
+        if (!TryGetProfile(model, out var config, out var error))
+            return [new PreflightResult("profile", false, error!, null, 0)];
 
         var results = new List<PreflightResult>();
-        foreach (var (setup, template) in setups.OrderBy(s => bundle.Setups.IndexOf(s.Key)))
+        foreach (var (setup, template) in config!.Setups.OrderBy(s => bundle.Setups.IndexOf(s.Key)))
         {
-            var command = ForModel(template, model);
-            var workDir = Path.Combine(WorkRoot(config), $"preflight-{Guid.NewGuid():N}");
+            var workDir = Path.Combine(WorkRoot(), $"preflight-{Guid.NewGuid():N}");
+            var promptFile = workDir + ".prompt.md";
+            var mcpConfigFile = Path.Combine(workDir, "mcp-config.json");
+            var command = ForModel(template, model, mcpConfigFile);
             Directory.CreateDirectory(workDir);
             try
             {
-                var promptFile = workDir + ".prompt.md";
+                if (command.McpConfigJson != null)
+                    await File.WriteAllTextAsync(mcpConfigFile, command.McpConfigJson);
                 var probe = setup == "csv" ? Probe : DataProbe;
                 await File.WriteAllTextAsync(promptFile, probe);
-                var result = await launcher.RunAsync(command, probe, workDir, promptFile, TimeSpan.FromMinutes(Math.Min(config.TimeoutMinutes, 5)), CancellationToken.None);
+                var result = await launcher.RunAsync(command, probe, workDir, promptFile, TimeSpan.FromMinutes(5), CancellationToken.None);
                 TryDelete(() => File.Delete(promptFile));
                 var skills = (result.Context?.Skills ?? []).Where(s => !command.AllowSkills.Contains(s, StringComparer.OrdinalIgnoreCase)).ToList();
                 var problems = new List<string>();
@@ -355,19 +375,22 @@ public sealed class AgentRunService(
             finally
             {
                 TryDelete(() => Directory.Delete(workDir, recursive: true));
+                TryDelete(() => File.Delete(promptFile));
+                TryDelete(() => File.Delete(AgentProcess.OutputFile(promptFile)));
             }
         }
         return results;
     }
 
     /// <summary>The command with {model} replaced by the model's exact version, so one entry serves every model of a tool.</summary>
-    public static AgentCommand ForModel(AgentCommand command, ModelProfile model) => new()
+    public static AgentCommand ForModel(AgentCommand command, ModelProfile model, string? mcpConfigFile = null) => new()
     {
         Command = command.Command,
-        Args = command.Args.Select(a => a.Replace("{model}", model.ModelVersion)).ToList(),
+        Args = command.Args.Select(a => a.Replace("{model}", model.ModelVersion).Replace("{mcpConfigFile}", mcpConfigFile ?? "")).ToList(),
         Prompt = command.Prompt,
         Output = command.Output,
         Env = command.Env,
+        McpConfigJson = command.McpConfigJson,
         AllowSkills = command.AllowSkills,
     };
 
@@ -387,23 +410,30 @@ public sealed class AgentRunService(
         return string.Join(" ", parts);
     }
 
-    private (AgentsConfig? Config, string? Error) LoadConfig()
+    private static bool TryGetProfile(ModelProfile model, out AgentProfileConfig? config, out string? error)
     {
-        if (!File.Exists(settings.ConfigPath))
-            return (null, $"No agents.json at {settings.ConfigPath}. Copy agents.example.json to agents.json and edit it.");
         try
         {
-            return (AgentsConfig.Load(settings.ConfigPath), null);
+            config = JsonSerializer.Deserialize<AgentProfileConfig>(model.AgentConfigJson ?? "", ProfileJson);
+            if (config == null || !string.Equals(config.Cli, model.AgentCli, StringComparison.OrdinalIgnoreCase))
+            {
+                error = $"Model {model.Id} has an invalid CLI profile. Choose its CLI again on the Models page to regenerate it.";
+                return false;
+            }
+            error = null;
+            return true;
         }
-        catch (Exception ex) when (ex is IOException or System.Text.Json.JsonException or InvalidDataException)
+        catch (JsonException ex)
         {
-            return (null, $"agents.json can't be read: {ex.Message}");
+            config = null;
+            error = $"Model {model.Id} has invalid CLI profile JSON: {ex.Message}";
+            return false;
         }
     }
 
-    private static string WorkRoot(AgentsConfig config)
+    private static string WorkRoot()
     {
-        var root = Path.GetFullPath(Environment.ExpandEnvironmentVariables(config.WorkRoot ?? Path.Combine(Path.GetTempPath(), "obc-eval-runs")));
+        var root = Path.GetFullPath(Path.Combine(Path.GetTempPath(), "obc-eval-runs"));
         Directory.CreateDirectory(root);
         return root;
     }

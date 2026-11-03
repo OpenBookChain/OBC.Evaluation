@@ -32,6 +32,13 @@ public sealed class EvalService(IDbContextFactory<EvalDb> dbs, Bundle bundle, Ti
     public async Task<ModelProfile> AddModelAsync(ModelProfile model)
     {
         await using var db = await dbs.CreateDbContextAsync();
+        if (model.Mode == Modes.Agent && string.IsNullOrWhiteSpace(model.AgentConfigJson))
+        {
+            model.AgentCli = string.IsNullOrWhiteSpace(model.AgentCli)
+                ? (model.Provider.Equals("OpenAI", StringComparison.OrdinalIgnoreCase) ? "codex" : "claude")
+                : model.AgentCli;
+            model.AgentConfigJson = AgentProfileDefaults.Create(model.AgentCli);
+        }
         model.CreatedAt = Now;
         db.Models.Add(model);
         await db.SaveChangesAsync();

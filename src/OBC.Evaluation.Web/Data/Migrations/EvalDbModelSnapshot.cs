@@ -183,6 +183,13 @@ namespace OBC.Evaluation.Web.Data.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("AgentCli")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AgentConfigJson")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("App")
                         .IsRequired()
                         .HasColumnType("TEXT");

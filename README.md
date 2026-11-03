@@ -20,8 +20,7 @@ Answers stay sealed. Neither the wizard nor the agent runner shows them. Only th
 | `tools/build_bundle.py` | Builds the bundle from OBC.SimulationDataGenerator. Byte-identical on rerun. |
 | `src/OBC.Evaluation.Core` | Bundle loading, the prompt builder, the reply checks, and the agent launcher and output readers. |
 | `src/OBC.Evaluation.Web` | The app: dashboard, checklist, models, run wizard, agent runner, runs, export and import. SQLite in `state/`. |
-| `agents.example.json` | Copy to `agents.json`: the command to start each tool in each setup. |
-| `docs/AUTOMATION_DESIGN.md` | Design of the agent runner. |
+| `docs/AUTOMATION_DESIGN.md` | How the in-app agent runner uses model profiles. |
 | `tests/` | Unit and end-to-end tests. |
 
 ## Install
@@ -29,7 +28,7 @@ Answers stay sealed. Neither the wizard nor the agent runner shows them. Only th
 You need:
 - the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0);
 - git, with access to this repo and to OBC.SimulationDataGenerator;
-- for the agent flow, the CLI tools you will run (Claude Code, Copilot CLI), signed in;
+- for the agent flow, the CLI tools you will run (Codex CLI, Claude Code, or Copilot CLI), signed in;
 - for the OBC and plain setups, access to an OBC org and a Postgres database, each with its MCP server.
 
 Python 3 is only needed to rebuild the bundle. It uses no packages.
@@ -67,7 +66,6 @@ These are under `Evaluation` in `src/OBC.Evaluation.Web/appsettings.json`. Paths
 | `BundlePath` | `bundle` | The frozen inputs. |
 | `DatabasePath` | `state/evaluation.db` | The study's record on this machine. |
 | `DataRoot` | `../OBC.SimulationDataGenerator/evaluation/data` | The data sets. |
-| `AgentsConfig` | `agents.json` | The agent commands. |
 | `Operator` | none | Your name, shown on your exports and on your log entries in a teammate's database. |
 
 ### Backups
@@ -102,12 +100,11 @@ The reply's structure is checked straight away. A broken paste can be retried as
 
 ## Agent flow
 
-The runner is part of the app. Nothing to expose and no key.
+The runner is part of the app. Add or edit an agent-mode model on the **Models** page and choose its CLI. The model profile stores the CLI command and setup-specific configuration; no separate runner config or API key is needed. Sign in to the CLI using its normal account flow.
 
-1. **Eval profile, once per tool.** A config folder for the tool, signed in once (`CLAUDE_CONFIG_DIR`, `COPILOT_HOME`). Claude Code and Copilot then see the same account connectors as your normal profile, so the OBC and plain Postgres servers need no second set-up. The commands in `agents.json` give each setup only its own server and deny the other connectors, the web tools and the account's skills, so nothing else reaches the model. A tool whose servers aren't account connectors needs its own MCP config file.
-2. **`agents.json`.** Copy `agents.example.json` to `agents.json` (git-ignored) and set the commands. The keys under `agents` are tool names; a model's **App** on the Models page must equal one.
-3. **Models:** add the model in agent mode, with the exact version, and put `--model {model}` in the command: `{model}` is replaced by the model's exact version, so one entry serves every model of a tool. Never use "auto".
-4. **Agents page:** pick the model, press **Check setup** (a one-word prompt through each setup; shows the model, MCP servers and skills the tool loaded), then **Start**. Use a max of 3 runs for a first trial. **Pause after this run** and **Stop now** are there while it runs.
+On the **Agent runner** page, choose a model, size, setup, run limit and optional cost cap. **Check setup** probes the configured setups. **Start**, **Pause after this run** and **Stop now** control the session, with progress and results shown on the page.
+
+Each model profile stores the exact model version and launch settings for OBC, plain Postgres and CSV. Codex profiles use the OBC MCP endpoint, the plain Postgres MCP endpoint, or no MCP for CSV. Claude profiles receive the corresponding per-setup MCP config. Codex JSONL output provides the reply, turns, tool calls and token usage; per-run USD cost is unavailable from Codex CLI output.
 
 Each run is a **fresh agent process** in an empty folder with only that setup's data source. The CSV setup gets only the CSV, checked against its hash. One process per run is deliberate: an agent that answers many questions in one conversation sees its earlier questions and answers, which a manual run never does.
 

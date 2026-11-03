@@ -40,6 +40,8 @@ public sealed class ModelProfile
     public string App { get; set; } = string.Empty;
 
     public string Mode { get; set; } = Modes.Manual;
+    public string AgentCli { get; set; } = string.Empty;
+    public string? AgentConfigJson { get; set; }
     public string? Notes { get; set; }
     public bool Active { get; set; } = true;
     public DateTime CreatedAt { get; set; }

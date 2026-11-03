@@ -1,83 +1,30 @@
-# Automated runs: design
+# Agent runner
 
-Status: built for Claude Code and Copilot CLI. Antigravity (`agy`) is not built yet: it needs its headless flags and output format.
+## Model profiles
 
-## Goal
+An agent-mode model stores its CLI name and setup-specific launch configuration in `Models.AgentCli` and `Models.AgentConfigJson`. Each setup (`obc`, `plain`, or `csv`) defines the command, arguments, prompt transport, output format, environment overrides, and optional MCP config. The runner reads the selected model profile directly; there is no separate `agents.json` requirement.
 
-Run the evaluation unattended with the CLI agents the study uses (Claude Code, Copilot CLI, Gemini CLI), started from the app, with no HTTP API or key. Each run must stay as clean and as comparable as a manual wizard run.
+Authentication stays with the CLI's normal local sign-in. The evaluation app does not need an OpenAI or Claude API key for CLI runs, and credentials are not copied into the database.
 
-## What changes
+## Session flow
 
-The runner moves **inside the web app**. Today a separate process asks the app for the next run over `/api/agent/*` and posts the result back. Instead, a hosted background service calls `EvalService` directly (`NextAsync`, `StartAsync`, `SubmitAsync`, `AbandonAsync`), so there is one writer to the database and no key to manage.
+The Agent runner page selects a model and optional size, setup, run count, and cost cap. It can check the configured setups, start a session, pause after the current run, or stop immediately. Session progress and saved/failed counts update while each CLI runs.
 
-| Today | After |
-|---|---|
-| `OBC.Evaluation.Runner` console app | `AgentRunService` (hosted service) in `OBC.Evaluation.Web` |
-| `/api/agent/*` endpoints, `AgentApiKey` | removed |
-| `runner.json` | `Evaluation:Agents` in `appsettings` (or `agents.json`, git-ignored) |
-| progress in a terminal | **Agents** page: live state, log, Start / Pause / Stop |
+For every task, the service:
 
-`AgentProcess` (spawn, timeout, kill tree, output parsing) moves to `OBC.Evaluation.Core` unchanged in spirit. The prompt builder, reply checks and exports are untouched.
+1. Gets the next available run and opens an attempt using the normal evaluation prompt.
+2. Creates a fresh temporary working directory. For CSV tasks, it copies only the hash-checked CSV into that directory. For connector tasks, the model profile supplies the setup-specific MCP configuration.
+3. Starts a new CLI process for that one task. No conversation is shared between tasks.
+4. Reads the selected CLI's output format and submits the final reply, duration, and available usage fields to the evaluation service.
+5. Deletes the temporary working files. Failed starts and stopped sessions are recorded as abandoned attempts, so the run can be retried.
 
-## What stays the same
+The output readers support Claude JSON/stream JSON, Copilot JSONL, Codex JSONL, and plain text. Codex CLI supplies token and turn usage, but not per-run USD cost. A cost cap therefore only stops sessions when the selected CLI reports cost.
 
-- **One fresh process per run**, in an empty folder, so a run never sees another run's question or answer.
-- **The same prompt as the manual flow**, with its SHA-256 recorded.
-- **CSV setup:** the CSV is copied in and checked against the bundle hash first.
-- **Every attempt is saved exactly:** prompt, reply, raw output, command line, time and measured usage.
-- A failed or timed-out run is an **abandoned attempt** with the reason, and is retried as a new attempt, never overwritten.
+## Operational safeguards
 
-## Agent adapters
-
-Each CLI is a config entry: command, argument template, how the prompt is passed, how to read the result, and which environment variables isolate it. An adapter turns the CLI's output into `AgentResult` (reply, tokens, cost, turns, seconds).
-
-| CLI | Headless call | Result and usage | Isolation | Status |
-|---|---|---|---|---|
-| Claude Code | `claude -p --output-format json --strict-mcp-config --mcp-config <file>` | one JSON object: `result`, `usage`, `total_cost_usd`, `num_turns` (parser exists) | empty `CLAUDE_CONFIG_DIR`, strict MCP config | `claude` isn't on this machine's PATH, so it needs a full path in config |
-| Copilot CLI | `copilot -p <text> --allow-all-tools --no-ask-user --no-custom-instructions --output-format json --usage-output-file <file>` | JSONL events for the reply, plus a usage JSON file; memory is off in prompt mode | `--additional-mcp-config` for the setup's server, `--disable-builtin-mcps`, `--available-tools` / `--excluded-tools` to block web and GitHub tools | installed (1.0.99-2); **event format to confirm with a real run** |
-| Gemini (`agy`, Antigravity CLI) | **unknown**: `agy` isn't on PATH here; its folder is `~/.gemini/antigravity-cli`. A classic `gemini` shim exists (`gemini.ps1`) | to find out from `agy --help` | to find out | **needs `agy --help` output or its install path** |
-
-Rules for every adapter:
-- The prompt goes in by stdin or a prompt file where the CLI allows it, so Windows quoting can't alter it.
-- Web search, web fetch and memory are off. Only the setup's own data source is available (OBC MCP, plain Postgres MCP, or the CSV with file read and Python).
-- The adapter records the exact command line and the CLI version in each attempt.
-
-## Sign-in and isolation
-
-Both MCP servers (OBC and plain Postgres) need a sign-in. Facts and assumptions, to be confirmed by the checks below:
-
-- **Sign-ins are not shared between tools.** Each CLI keeps its own MCP tokens, and the desktop app's connectors are separate again. Plan on one sign-in per tool per MCP server.
-- **Several processes of the same CLI can normally share one sign-in**, because they read the same stored tokens. Refreshing a token in parallel can race, which is another reason to run one at a time.
-- **Isolation can remove the login.** An empty config directory (for example `CLAUDE_CONFIG_DIR`) also has no login and no MCP tokens. So each tool gets a dedicated **eval profile**: a directory with the sign-in and the two MCP servers and nothing else (no memory, skills, plugins or custom instructions). It is created once by hand, by running the CLI with that directory and signing in, then reused by every run.
-- **Per-setup MCP config:** the `obc` setup lists only the OBC server, `plain` only the Postgres server, `csv` none. Run `plain` and `obc` with separate MCP configs so a model can't reach the other source.
-- **Preflight check** before a session starts, per setup: a short probe run in the eval profile that confirms the right MCP tools are listed and callable, the CLI version, and the exact model. If the sign-in has expired, the session doesn't start and says which tool to sign in to again.
-- **Mid-session expiry:** if a run fails because of authentication, the attempt is abandoned with that reason and the service pauses, rather than burning through the matrix with failures.
-
-## Run control
-
-- **Queue:** the next ready run for the chosen model, filtered by size and setup, using the existing `NextAsync` rules. Audits wait for their preparer; runs unlock only when the checklist phase is ready.
-- **Start, Pause, Stop:** pause finishes the current run and stops. Stop kills the current process and abandons the attempt with the reason "stopped".
-- **Pause points:** the service stops by itself when nothing is ready, for example before the change set (T7), and says what to tick on the checklist.
-- **Safety:** a per-run timeout; stop after N failures in a row; an optional cost cap per session (from measured cost where the CLI reports it).
-- **Concurrency:** one run at a time by default. An optional limit of one concurrent run per setup would be a later step; runs of the same setup stay serial.
-- **Crash recovery:** on startup, open agent attempts left by a crash are abandoned (the app already has `AbandonStaleAgentAttemptsAsync`).
-- **One model per session:** an agent model is its CLI plus model version plus reasoning setting. The Models page gets the adapter name and its settings.
-
-## Usage figures
-
-Agents report measured tokens, cost and time, so those are the figures the study uses. The model's self-reported usage in the prompt (added earlier) is redundant for agents. It stays only so manual and agent prompts remain identical. The wizard's optional manual token fields can stay or go.
-
-## Open questions
-
-1. **OBC sign-in:** does the OBC MCP server work in each CLI's eval profile after a one-time browser sign-in, and does that sign-in last through a long session? A token or API key would be better. This decides whether the `obc` setup can be automated.
-2. **Plain Postgres MCP:** which server, and is it read-only? The prompt tells the agent the schema is the same as the OBC org's data.
-3. **Model naming:** Copilot and Gemini can route to different models (`--model auto` in Copilot). The study should pin an exact model per run and refuse "auto".
-4. **Claude Code on this machine:** the desktop app is present, but the `claude` CLI isn't on PATH. Install it, or point the config at its full path.
-5. **Cost:** 145 runs per model per CLI. Do you want a default session cap?
-
-## Build order
-
-1. Move the process runner and parsers into Core; add the Copilot and Gemini adapters with tests on captured sample output.
-2. Add `AgentRunService` and the Agents page (Start, Pause, Stop, live log).
-3. Remove the HTTP API, the key and the standalone runner; update the README.
-4. Run a 3-run trial per CLI, compare the saved records with a manual run of the same tasks, and check that prompts hash identically.
+- The session uses one fresh process per task to prevent an agent from seeing earlier questions or answers.
+- CSV files are checked against the bundle's recorded hash before they are copied to the agent's working directory.
+- A run that uses an unapproved skill reported by its CLI is discarded.
+- Connector setups must call a data tool before a successful result is saved.
+- The session stops after three consecutive failed runs, on an explicit stop request, or when a supported cost cap is reached.
+- If the app exits during a run, stale attempts are abandoned and the run becomes available again.
