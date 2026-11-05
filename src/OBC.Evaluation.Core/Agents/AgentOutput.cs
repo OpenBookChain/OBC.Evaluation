@@ -106,6 +106,7 @@ public static class AgentOutput
         string? model = null;
         var skills = new List<string>();
         var servers = new List<string>();
+        var down = new List<string>();
         int toolCalls = 0, dataCalls = 0;
         foreach (var line in Lines(output))
         {
@@ -126,15 +127,18 @@ public static class AgentOutput
                 if (root.TryGetProperty("skills", out var list) && list.ValueKind == JsonValueKind.Array)
                     skills.AddRange(list.EnumerateArray().Where(s => s.ValueKind == JsonValueKind.String).Select(s => s.GetString()!));
                 if (root.TryGetProperty("mcp_servers", out var mcp) && mcp.ValueKind == JsonValueKind.Array)
+                {
                     servers.AddRange(mcp.EnumerateArray().Select(s => Text(s, "name")).OfType<string>());
+                    down.AddRange(mcp.EnumerateArray().Where(s => Text(s, "status") is "needs-auth" or "failed").Select(s => $"{Text(s, "name")} ({Text(s, "status")})"));
+                }
             }
             catch (JsonException) { }
         }
 
         var result = LastResultLine(output);
         if (result == null)
-            return new AgentResult(false, null, "The output has no result event.", seconds, null, null, commandLine, raw, new AgentContext(model, skills, servers, null));
-        return ReadClaudeJson(result, seconds, commandLine, raw) with { Context = new AgentContext(model, skills, servers, null, dataCalls), ToolCalls = toolCalls };
+            return new AgentResult(false, null, "The output has no result event.", seconds, null, null, commandLine, raw, new AgentContext(model, skills, servers, null) { DownMcpServers = down });
+        return ReadClaudeJson(result, seconds, commandLine, raw) with { Context = new AgentContext(model, skills, servers, null, dataCalls) { DownMcpServers = down }, ToolCalls = toolCalls };
     }
 
     /// <summary>The closing {"type":"result"} line of a stream-json output, or null.</summary>

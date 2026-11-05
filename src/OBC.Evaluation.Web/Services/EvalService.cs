@@ -220,7 +220,7 @@ public sealed class EvalService(IDbContextFactory<EvalDb> dbs, Bundle bundle, Ti
             .OrderByDescending(a => a.Number).FirstOrDefaultAsync();
     }
 
-    public async Task<ReplyCheck> SubmitAsync(int attemptId, string reply, Action<Attempt>? measure = null)
+    public async Task<ReplyCheck> SubmitAsync(int attemptId, string reply, Action<Attempt>? measure = null, string? warning = null)
     {
         await using var db = await dbs.CreateDbContextAsync();
         var attempt = await db.Attempts.Include(a => a.Run).FirstAsync(a => a.Id == attemptId);
@@ -229,6 +229,8 @@ public sealed class EvalService(IDbContextFactory<EvalDb> dbs, Bundle bundle, Ti
 
         var task = bundle.Task(attempt.Run.TaskId);
         var check = ReplyValidator.Check(task.Kind, attempt.Run.Setup, reply);
+        if (warning != null)
+            check = check with { Status = check.Status == ReplyCheck.Valid ? ReplyCheck.Issues : check.Status, Messages = [.. check.Messages, warning] };
         attempt.Reply = reply;
         attempt.ReplySha256 = Hashing.Sha256(reply);
         attempt.Validation = check.Status;

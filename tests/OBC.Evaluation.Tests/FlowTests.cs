@@ -144,7 +144,7 @@ public class FlowTests : IClassFixture<AppFactory>
 
             var second = await e.StartAsync(next.Run.Id, Modes.Manual, retry: true);
             Assert.Equal(2, second.Number);
-            Assert.EndsWith("Data file: base.csv\n", second.Prompt);
+            Assert.Contains("Data file: ./base.csv\n", second.Prompt);
             await e.SubmitAsync(second.Id, QaReply);
             Assert.Equal(ReplyCheck.Valid, (await e.ViewAsync(next.Run.Id)).Latest!.Validation);
         });
@@ -162,7 +162,7 @@ public class FlowTests : IClassFixture<AppFactory>
         {
             Assert.Empty(Directory.GetFileSystemEntries(workDir));
             folders.Add(workDir);
-            return Ok(new AgentContext("test-1", [], ["obc"], null));
+            return Ok(new AgentContext("test-1", [], ["obc"], null, 1));
         };
 
         await TickAsync(500, "T1", "T2", "T3");
@@ -194,6 +194,83 @@ public class FlowTests : IClassFixture<AppFactory>
         Assert.Equal((0, 1), (status.Done, status.Failed));
         await app.WithEval(async e =>
             Assert.Contains((await e.ViewsAsync(agent.Id)).Select(v => v.Latest?.AbandonReason), r => r != null && r.Contains("caveman")));
+    }
+
+    [Fact]
+    public async Task A_run_whose_data_source_needs_sign_in_is_thrown_away_and_the_session_stops()
+    {
+        var agent = await AddModel(Modes.Agent);
+        await TickAsync(500, "T1", "T2", "T3");
+        app.Agent = _ => Ok(new AgentContext("test-1", [], ["obc"], null, 0) { DownMcpServers = ["claude.ai OBC SyncDB MCP (needs-auth)"] });
+
+        var status = await app.RunSessionAsync(new AgentRunRequest(agent.Id, 500, "obc", 5, null));
+
+        Assert.Equal((0, 1), (status.Done, status.Failed));
+        await app.WithEval(async e =>
+            Assert.Contains((await e.ViewsAsync(agent.Id)).Select(v => v.Latest?.AbandonReason), r => r != null && r.Contains("claude.ai OBC SyncDB MCP (needs-auth)")));
+    }
+
+    [Fact]
+    public async Task Another_connector_needing_sign_in_does_not_stop_the_run()
+    {
+        var agent = await AddModel(Modes.Agent);
+        await TickAsync(500, "T1", "T2", "T3");
+        app.Agent = _ => Ok(new AgentContext("test-1", [], ["obc"], null, 1) { DownMcpServers = ["claude.ai Google Drive (needs-auth)"] });
+
+        var status = await app.RunSessionAsync(new AgentRunRequest(agent.Id, 500, "obc", 1, null));
+
+        Assert.Equal((1, 0), (status.Done, status.Failed));
+    }
+
+    [Theory]
+    [InlineData("obc")]
+    [InlineData("csv")]
+    public async Task A_run_that_never_touched_its_data_is_not_saved(string setup)
+    {
+        var agent = await AddModel(Modes.Agent);
+        await TickAsync(500, "T1", "T2", "T3");
+        app.Agent = _ => Ok(new AgentContext("test-1", [], [], null, 0)) with { ToolCalls = 0 };
+
+        var status = await app.RunSessionAsync(new AgentRunRequest(agent.Id, 500, setup, 0, null));
+
+        Assert.Equal((0, AgentRunService.MaxFailuresInARow), (status.Done, status.Failed));
+        await app.WithEval(async e => Assert.DoesNotContain(await e.ViewsAsync(agent.Id), v => v.Latest?.Status == AttemptStatus.Submitted));
+    }
+
+    [Fact]
+    public async Task A_run_whose_tool_reports_no_tool_calls_is_flagged()
+    {
+        var agent = await AddModel(Modes.Agent);
+        await TickAsync(500, "T1", "T2", "T3");
+        app.Agent = _ => Ok() with { ToolCalls = null };
+
+        await app.RunSessionAsync(new AgentRunRequest(agent.Id, 500, "obc", 1, null));
+
+        await app.WithEval(async e =>
+        {
+            var saved = (await e.ViewsAsync(agent.Id)).Single(v => v.Latest?.Status == AttemptStatus.Submitted).Latest!;
+            Assert.Equal(ReplyCheck.Issues, saved.Validation);
+            Assert.Contains("doesn't report its tool calls", saved.ValidationMessages);
+        });
+    }
+
+    [Theory]
+    [InlineData("claude-json", "--mcp-config")]
+    [InlineData("claude-stream-json", "--strict-mcp-config")]
+    public void An_old_claude_profile_is_replaced_with_the_account_connectors(string output, string flag)
+    {
+        var old = "{\"cli\":\"claude\",\"setups\":{\"obc\":{\"command\":\"claude\",\"args\":[\"-p\",\"" + flag + "\",\"x\"],\"output\":\"" + output + "\"}}}";
+
+        var upgraded = AgentProfileDefaults.UpgradeLegacyClaudeProfiles(old);
+        var setups = JsonSerializer.Deserialize<AgentProfileConfig>(upgraded, new JsonSerializerOptions(JsonSerializerDefaults.Web))!.Setups;
+
+        Assert.Equal("claude-stream-json", setups["plain"].Output);
+        Assert.Equal("1", setups["plain"].Env["CLAUDE_CODE_DISABLE_CLAUDE_MDS"]);
+        Assert.DoesNotContain("--mcp-config", setups["plain"].Args);
+        Assert.Equal(["--allowedTools", "mcp__claude_ai_plain_postgres", "--disallowedTools", "mcp__claude_ai_OBC_SyncDB_MCP"],
+            setups["plain"].Args.SkipWhile(a => a != "--allowedTools").Take(4));
+        Assert.Contains("mcp__claude_ai_plain_postgres", setups["csv"].Args.SkipWhile(a => a != "--disallowedTools"));
+        Assert.Equal(upgraded, AgentProfileDefaults.UpgradeLegacyClaudeProfiles(upgraded));
     }
 
     [Fact]

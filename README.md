@@ -106,6 +106,10 @@ On the **Agent runner** page, choose a model, size, setup, run limit and optiona
 
 Each model profile stores the exact model version and launch settings for OBC, plain Postgres and CSV. Codex profiles use the OBC MCP endpoint, the plain Postgres MCP endpoint, or no MCP for CSV. Claude profiles receive the corresponding per-setup MCP config. Codex JSONL output provides the reply, turns, tool calls and token usage; per-run USD cost is unavailable from Codex CLI output.
 
+Claude runs use your account connectors (`claude.ai OBC SyncDB MCP`, `claude.ai plain postgres`), so nothing needs a separate sign-in. Each setup allows only its own connector and denies the others, and `--tools` leaves an OBC or plain run only `ToolSearch` and a CSV run only `Read` and `Bash`. `--disable-slash-commands` and `CLAUDE_CODE_DISABLE_CLAUDE_MDS=1` keep your skills and CLAUDE.md out. The connector names are in `AgentProfileDefaults.cs`: if your account has other names or more connectors, change them there, or a connector could reach a run. Check setup shows which tools a run called.
+
+A run is thrown away, not saved, if its data source reports `needs-auth` or `failed` (this also stops the session), or if it made no call to its connector or, for CSV, no tool call at all. A tool that doesn't report its calls saves the run with the validation status `issues`.
+
 Each run is a **fresh agent process** in an empty folder with only that setup's data source. The CSV setup gets only the CSV, checked against its hash. One process per run is deliberate: an agent that answers many questions in one conversation sees its earlier questions and answers, which a manual run never does.
 
 A session stops when nothing is ready (for example before the change set, when you tick the checklist), after 3 failed runs in a row, at the optional cost cap, or when you stop it. A failed or stopped run is saved as an abandoned attempt with the reason and offered again. A run is also thrown away if the tool reports it loaded a skill not listed in `allowSkills`.

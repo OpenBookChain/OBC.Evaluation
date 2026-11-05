@@ -45,6 +45,8 @@ using (var scope = app.Services.CreateScope())
             profile.AgentConfigJson = AgentProfileDefaults.Create(profile.AgentCli);
         else if (string.Equals(profile.AgentCli, "codex", StringComparison.OrdinalIgnoreCase))
             profile.AgentConfigJson = AgentProfileDefaults.UpgradeLegacyCodexMcpProfiles(profile.AgentConfigJson);
+        else if (string.Equals(profile.AgentCli, "claude", StringComparison.OrdinalIgnoreCase))
+            profile.AgentConfigJson = AgentProfileDefaults.UpgradeLegacyClaudeProfiles(profile.AgentConfigJson);
     }
     await db.SaveChangesAsync();
 

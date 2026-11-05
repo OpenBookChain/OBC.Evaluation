@@ -47,7 +47,7 @@ public class CoreTests
     [Fact]
     public void A_csv_prompt_names_the_data_file()
     {
-        Assert.EndsWith("\nData file: base.csv\n", PromptBuilder.Build(Qa, "csv", "# Skill"));
+        Assert.Contains("\nData file: ./base.csv\n", PromptBuilder.Build(Qa, "csv", "# Skill"));
         Assert.DoesNotContain("Data file", PromptBuilder.Build(Qa, "plain", "# Skill"));
     }
 
@@ -136,6 +136,18 @@ public class CoreTests
 
         Assert.Equal(2, result.ToolCalls);
         Assert.Equal(1, result.Context!.DataToolCalls);
+    }
+
+    [Fact]
+    public void The_runner_sees_a_claude_mcp_server_that_needs_sign_in()
+    {
+        var output = string.Join("\n",
+            """{"type":"system","subtype":"init","model":"m","skills":[],"mcp_servers":[{"name":"plain","status":"needs-auth"},{"name":"obc","status":"connected"},{"name":"late","status":"pending"}]}""",
+            """{"type":"result","is_error":false,"result":"done","num_turns":1}""");
+
+        var result = AgentOutput.ReadClaudeStream(output, 1, "claude -p", output);
+
+        Assert.Equal(["plain (needs-auth)"], result.Context!.DownMcpServers);
     }
 
     [Fact]

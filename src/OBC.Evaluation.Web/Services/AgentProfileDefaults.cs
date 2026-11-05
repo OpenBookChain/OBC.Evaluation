@@ -10,6 +10,11 @@ public static class AgentProfileDefaults
     private const string PlainUrl = "https://ai.openbookchain.com/mcp-postgres";
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
 
+    /// <summary>The account connectors a Claude run may use. Each setup allows its own and denies the rest.</summary>
+    private const string ObcConnector = "mcp__claude_ai_OBC_SyncDB_MCP";
+    private const string PlainConnector = "mcp__claude_ai_plain_postgres";
+    private static readonly string[] ClaudeConnectors = [ObcConnector, PlainConnector, "mcp__claude_ai_Google_Drive", "mcp__claude_ai_Claude_Docs", "mcp__seq"];
+
     public static string Create(string cli)
     {
         var codex = string.Equals(cli, "codex", StringComparison.OrdinalIgnoreCase);
@@ -62,6 +67,24 @@ public static class AgentProfileDefaults
         return changed ? root.ToJsonString(Json) : profileJson;
     }
 
+    /// <summary>
+    /// Replaces Claude profiles that print plain JSON, or that define their own MCP servers. A server defined that way
+    /// can't sign in where the auth server has no dynamic client registration, and it isn't the account connector.
+    /// </summary>
+    public static string UpgradeLegacyClaudeProfiles(string profileJson)
+    {
+        JsonObject? root;
+        try { root = JsonNode.Parse(profileJson) as JsonObject; }
+        catch (JsonException) { return profileJson; }
+        if (root == null || !string.Equals(root["cli"]?.GetValue<string>(), "claude", StringComparison.OrdinalIgnoreCase) ||
+            root["setups"] is not JsonObject setups)
+            return profileJson;
+
+        var legacy = setups.Any(s => s.Value is JsonObject setup && (setup["output"]?.GetValue<string>() == "claude-json"
+            || setup["args"] is JsonArray args && args.Any(a => a?.GetValue<string>() is "--mcp-config" or "--strict-mcp-config")));
+        return legacy ? Create("claude") : profileJson;
+    }
+
     private static Dictionary<string, AgentCommand> CodexSetups()
     {
         AgentCommand Codex(string? serverName, string? url)
@@ -86,29 +109,33 @@ public static class AgentProfileDefaults
         };
     }
 
+    /// <summary>
+    /// Each run has the account's connectors, which need user settings to load, so --setting-sources can't be used.
+    /// The flags and the environment variable keep the operator's skills and CLAUDE.md out, and --tools leaves an MCP
+    /// run only ToolSearch, to load its connector's tools: --allowedTools alone only skips the approval prompt.
+    /// </summary>
     private static Dictionary<string, AgentCommand> ClaudeSetups()
     {
-        AgentCommand Claude(string? serverName, string? url, string[] allowedTools) => new()
+        AgentCommand Claude(string? connector, string[] tools, string[] allowedTools) => new()
         {
             Command = "claude",
             Args = [
-                "-p", "--output-format", "json", "--model", "{model}",
-                "--mcp-config", "{mcpConfigFile}", "--strict-mcp-config",
-                "--allowedTools", .. allowedTools
+                "-p", "--output-format", "stream-json", "--verbose", "--model", "{model}",
+                "--disable-slash-commands", "--no-session-persistence",
+                "--tools", .. tools,
+                "--allowedTools", .. allowedTools,
+                "--disallowedTools", .. ClaudeConnectors.Where(c => c != connector)
             ],
             Prompt = "stdin",
-            Output = "claude-json",
-            McpConfigJson = serverName == null
-                ? "{\"mcpServers\":{}}"
-                : JsonSerializer.Serialize(new { mcpServers = new Dictionary<string, object>
-                    { [serverName] = new { type = "http", url } } })
+            Output = "claude-stream-json",
+            Env = new Dictionary<string, string> { ["CLAUDE_CODE_DISABLE_CLAUDE_MDS"] = "1" }
         };
 
         return new Dictionary<string, AgentCommand>
         {
-            ["obc"] = Claude("obc", ObcUrl, ["mcp__obc"]),
-            ["plain"] = Claude("plain", PlainUrl, ["mcp__plain"]),
-            ["csv"] = Claude(null, null, ["Read", "Bash(python:*)"])
+            ["obc"] = Claude(ObcConnector, ["ToolSearch"], [ObcConnector]),
+            ["plain"] = Claude(PlainConnector, ["ToolSearch"], [PlainConnector]),
+            ["csv"] = Claude(null, ["Read", "Bash"], ["Read", "Bash(python:*)"])
         };
     }
 }
