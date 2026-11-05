@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using OBC.Evaluation.Core;
 using OBC.Evaluation.Web.Data;
 
@@ -189,9 +190,10 @@ public sealed class AgentRunService(
         Changed?.Invoke();
 
         var workRoot = WorkRoot();
-        var workDir = Path.Combine(workRoot, $"attempt-{attempt.Id}");
-        var promptFile = Path.Combine(workRoot, $"attempt-{attempt.Id}.prompt.md");
-        var mcpConfigFile = Path.Combine(workDir, "mcp-config.json");
+        // A new name each time: a folder left by an earlier run or another database must never be reused.
+        var workDir = Path.Combine(workRoot, $"attempt-{attempt.Id}-{Guid.NewGuid():N}");
+        var promptFile = workDir + ".prompt.md";
+        var mcpConfigFile = AgentProcess.McpConfigFile(promptFile);
         var command = ForModel(template, model, mcpConfigFile);
         try
         {
@@ -231,9 +233,19 @@ public sealed class AgentRunService(
                 return Outcome.Fatal;
             }
 
-            if (next.Run.Setup != "csv" && result.Context?.DataToolCalls == 0)
+            if (DownDataSources(command, result.Context) is { Count: > 0 } down)
             {
-                var why = "The agent never called a data tool, so its answer didn't come from the data source. Not saved as a result.";
+                var why = $"The data source wasn't usable: {string.Join(", ", down)}. Sign in to it from this tool's profile, then press Check setup. Not saved as a result.";
+                await eval.AbandonAsync(attempt.Id, why, result.RawOutput);
+                lock (gate) failed++;
+                Say($"{label}: {why}");
+                return Outcome.Fatal;
+            }
+
+            var reachedData = next.Run.Setup == "csv" ? result.ToolCalls : result.Context?.DataToolCalls;
+            if (reachedData == 0)
+            {
+                var why = "The agent never called a data tool or read the file, so its answer didn't come from the data source. Not saved as a result.";
                 await eval.AbandonAsync(attempt.Id, why, result.RawOutput);
                 lock (gate) failed++;
                 Say($"{label}: {why}");
@@ -241,6 +253,7 @@ public sealed class AgentRunService(
             }
 
             var notes = Notes(result.Context, model);
+            var warning = reachedData == null ? "This tool doesn't report its tool calls, so nothing shows the answer came from the data source." : null;
             var check = await eval.SubmitAsync(attempt.Id, result.Reply!, a =>
             {
                 a.DurationSeconds = result.Seconds;
@@ -254,7 +267,7 @@ public sealed class AgentRunService(
                 a.AgentCommand = result.CommandLine;
                 a.RawOutput = result.RawOutput;
                 a.Notes = notes;
-            });
+            }, warning);
             lock (gate)
             {
                 done++;
@@ -274,6 +287,7 @@ public sealed class AgentRunService(
             Changed?.Invoke();
             TryDelete(() => Directory.Delete(workDir, recursive: true));
             TryDelete(() => File.Delete(promptFile));
+            TryDelete(() => File.Delete(mcpConfigFile));
             TryDelete(() => File.Delete(AgentProcess.OutputFile(promptFile)));
         }
     }
@@ -345,7 +359,7 @@ public sealed class AgentRunService(
         {
             var workDir = Path.Combine(WorkRoot(), $"preflight-{Guid.NewGuid():N}");
             var promptFile = workDir + ".prompt.md";
-            var mcpConfigFile = Path.Combine(workDir, "mcp-config.json");
+            var mcpConfigFile = AgentProcess.McpConfigFile(promptFile);
             var command = ForModel(template, model, mcpConfigFile);
             Directory.CreateDirectory(workDir);
             try
@@ -360,7 +374,9 @@ public sealed class AgentRunService(
                 var problems = new List<string>();
                 if (!result.Ok)
                     problems.Add(result.Error!);
-                if (result.Ok && setup != "csv" && result.Context?.DataToolCalls == 0)
+                if (DownDataSources(command, result.Context) is { Count: > 0 } down)
+                    problems.Add($"data source not usable: {string.Join(", ", down)}");
+                else if (result.Ok && setup != "csv" && result.Context?.DataToolCalls == 0)
                     problems.Add("never called the data tool, so the connector isn't reachable");
                 if (skills.Count > 0)
                     problems.Add($"loads skills: {string.Join(", ", skills)}");
@@ -376,6 +392,7 @@ public sealed class AgentRunService(
             {
                 TryDelete(() => Directory.Delete(workDir, recursive: true));
                 TryDelete(() => File.Delete(promptFile));
+                TryDelete(() => File.Delete(mcpConfigFile));
                 TryDelete(() => File.Delete(AgentProcess.OutputFile(promptFile)));
             }
         }
@@ -393,6 +410,10 @@ public sealed class AgentRunService(
         McpConfigJson = command.McpConfigJson,
         AllowSkills = command.AllowSkills,
     };
+
+    /// <summary>The unusable servers this run was allowed to use, such as "claude.ai plain postgres (needs-auth)". Another connector being down doesn't matter.</summary>
+    private static List<string> DownDataSources(AgentCommand command, AgentContext? context) =>
+        (context?.DownMcpServers ?? []).Where(d => command.Args.TakeWhile(a => a != "--disallowedTools").Contains("mcp__" + Regex.Replace(d[..d.LastIndexOf(" (", StringComparison.Ordinal)], "[^A-Za-z0-9]", "_"))).ToList();
 
     private static string? Notes(AgentContext? context, ModelProfile model)
     {
